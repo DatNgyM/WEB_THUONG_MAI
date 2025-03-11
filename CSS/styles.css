@@ -1,210 +1,239 @@
 /* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f3f0;
-    color: #333;
-    line-height: 1.6;
+  font-family: Arial, sans-serif;
+  background-color: #f9f3f0;
+  color: #333;
+  line-height: 1.6;
 }
 
 /* Header Navigation */
 header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
+  list-style: none;
+  display: flex;
 }
 
 nav ul li {
-    margin: 0 15px;
+  margin: 0 15px;
 }
 
 nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
 }
 
 .contact {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 /* Hero Section */
 .hero {
-    text-align: center;
-    padding: 100px 20px;
-    background: url('path/to/hero-image.jpg') no-repeat center center;
-    background-size: cover;
-    min-height: 500px; /* Ensuring the hero section has enough height */
+  text-align: center;
+  padding: 100px 20px;
+  background: url("path/to/hero-image.jpg") no-repeat center center;
+  background-size: cover;
+  min-height: 500px; /* Ensuring the hero section has enough height */
 }
 
 .hero h1 {
-    font-size: 48px;
-    color: #fff;
+  font-size: 48px;
+  color: #fff;
 }
 
 .hero h2 {
-    font-size: 24px;
-    color: #fff;
+  font-size: 24px;
+  color: #fff;
 }
 
 .tagline {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #fff;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #fff;
 }
 
 /* Featured Products Section */
 .featured-products {
-    padding: 50px 20px;
-    text-align: center;
-    background-color: #fff;
-    margin-top: 50px; /* Ensures space between hero and product section */
+  padding: 50px 20px;
+  text-align: center;
+  background-color: #fff;
+  margin-top: 50px; /* Ensures space between hero and product section */
 }
 
 .featured-products h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .products {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px; /* Spacing between product cards */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px; /* Spacing between product cards */
 }
 
 .product {
-    margin: 10px;
-    text-align: center;
-    width: 200px; /* Set a fixed width for each product */
+  margin: 10px;
+  text-align: center;
+  width: 200px; /* Set a fixed width for each product */
 }
 
 .product img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 /* Custom Colour Palettes Section */
 .custom-palettes {
-    display: block;  /* Remove flex layout to stack the content */
-    padding: 50px 20px;
-    background-color: #f4f0ec;
-    margin-top: 50px;
+  display: block; /* Remove flex layout to stack the content */
+  padding: 50px 20px;
+  background-color: #f4f0ec;
+  margin-top: 50px;
 }
 
 .custom-palettes-content {
-    width: 100%;  /* Full width for content */
-    text-align: right;  /* Center the text */
-    margin-bottom: 30px; /* Adds space between content and image */
+  width: 100%; /* Full width for content */
+  text-align: right; /* Center the text */
+  margin-bottom: 30px; /* Adds space between content and image */
 }
 .custom-palettes-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    width: 100%; /* Đảm bảo các đoạn văn không bị co lại */
-    /* text-align: justify; Căn đều nội dung */
+  font-size: 18px;
+  margin-bottom: 20px;
+  width: 100%; /* Đảm bảo các đoạn văn không bị co lại */
+  /* text-align: justify; Căn đều nội dung */
 }
 
-.custom-palettes-content_{
-    margin-left: 59.5%;
-    width: 50%;
-    text-align: left;
+.custom-palettes-content_ {
+  margin-left: 59.5%;
+  width: 50%;
+  text-align: left;
 }
 
 .custom-palettes-content h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .custom-palettes-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .custom-palettes-content button {
-    padding: 12px 30px;
-    background-color: #f8d084;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
+  padding: 12px 30px;
+  background-color: #f8d084;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .custom-palettes-content button:hover {
-    background-color: #f7b400;
+  background-color: #f7b400;
 }
 
-
-
 .custom-palettes-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 /* Why Five Section */
 .why-five {
-    padding: 50px 20px;
-    text-align: left; /* Align the text to the left */
-    background-color: #fff;
-    margin-top: 50px;
+  padding: 50px 20px;
+  text-align: left; /* Align the text to the left */
+  background-color: #fff;
+  margin-top: 50px;
 }
 
 .why-five h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .why-five p {
-    font-size: 18px;
-    margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .why-five ul {
-    list-style: disc;
-    font-size: 18px;
-    margin-bottom: 20px;
+  list-style: disc;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .why-five ul li {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .why-image {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .why-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
-.Synthetic{
-    display: block;
-    margin-left: 59.5%;
-    width: 40%; /* Thay đổi chiều rộng phù hợp */
-    max-width: 600px; /* Giới hạn chiều rộng tối đa */
-    text-align: justify;
-    margin-right: auto;
-    padding: 50px 20px; 
-} 
+.Synthetic {
+  display: block;
+  margin-left: 59.5%;
+  width: 40%; /* Thay đổi chiều rộng phù hợp */
+  max-width: 600px; /* Giới hạn chiều rộng tối đa */
+  text-align: justify;
+  margin-right: auto;
+  padding: 50px 20px;
+}
 
 footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  text-align: center;
+  padding: 20px;
+  background-color: rgb(169, 129, 121);
+  border-top: 1px solid #7d2e2e;
+}
+
+.footer-brand {
+  grid-column: 1 / 2;
+}
+
+.footer-contact {
+  grid-column: 2 / 3;
+}
+
+.footer-links {
+  grid-column: 3 / 4;
+}
+
+.footer-emails {
+  grid-column: 4 / 5;
+}
+
+footer p {
+  grid-column: span 4;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.footer-contact ul,
+.footer-links ul,
+.footer-emails ul {
+  list-style: none;
 }
