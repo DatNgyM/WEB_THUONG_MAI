@@ -21,6 +21,35 @@ header {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.hero {
+  background: hsla(298, 68%, 90%, 1);
+
+  background: linear-gradient(
+    90deg,
+    hsla(298, 68%, 90%, 1) 0%,
+    hsla(30, 82%, 91%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    90deg,
+    hsla(298, 68%, 90%, 1) 0%,
+    hsla(30, 82%, 91%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    90deg,
+    hsla(298, 68%, 90%, 1) 0%,
+    hsla(30, 82%, 91%, 1) 100%
+  );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#F6D5F7", endColorstr="#FBE9D7", GradientType=1 );
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
 nav ul {
   list-style: none;
   display: flex;
@@ -36,18 +65,49 @@ nav ul li a {
   font-weight: bold;
 }
 
-.contact {
+.contact-info {
   display: flex;
   align-items: center;
 }
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.search-container input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-size: 14px;
+  width: 180px;
+}
+
+.search-container {
+  color: #333;
+  border-radius: 0 4px 4px 0;
+  transform: translateX(850px);
+}
+placeholder:hover {
+  display: none;
+}
+
+/* Add font awesome for the search icon */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");
 
 /* Hero Section */
 .hero {
   text-align: center;
   padding: 100px 20px;
-  background: url("path/to/hero-image.jpg") no-repeat center center;
   background-size: cover;
   min-height: 500px; /* Ensuring the hero section has enough height */
+  background: linear-gradient(
+    90deg,
+    hsla(298, 68%, 90%, 1) 0%,
+    hsla(30, 82%, 91%, 1) 100%
+  );
 }
 
 .hero h1 {
@@ -98,6 +158,50 @@ nav ul li a {
   border-radius: 8px;
 }
 
+/* Product Filters */
+.product-filters {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f3f0;
+  margin-top: 20px;
+}
+
+.product-filters select {
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.product-filters select:hover {
+  border-color: #f8d084;
+}
+
+.product-filters select:focus {
+  border-color: #f7b400;
+  box-shadow: 0 0 0 2px rgba(247, 180, 0, 0.2);
+}
+
+/* Product styles enhancement */
+.product-name {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.product-price {
+  color: #666;
+}
+
+/* Add hidden class for filtering */
+.hidden {
+  display: none;
+}
+
 /* Custom Colour Palettes Section */
 .custom-palettes {
   display: block; /* Remove flex layout to stack the content */
@@ -118,7 +222,7 @@ nav ul li a {
   /* text-align: justify; Căn đều nội dung */
 }
 
-.custom-palettes-content_ {
+.custom-palettes-text {
   margin-left: 59.5%;
   width: 50%;
   text-align: left;
@@ -190,7 +294,7 @@ nav ul li a {
   height: auto;
   border-radius: 8px;
 }
-.Synthetic {
+.synthetic {
   display: block;
   margin-left: 59.5%;
   width: 40%; /* Thay đổi chiều rộng phù hợp */
@@ -219,7 +323,7 @@ footer {
 }
 
 .footer-links {
-  grid-column: 3 / 4;
+  grid-column: 4 / 5;
 }
 
 .footer-emails {
