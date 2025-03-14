@@ -1,4 +1,5 @@
-/* General Reset */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");
+
 * {
   margin: 0;
   padding: 0;
@@ -10,17 +11,18 @@ body {
   background-color: #f9f3f0;
   color: #333;
   line-height: 1.6;
-}
-body {
   overflow: hidden;
 }
 
 html {
   overflow: auto; /* Cho phép cuộn trang nhưng ẩn thanh cuộn */
-  -ms-overflow-style: none;  /* Cho IE/Edge */
-  scrollbar-width: none;      /* Cho Firefox */
+  -ms-overflow-style: none; /* Cho IE/Edge */
+  scrollbar-width: none; /* Cho Firefox */
 }
 
+html::-webkit-scrollbar {
+  display: none;
+}
 
 /* Header Navigation */
 header {
@@ -32,27 +34,16 @@ header {
 }
 
 .hero {
-  background: hsla(298, 68%, 90%, 1);
-
+  border-radius: 0 0 20px 20px;
+  text-align: center;
+  padding: 100px 20px;
+  background-size: cover;
+  min-height: 500px;
   background: linear-gradient(
     90deg,
     hsla(298, 68%, 90%, 1) 0%,
     hsla(30, 82%, 91%, 1) 100%
   );
-
-  background: -moz-linear-gradient(
-    90deg,
-    hsla(298, 68%, 90%, 1) 0%,
-    hsla(30, 82%, 91%, 1) 100%
-  );
-
-  background: -webkit-linear-gradient(
-    90deg,
-    hsla(298, 68%, 90%, 1) 0%,
-    hsla(30, 82%, 91%, 1) 100%
-  );
-
-  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#F6D5F7", endColorstr="#FBE9D7", GradientType=1 );
 }
 
 .logo {
@@ -74,7 +65,6 @@ nav ul li a {
   color: #333;
   font-weight: bold;
 }
-/*  */
 .contact-info {
   display: flex;
   align-items: center;
@@ -103,12 +93,13 @@ nav ul li a {
 
 .contact a {
   text-decoration: none;
-  color: #333;  /* Màu chữ cho nút CONTACT */
+  color: #333; /* Màu chữ cho nút CONTACT */
   margin-left: 10px;
 }
 
-.currency, .cart {
-  margin-left: 10px;  /* Thêm khoảng cách giữa các phần tử */
+.currency,
+.cart {
+  margin-left: 10px; /* Thêm khoảng cách giữa các phần tử */
 }
 
 /*  */
@@ -116,22 +107,8 @@ placeholder:hover {
   display: none;
 }
 
-/* Add font awesome for the search icon */
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css");
-
 /* Hero Section */
-.hero {
-  border-radius: 0 0 20px 20px;
-  text-align: center;
-  padding: 100px 20px;
-  background-size: cover;
-  min-height: 500px; /* Ensuring the hero section has enough height */
-  background: linear-gradient(
-    90deg,
-    hsla(298, 68%, 90%, 1) 0%,
-    hsla(30, 82%, 91%, 1) 100%
-  );
-}
+
 /* màu trang head */
 .hero h1 {
   font-size: 48px;
@@ -161,22 +138,21 @@ placeholder:hover {
   font-size: 28px;
   margin-bottom: 20px;
 }
-.products { 
+.products {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px; 
+  gap: 20px;
 }
 /* Phần sp */
 #products-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;  /* Khoảng cách giữa các sản phẩm */
-  width: 75%;  /* Sản phẩm chiếm 75% chiều rộng */
-  margin-left: 220px;  /* Di chuyển sản phẩm sang phải thêm một chút */
-  margin-top: -190px;  /* Đảm bảo sản phẩm không bị chạm vào header */
-  position: relative;  /* Giữ vị trí ổn định cho phần nền */
-  z-index: 1;  /* Đảm bảo các phần tử khác không bị ảnh hưởng */
+  gap: 20px; /* Khoảng cách giữa các sản phẩm */
+  width: 75%; /* Sản phẩm chiếm 75% chiều rộng */
+  margin: -190px 0 0 220px; /* Di chuyển sản phẩm sang phải thêm một chút */
+  position: relative; /* Giữ vị trí ổn định cho phần nền */
+  z-index: 1; /* Đảm bảo các phần tử khác không bị ảnh hưởng */
   min-height: 350px;
 }
 /* Nếu như xóa nó đi nó sẽ lại như ban đầu */
@@ -186,7 +162,7 @@ placeholder:hover {
   margin-left: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
-  text-align: right; 
+  text-align: right;
   width: 200px;
 }
 
@@ -200,8 +176,8 @@ placeholder:hover {
 
 .product-filters {
   display: flex;
-  flex-direction: column;  /* Sắp xếp các lựa chọn lọc theo chiều dọc */
-  gap: 20px;  /* Khoảng cách giữa các bộ lọc */
+  flex-direction: column; /* Sắp xếp các lựa chọn lọc theo chiều dọc */
+  gap: 20px; /* Khoảng cách giữa các bộ lọc */
   padding: 20px;
   background-color: #ffffff;
   width: 20%; /* Chiều rộng của bộ lọc */
@@ -226,7 +202,6 @@ placeholder:hover {
   box-shadow: 0 0 0 2px rgba(247, 180, 0, 0.2);
 }
 
-
 /* Product styles enhancement */
 .product-name {
   font-weight: bold;
@@ -246,7 +221,7 @@ placeholder:hover {
 .custom-palettes {
   display: block; /* Remove flex layout to stack the content */
   padding: 50px 20px;
-  background-color: #f4f0ec;
+  background-color: #f8f3ef;
   margin-top: 50px;
 }
 
@@ -259,8 +234,8 @@ placeholder:hover {
   font-size: 18px;
   margin-bottom: 20px;
   width: 83%; /* Đảm bảo các đoạn văn không bị co lại */
-    text-align: justify;  /*Căn đều nội dung */
-} 
+  text-align: justify; /*Căn đều nội dung */
+}
 
 .custom-palettes-text {
   margin-left: 59.5%;
@@ -273,12 +248,9 @@ placeholder:hover {
   margin-bottom: 20px;
 }
 
-.custom-palettes-content p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.custom-palettes-content button {
+/* Consolidate button styles */
+.custom-palettes-content button,
+.why-five button {
   padding: 12px 30px;
   background-color: #f8d084;
   border: none;
@@ -287,7 +259,8 @@ placeholder:hover {
   border-radius: 4px;
 }
 
-.custom-palettes-content button:hover {
+.custom-palettes-content button:hover,
+.why-five button:hover {
   background-color: #f7b400;
 }
 
@@ -334,14 +307,7 @@ placeholder:hover {
   height: auto;
   border-radius: 8px;
 }
-.why-five button{
-   padding: 12px 30px;
-  background-color: #f8d084;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 4px;
-}
+
 .synthetic {
   display: block;
   margin-left: 59.5%;
@@ -350,7 +316,6 @@ placeholder:hover {
   text-align: justify;
   margin-right: auto;
   padding: 50px 20px;
-  
 }
 
 footer {
@@ -370,7 +335,7 @@ footer {
 .footer-contact {
   grid-column: 2 / 3;
 }
-/* them cua phat */ 
+/* them cua phat */
 .footer-links ul {
   display: flex; /* Hiển thị danh sách dưới dạng hàng ngang */
   justify-content: center; /* Căn giữa theo chiều ngang */
@@ -378,26 +343,18 @@ footer {
   list-style: none; /* Bỏ dấu chấm đầu dòng */
   padding: 0;
   margin: 0;
-}
-/*  */
-.footer-links ul {
-  list-style: none;  /* Loại bỏ dấu chấm đầu dòng */
-  display: flex;     /* Đặt các mục trong ul thành dạng flex (hàng ngang) */
-  justify-content: space-between;  /* Tự động căn đều các phần tử */
-  padding: 0;         /* Loại bỏ khoảng cách mặc định */
+  justify-content: space-between;
 }
 
 .footer-links li {
-  margin-right: 20px;  /* Khoảng cách giữa các mục */
+  margin-right: 20px; /* Khoảng cách giữa các mục */
 }
 
 .footer-links a {
-  text-decoration: none;  /* Loại bỏ gạch dưới */
-  color: #0000EE;  /* Màu chữ */
+  text-decoration: none; /* Loại bỏ gạch dưới */
+  color: #0000ee; /* Màu chữ */
   font-weight: bold; /* Nếu cần, bạn có thể làm cho chữ đậm */
 }
-/*  */
-
 
 .footer-emails {
   grid-column: 4 / 5;
