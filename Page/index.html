@@ -14,23 +14,22 @@
           <li><a href="#shop">SHOP</a></li>
           <li><a href="#about">ABOUT</a></li>
           <li><a href="#colours">OUR COLOURS</a></li>
-
-          <li>
-            <div class="search-container">
-              <input
-                type="text"
-                placeholder="🔍 Tìm kiếm sản phẩm..."
-                onkeyup="searchProduct()"
-              />
-            </div>
-          </li>
         </ul>
       </nav>
+
       <div class="contact-info">
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="🔍 Tìm kiếm sản phẩm..."
+            onkeyup="searchProduct()"
+          />
+        </div>
         <a href="#contact">CONTACT</a>
         <div class="currency">NZD ($)</div>
         <div class="cart">🛒 0</div>
       </div>
+
     </header>
 
     <main>
@@ -42,36 +41,38 @@
         </div>
       </section>
 
-      <div class="product-filters">
-        <select id="filter-season">
-          <option value="">Chọn mùa</option>
-          <option value="spring">Winter</option>
-          <option value="summer">Spring</option>
-          <option value="autumn">Autumn</option>
-          <option value="winter">Summer</option>
-        </select>
-
-        <select id="filter-price">
-          <option value="">Giá</option>
-          <option value="low-high">Giá thấp đến cao</option>
-          <option value="high-low">Giá cao đến thấp</option>
-        </select>
-
-        <select id="filter-color">
-          <option value="">Chọn màu sắc</option>
-          <option value="lilac">Lilac</option>
-          <option value="lilac">Lilac</option>
-          <option value="lilac">Lilac</option>
-          <option value="lilac">Lilac</option>
-          <option value="lilac">Lilac</option>
-          <option value="lilac">Lilac</option>
-          <!-- Thêm các màu khác -->
-        </select>
-      </div>
-
       <!-- Featured Products Section -->
       <section class="featured-products" id="shop">
         <h3>FEATURED PRODUCTS</h3>
+        <!--  -->
+        <div class="product-filters">
+          <select id="filter-season">
+            <option value="">Chọn mùa</option>
+            <option value="spring">Winter</option>
+            <option value="summer">Spring</option>
+            <option value="autumn">Autumn</option>
+            <option value="winter">Summer</option>
+          </select>
+  
+          <select id="filter-price">
+            <option value="">Giá</option>
+            <option value="low-high">Giá thấp đến cao</option>
+            <option value="high-low">Giá cao đến thấp</option>
+          </select>
+  
+          <select id="filter-color">
+            <option value="">Chọn màu sắc</option>
+            <option value="lilac">Lilac</option>
+            <option value="lilac">Lilac</option>
+            <option value="lilac">Lilac</option>
+            <option value="lilac">Lilac</option>
+            <option value="lilac">Lilac</option>
+            <option value="lilac">Lilac</option>
+            <!-- Thêm các màu khác -->
+          </select>
+        </div>
+        <!--  -->
+        
         <div class="products" id="products-container">
           <div
             class="product"
@@ -117,6 +118,8 @@
             <p class="product-price">$95.00</p>
           </div>
         </div>
+
+    
       </section>
 
       <!-- Custom Colour Palettes Section -->
@@ -132,9 +135,7 @@
           </div>
           <button>START CREATING</button>
         </div>
-        <!-- <div class="custom-palettes-image">
-                <img src="path/to/custom-palette-image.jpg" alt="Custom Palette">
-            </div> -->
+ 
       </section>
 
       <!-- Why Five05 Section -->
@@ -187,17 +188,12 @@
           <li>Email: contact@fiveo5.com</li>
         </ul>
       </div>
+     
       <div class="footer-links">
         <ul>
           <li><a href="#home">HOME</a></li>
           <li><a href="#about">ABOUT</a></li>
           <li><a href="#shop">SHOP</a></li>
-          <li><a href="#our-colours">Our Colours</a></li>
-          <li><a href="#shipping-returns">Shipping & Returns</a></li>
-          <li><a href="#terms-conditions">Terms & Conditions</a></li>
-          <li><a href="#privacy-policy">Privacy Policy</a></li>
-          <li><a href="#delivery-policy">Delivery Policy</a></li>
-          <li><a href="#contact-us">Contact Us</a></li>
         </ul>
       </div>
       <div class="footer-emails">
@@ -206,9 +202,18 @@
           <li>
             <input type="email" placeholder="Enter your email" />
             <button>Subscribe</button>
+            <br><br>
+            <li><a href="#our-colours">Our Colours</a></li>
+            <li><a href="#shipping-returns">Shipping & Returns</a></li>
+            <li><a href="#terms-conditions">Terms & Conditions</a></li>
+            <li><a href="#privacy-policy">Privacy Policy</a></li>
+            <li><a href="#delivery-policy">Delivery Policy</a></li>
+            <li><a href="#contact-us">Contact Us</a></li>
           </li>
         </ul>
       </div>
+
+   
       <p>© 2023 Five:05 Cosmetics</p>
     </footer>
 
