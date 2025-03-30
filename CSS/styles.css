@@ -145,17 +145,19 @@ placeholder:hover {
   gap: 20px;
 }
 /* Phần sp */
+
+/* Nếu như xóa nó đi nó sẽ lại như ban đầu */
 #products-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px; /* Khoảng cách giữa các sản phẩm */
   width: 75%; /* Sản phẩm chiếm 75% chiều rộng */
-  margin: -190px 0 0 220px; /* Di chuyển sản phẩm sang phải thêm một chút */
+  margin-left: 220px;  /* Điều chỉnh lại vị trí của sản phẩm */
+  margin-top: 0; /* Di chuyển sản phẩm về lại vị trí ban đầu */
   position: relative; /* Giữ vị trí ổn định cho phần nền */
   z-index: 1; /* Đảm bảo các phần tử khác không bị ảnh hưởng */
   min-height: 350px;
 }
-/* Nếu như xóa nó đi nó sẽ lại như ban đầu */
 
 .product {
   margin: 20px;
@@ -170,36 +172,6 @@ placeholder:hover {
   width: 100%;
   height: auto;
   border-radius: 8px;
-}
-
-/* Product Filters */
-
-.product-filters {
-  display: flex;
-  flex-direction: column; /* Sắp xếp các lựa chọn lọc theo chiều dọc */
-  gap: 20px; /* Khoảng cách giữa các bộ lọc */
-  padding: 20px;
-  background-color: #ffffff;
-  width: 20%; /* Chiều rộng của bộ lọc */
-}
-
-.product-filters select {
-  padding: 8px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  font-size: 14px;
-  cursor: pointer;
-  outline: none;
-}
-
-.product-filters select:hover {
-  border-color: #f8d084;
-}
-
-.product-filters select:focus {
-  border-color: #f7b400;
-  box-shadow: 0 0 0 2px rgba(247, 180, 0, 0.2);
 }
 
 /* Product styles enhancement */
