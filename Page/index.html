@@ -28,12 +28,11 @@
             placeholder="🔍 Tìm kiếm sản phẩm..."
             onkeyup="searchProduct()"
           />
-<<<<<<< HEAD
        
       </div>
       
           <!-- Dropdown User Profile -->
-        <div class="dropdown">
+        <!-- <div class="dropdown">
             <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Tài khoản
               <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; margin-right: 5px;" />
             </button>
@@ -44,12 +43,29 @@
            <li><a class="dropdown-item" href="#">Số địa chỉ nhận hàng</a></li>
            <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
          </ul>
-      </div>
+      </div> -->
+      <!-- Dropdown User Profile -->
+<div class="dropdown d-inline-block">
+  <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    Tài khoản
+  </button>
 
-=======
-        </div>
-        <img src="images/user.png" alt="User Icon" style="width: 20px; height: 20px; margin-right: 5px;" />
->>>>>>> de77f95cf2408cf79bc580c1131b756101691388
+  <!-- Icon tách ra nằm ngoài button, bấm là vào trang login -->
+  <a href="login.html" style="display: inline-block; margin-left: 6px;">
+    <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; cursor: pointer;" />
+    
+  </a>
+
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
+    <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
+    <li><a class="dropdown-item" href="#">Khách hàng thân thiết</a></li>
+    <li><a class="dropdown-item" href="#">Số địa chỉ nhận hàng</a></li>
+    <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+  </ul>
+</div>
+
+
         <div class="currency">NZD ($)</div>
         <div class="cart">🛒</div>
       </div>
