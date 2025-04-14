@@ -196,7 +196,7 @@ placeholder:hover {
   display: block; 
   padding: 50px 20px;
   background-color: #A98179;
-  margin-top: 50px;
+  margin: 0 auto; /* Căn giữa */
 }
 
 .custom-palettes-content {
@@ -249,7 +249,7 @@ placeholder:hover {
   padding: 50px 20px;
   text-align: left; /* Align the text to the left */
   background-color: #fff;
-  margin-top: 50px;
+  margin-top: 0px;
 }
 
 .why-five h3 {
@@ -345,3 +345,4 @@ footer p {
 .footer-emails ul {
   list-style: none;
 }
+
