@@ -1,9 +1,6 @@
-// server/routes/auth.js
-
-
 const express = require('express');
-const db = require('../db');
 const router = express.Router();
+const db = require('../db');
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -15,7 +12,12 @@ router.post('/login', async (req, res) => {
     );
 
     if (result.rows.length > 0) {
-      res.json({ success: true });
+      const admin = result.rows[0];
+      res.json({
+        success: true,
+        role: 'admin',
+        name: admin.name || admin.username
+      });
     } else {
       res.status(401).json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' });
     }

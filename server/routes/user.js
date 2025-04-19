@@ -5,11 +5,11 @@ const pool = require('../db');
 
 // Đăng ký tài khoản người dùng
 router.post('/register', async (req, res) => {
-  // ✅ Chống crash nếu req.body là undefined
+  // Chống crash nếu req.body là undefined
   const body = req.body || {};
   const { name, username, email, password } = body;
 
-  // ✅ In log để debug
+  // In log để debug
   console.log('[DEBUG] req.body:', req.body);
 
   // Kiểm tra thiếu thông tin
@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
       user: result.rows[0]
     });
   } catch (err) {
-    console.error('❌ Register failed:', err);
+    console.error(' Register failed:', err);
     res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
   }
 });
