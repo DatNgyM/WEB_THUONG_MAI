@@ -128,4 +128,15 @@ function displayProducts(products) {
         `;
     productsContainer.appendChild(productElement);
   });
+  // load lại trag khi đăng nhập thành công
+  window.addEventListener('DOMContentLoaded', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const name = localStorage.getItem('name');
+    const greeting = document.getElementById('greeting');
+  
+    if (isLoggedIn && name && greeting) {
+      greeting.textContent = `👋 Xin chào, ${name}`;
+    }
+  });
+  
 }
