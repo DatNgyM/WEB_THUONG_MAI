@@ -1,3 +1,4 @@
+// server/tests/registerThenLogin.test.js
 const request = require('supertest');
 const express = require('express');
 const registerRoute = require('../routes/userRegister');
@@ -9,14 +10,18 @@ app.use(express.json());
 app.use('/user', registerRoute);
 app.use('/userAuth', loginRoute);
 
-describe('Test full flow: Register ➜ Login', () => {
-  const user = {
-    name: 'Mock User',
-    username: 'mockuser_1745127431794',
-    email: 'mock1745127431794@mail.com',
-    password: '123456'
-  };
 
+const timestamp = Date.now();
+const user = {
+  name: 'Mock User',
+  username: `mockuser_${timestamp}`,
+  email: `mock${timestamp}@mail.com`,
+  password: '123456'
+};
+
+console.log('[MOCK TEST] User:', user);
+
+describe('Test full flow: Register ➜ Login', () => {
   it('should register successfully', async () => {
     const res = await request(app).post('/user/register').send(user);
     expect(res.statusCode).toBe(201);
@@ -35,5 +40,5 @@ describe('Test full flow: Register ➜ Login', () => {
 });
 
 afterAll(async () => {
-  await db.end();
+  await db.end(); // đóng pool DB
 });
