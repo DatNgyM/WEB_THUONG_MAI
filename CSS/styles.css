@@ -13,7 +13,9 @@ body {
   line-height: 1.6;
   overflow: hidden;
 }
-
+#account-menu{
+  display: none; 
+}
 html {
   overflow: auto; /* Cho phép cuộn trang nhưng ẩn thanh cuộn */
   -ms-overflow-style: none; /* Cho IE/Edge */

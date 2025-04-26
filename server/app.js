@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-
+//const webRouter = require('../server/routes/web.js');
 // Các route
 const userRegister = require('./routes/userRegister'); 
 const userAuth = require('./routes/userAuth'); 
@@ -12,7 +12,7 @@ const requestSellerRoute = require('./routes/requestSeller');
 const PORT = 3000;
 
 app.use(express.json());
-
+//app.use('/',webRouter)
 // Đăng ký route API
 app.use('/user/request-seller', requestSellerRoute); // 👈 Ưu tiên route cụ thể
 app.use('/userAuth', userAuth);       // Xử lý login người dùng
