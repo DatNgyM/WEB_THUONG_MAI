@@ -139,6 +139,10 @@ placeholder:hover {
   cursor: pointer;
   border-radius: 4px;
 }
+.featured-products button:hover,
+.why-five button:hover {
+  background-color: #f7b400;
+}
 .featured-products {
   padding: 50px 20px;
   text-align: center;
