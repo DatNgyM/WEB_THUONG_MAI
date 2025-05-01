@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Five:05 Cosmetics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <script src="/JS/authDisplay.js" defer></script>
+    <scrip src="/JS/home.js">
+        </script>
+
+        <!-- Thêm Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="/CSS/styles.css" />
+        <style>
+            body {
+                background-color: #ffffff;
+            }
+
+            .product-image {
+                width: 100%;
+                height: auto;
+            }
+
+            .thumbnail {
+                width: 80px;
+                height: auto;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+
+            .thumbnail.active {
+                border: 2px solid #007bff;
+            }
+
+            .btn-outline-secondary {
+                background-color: #f8f9fa;
+                color: #6c757d;
+            }
+
+            .product-image {
+                max-height: 400px;
+                object-fit: cover;
+            }
+
+            .thumbnail {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                cursor: pointer;
+                opacity: 0.6;
+                transition: opacity 0.3s ease;
+            }
+
+            .thumbnail:hover,
+            .thumbnail.active {
+                opacity: 1;
+            }
+        </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/Page/index.html">HOME</a></li>
+                <li><a href="#shop">SHOP</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#colours">OUR COLOURS</a></li>
+            </ul>
+        </nav>
+
+        <div class="contact-info">
+            <div class="search-container">
+                <input type="text" placeholder="🔍 Tìm kiếm sản phẩm..." onkeyup="searchProduct()" />
+            </div>
+
+
+            <div id="account-section" style="display: none;">
+                <div class="dropdown d-inline-block" id="account-menu">
+                    <span id="user-greeting" style="margin-right: 10px; font-weight: bold;"></span>
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Tài khoản của tôi
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
+                        <li><a class="dropdown-item" href="#">Đăng ký tài khoản Premium</a></li>
+                        <li><a class="dropdown-item" href="#">Kênh người bán hàng</a></li>
+                        <li><a class="dropdown-item" href="#">Setting</a></li>
+                        <li><a class="dropdown-item" href="#logout">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="guest-section">
+                <a href="/Page/login.html" style="display: inline-block; margin-left: 6px;">
+                    <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; cursor: pointer;" />
+                </a>
+            </div>
+
+
+            <div class="currency">USD($)</div>
+            <div class="cart" href="#cart">🛒</div>
+        </div>
+
+    </header>
+
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-md-6 mb-4">
+                <img src="/images/iphone-16-pro-max-titan-sa-mac-2.jpg" alt="Product"
+                    class="img-fluid rounded mb-3 product-image" id="mainImage">
+                <div class="d-flex justify-content-between">
+                    <img src="/images/iphone-16-pro-max-titan-sa-mac-2.jpg" alt="Thumbnail 1"
+                        class="thumbnail rounded active" onclick="changeImage(event, this.src)">
+                    <img src="/images/iphone-16-pro-max-titan.jpg" alt="Thumbnail 2" class="thumbnail rounded"
+                        onclick="changeImage(event, this.src)">
+                    <img src="/images/iphone-16-pro-max-titan-sa-mac-3.jpg" alt="Thumbnail 3" class="thumbnail rounded"
+                        onclick="changeImage(event, this.src)">
+                    <img src="https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080"
+                        alt="Thumbnail 4" class="thumbnail rounded" onclick="changeImage(event, this.src)">
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-6">
+                <h2 class="mb-3">iPhone 16 Pro Max</h2>
+                <p class="text-muted mb-4">SKU: WH66769X7</p>
+                <div class="mb-3">
+                    <span class="h4 me-2">$989</span>
+                    <span class="text-muted"><s>$1.211,87</s></span>
+                </div>
+                <div class="mb-3">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-half text-warning"></i>
+                    <span class="ms-2">4.5 (120 reviews)</span>
+                </div>
+                <p class="mb-4"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, itaque accusantium
+                    odio,
+                    soluta, corrupti aliquam quibusdam tempora at cupiditate quis eum maiores libero veritatis?
+                    Dicta facilis sint aliquid ipsum atque?.</p>
+                <div class="mb-4">
+                    <h5>Color:</h5>
+                    <div class="btn-group mb-3" role="group" aria-label="Color selection">
+                        <input type="radio" class="btn-check" name="color" id="black" autocomplete="off" checked>
+                        <label class="btn btn-outline-dark" for="black">Black</label>
+
+                        <input type="radio" class="btn-check" name="color" id="silver" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="silver">Silver</label>
+
+                        <input type="radio" class="btn-check" name="color" id="blue" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="blue">Blue</label>
+                    </div>
+
+                    <h5>Storage capacity:</h5>
+                    <div class="btn-group" role="group" aria-label="Storage selection">
+                        <input type="radio" class="btn-check" name="storage" id="256gb" autocomplete="off" checked>
+                        <label class="btn btn-outline-dark" for="256gb"
+                            style="background-color: transparent; color: inherit; border-color: inherit;">256GB</label>
+
+                        <input type="radio" class="btn-check" name="storage" id="512gb" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="512gb"
+                            style="background-color: transparent; color: inherit; border-color: inherit;">512GB</label>
+
+                        <input type="radio" class="btn-check" name="storage" id="1tb" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="1tb"
+                            style="background-color: transparent; color: inherit; border-color: inherit;">1TB</label>
+                    </div>
+
+
+                </div>
+                <div class="mb-4">
+                    <label for="quantity" class="form-label">Quantity:</label>
+                    <input type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
+                </div>
+                <button class="btn btn-primary btn-lg mb-3 me-2">
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+                <button class="btn btn-outline-secondary btn-lg mb-3">
+                    <i class="bi bi-heart"></i> Add to Wishlist
+                </button>
+                <div class="mt-4">
+                    <h5>Key Features:</h5>
+                    <ul>
+                        <li>Industry-leading noise cancellation</li>
+                        <li>30-hour battery life</li>
+                        <li>Touch sensor controls</li>
+                        <li>Speak-to-chat technology</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <!-- Tabs navigation -->
+        <ul class="nav nav-tabs" id="productTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description"
+                    type="button" role="tab" aria-controls="description" aria-selected="true">Mô tả</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="features-tab" data-bs-toggle="tab" data-bs-target="#features" type="button"
+                    role="tab" aria-controls="features" aria-selected="false">Tính năng nổi bật</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="updates-tab" data-bs-toggle="tab" data-bs-target="#updates" type="button"
+                    role="tab" aria-controls="updates" aria-selected="false">Cập nhật mới</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                    role="tab" aria-controls="reviews" aria-selected="false">Đánh giá</button>
+            </li>
+        </ul>
+
+       <!-- Tabs content -->
+<div class="tab-content pt-3" id="productTabContent">
+    <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+        <p><strong>iPhone 16 Pro Max</strong> khẳng định Apple là biểu tượng đổi mới và tiên phong, với công nghệ tiên tiến, thiết kế tinh tế và hiệu năng mạnh mẽ.</p>
+
+        <p><strong>Nâng cấp so với iPhone 15:</strong>  
+        Chip A18 mới mang lại hiệu suất vượt trội, xử lý đồ họa mạnh hơn và tiết kiệm năng lượng hơn.</p>
+    
+        <p><strong>Camera đột phá:</strong>  
+        Camera Fusion 48MP chụp đêm tuyệt vời, quay video không gian sống động, và có nút Camera Control hỗ trợ thao tác nhanh.</p>
+    
+        <p><strong>Màn hình:</strong>  
+        Dynamic Island, công nghệ True Tone, màu sắc rộng P3, ProMotion 120Hz (ở bản Pro và Pro Max).</p>
+    
+        <p><strong>Pin và sạc:</strong>  
+        iPhone 16 Plus và Pro Max cho thời lượng pin dài hơn, hỗ trợ MagSafe sạc nhanh hơn 25W.</p>
+    
+        <p><strong>So sánh iPhone 16 Pro vs 16 Pro Max:</strong>  
+        - Màn hình 6.3" vs 6.9"  
+        - Thời lượng pin 27h vs 33h  
+        - iPhone 16 Pro Max bắt đầu từ 256GB bộ nhớ</p>
+    
+        <p><strong>Thiết kế:</strong>  
+        Khung titan, mặt kính nhám chống bám vân tay, đạt chuẩn kháng nước IP68, lựa chọn màu sắc đa dạng.</p>
+    
+        <p><strong>Đẳng cấp doanh nhân:</strong>  
+        iPhone 16 Pro Max không chỉ mạnh mẽ mà còn toát lên vẻ ngoài sang trọng, bền bỉ và thời thượng.</p>
+  
+      <div class="row">
+        <div class="col-md-10 mx-auto">
+          <img src="/images/iphone-16-pro-max-1-638639190782955686.jpg" class="img-fluid mb-3 w-100 rounded" alt="ảnh 1">
+          <img src="/images/iphone-16-pro-max-2-638639190801601764.jpg" class="img-fluid mb-3 w-100 rounded" alt="ảnh 2">
+          <img src="/images/iphone-16-pro-max-3-638639190801601764.jpg" class="img-fluid mb-3 w-100 rounded" alt="ảnh 3">
+          <img src="/images/iphone-16-pro-max-4-638639190848358132.jpg" class="img-fluid mb-3 w-100 rounded" alt="ảnh 4">
+        </div>
+      </div>
+    </div>
+  
+    <div class="tab-pane fade" id="features" role="tabpanel" aria-labelledby="features-tab">
+      <ul>
+        <li>Camera 108MP siêu nét</li>
+        <li>Pin 5000mAh sử dụng cả ngày</li>
+        <li>Màn hình AMOLED 6.7 inch</li>
+      </ul>
+    </div>
+  
+    <div class="tab-pane fade" id="updates" role="tabpanel" aria-labelledby="updates-tab">
+      <p>Phiên bản mới cập nhật phần mềm với nhiều tính năng cải tiến và vá lỗi bảo mật.</p>
+    </div>
+  
+    <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+      <p>Khách hàng đánh giá: "Sản phẩm rất tốt, pin lâu và màn hình đẹp."</p>
+    </div>
+  </div>
+  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changeImage(event, src) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
