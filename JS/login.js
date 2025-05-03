@@ -9,7 +9,7 @@ document.querySelector('#login-form').addEventListener('submit', async function 
     return;
   }
 
-  // Nếu input là admin (dựa trên định dạng @admin hoặc username chứa "admin")
+  // input là admin (dựa trên định dạng @admin hoặc username chứa "admin")
   const isAdmin = input.toLowerCase().includes('admin');
 
   if (isAdmin) {
@@ -49,7 +49,7 @@ async function loginUser(username, password) {
     const res = await fetch('/userAuth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }) // gửi key cho từng BEBE
     });
 
     const result = await res.json();
@@ -89,7 +89,7 @@ async function loginUser(username, password) {
 //     payload = { username: login, password };
 //   } else {
 //     endpoint = '/userAuth/login';
-//     payload = { login, password }; // bên backend nhận login là username/email
+//     payload = { login, password }; // bên backend nhận login là username/email ?
 //   }
 
 //   try {

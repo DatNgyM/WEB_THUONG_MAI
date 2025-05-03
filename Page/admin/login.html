@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Dashboard</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+</head>
+
+<body class="bg-login">
+    <div class="container">
+        <div class="row tm-mt-big">
+            <div class="col-12 mx-auto tm-login-col">
+                <div class="bg-white tm-block">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h2 class="tm-block-title mt-3">Admin Login</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <form id="loginForm" class="tm-login-form">
+                                <div class="input-group">
+                                    <label for="username" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Username</label>
+                                    <input name="username" type="text" class="form-control validate" id="username" required>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <label for="password" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Password</label>
+                                    <input name="password" type="password" class="form-control validate" id="password" required>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <button type="submit" class="btn btn-primary d-inline-block mx-auto">Login</button>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <p class="text-danger text-center w-100" id="errorMessage" style="display: none;"></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/adminLogin.js"></script>
+</body>
+</html>

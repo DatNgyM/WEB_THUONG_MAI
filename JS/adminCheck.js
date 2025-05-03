@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm("Bạn đang đăng nhập bằng tài khoản admin.\nBạn muốn truy cập trang quản trị không?")) {
           window.location.href = '/Page/admin/index.html';
         }
-      }, 350); // ms 
+      }, 350); //msms
     }
   });
   

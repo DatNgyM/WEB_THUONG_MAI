@@ -1,1009 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Five:05 - Products</title>
-  <link rel="stylesheet" href="/CSS/styles.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
-  <script src="/JS/authDisplay.js" defer></script>
-  <script src="/JS/adminCheck.js" defer></script>
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - Five:05</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/styles.css" />
+    <style>
+        .product-card {
+            margin-bottom: 2rem;
+        }
 
-    .filter-sidebar {
-      background: white;
-      border-radius: 12px;
-      position: sticky;
-      top: 20px;
-      height: fit-content;
-    }
+        .product {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .product-card {
-      background: white;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      height: 100%;
-    }
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
+        .product-image {
+            position: relative;
+            padding-top: 75%;
+            overflow: hidden;
+        }
 
-    .product-image {
-      height: 200px;
-      object-fit: cover;
-      border-radius: 12px 12px 0 0;
-    }
+        .product-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .price {
-      color: #2563eb;
-      font-weight: 600;
-    }
+        .product-overlay {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.9);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            transition: bottom 0.3s ease;
+        }
 
-    .discount-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #dc2626;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.875rem;
-    }
+        .product:hover .product-overlay {
+            bottom: 0;
+        }
 
-    .wishlist-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: white;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+        .product-info {
+            padding: 1rem;
+            text-align: center;
+        }
 
-    .wishlist-btn:hover {
-      background: #fee2e2;
-      color: #dc2626;
-    }
+        .product-name {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+            color: var(--text-color);
+        }
 
-    .rating-stars {
-      color: #fbbf24;
-    }
+        .product-price {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
 
-    .category-badge {
-      background: #e5e7eb;
-      color: #4b5563;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-    }
+        .product-rating {
+            color: #ffc107;
+            margin: 0.5rem 0;
+        }
 
-    .filter-group {
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 1rem;
-      margin-bottom: 1rem;
-    }
+        .filters-sidebar {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
 
-    .color-option {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      position: relative;
-    }
+        .filter-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
 
-    .color-option.selected::after {
-      content: "";
-      position: absolute;
-      inset: -3px;
-      border: 2px solid #2563eb;
-      border-radius: 50%;
-    }
+        .filter-section:last-child {
+            border-bottom: none;
+        }
 
-    .sort-btn {
-      background: white;
-      border: 1px solid #e5e7eb;
-      padding: 8px 16px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
 
-    .sort-btn:hover {
-      background: #f3f4f6;
-    }
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
 
-    .cart-btn {
-      background: #2563eb;
-      color: white;
-      border: none;
-      transition: all 0.2s;
-    }
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
 
-    .cart-btn:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-    }
-  </style>
+        .range-inputs input {
+            width: 80px;
+            padding: 0.25rem;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            border: none;
+            background: none;
+            padding: 0.5rem;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .view-btn.active {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 991px) {
+            .filters-sidebar {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/Page/index.html">HOME</a></li>
-        <li><a href="#shop">SHOP</a></li>
-        <li><a href="#about">ABOUT</a></li>
-        <li><a href="#colours">OUR COLOURS</a></li>
-      </ul>
-    </nav>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="/Page/index.html">Five:05</a>
+            </div>
+            
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html" class="active">Shop</a></li>
+                    <li><a href="/Page/index.html#about">About</a></li>
+                    <li><a href="/Page/index.html#colours">Our Colors</a></li>
+                </ul>
+            </nav>
 
-    <div class="contact-info">
-      <div class="search-container">
-        <input type="text" placeholder="🔍 Tìm kiếm sản phẩm..." />
-      </div>
-      <div id="account-section" style="display: none">
-        <div class="dropdown d-inline-block" id="account-menu">
-          <span id="user-greeting" style="margin-right: 10px; font-weight: bold"></span>
-          <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Tài khoản
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-            <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
-            <li>
-              <a class="dropdown-item" href="#">Khách hàng thân thiết</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#">Số địa chỉ nhận hàng</a>
-            </li>
-            <li><a class="dropdown-item" href="#logout">Đăng xuất</a></li>
-          </ul>
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search products..." id="searchInput">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div id="account-section" style="display: none;">
+                    <div class="dropdown" id="account-menu">
+                        <span id="user-greeting"></span>
+                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Page/accountProfile.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">My Orders</a></li>
+                            <li><a class="dropdown-item" href="#">Wishlist</a></li>
+                            <li><a class="dropdown-item" href="/Page/accountsetting.html">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="guest-section">
+                    <a href="/Page/login.html" class="auth-link">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+
+                <div class="cart-container">
+                    <a href="#cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div id="guest-section">
-        <a href="/Page/login.html">
-          <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; cursor: pointer" />
-        </a>
-      </div>
-      <div class="currency">USD($)</div>
-      <div class="cart">🛒</div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Quảng cáo -->
-  <div class="container my-5">
-    <!-- class="bg-light text-center p-5 rounded shadow-sm" -->
-    <div>
-      <!-- <h2>QC</h2> -->
-      <!-- <p>Chèn nội dung quảng cáo, khuyến mãi, banner hình ảnh ở đây.</p> -->
-      <!-- Nếu muốn thêm ảnh banner -->
-      <!-- <img src="/images/banner-qc.jpg" alt="Banner QC" class="img-fluid"> -->
-      <img src="/images/banner_QC.png" alt="Banner QC" class="img-fluid" />
-    </div>
-  </div>
-
-  <div class="container py-5">
-    <!-- Top Bar -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="mb-0">Product Collection</h4>
-      <div class="d-flex gap-2 align-items-center">
-        <span class="text-muted">Sort by:</span>
-        <button class="sort-btn">
-          Newest <i class="bi bi-chevron-down ms-2"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="row g-4">
-      <!-- Filters Sidebar -->
-      <div class="col-lg-3">
-        <div class="filter-sidebar p-4 shadow-sm">
-          <div class="filter-group">
-            <h6 class="mb-3">Categories</h6>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="electronics" />
-              <label class="form-check-label" for="electronics">
-                Electronics
-              </label>
+    <main class="shop-page">
+        <div class="shop-hero">
+            <div class="container">
+                <div class="shop-hero-content">
+                    <h1>Our Products</h1>
+                    <p>Discover our collection of premium tech products</p>
+                </div>
             </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="clothing" />
-              <label class="form-check-label" for="clothing">
-                Clothing
-              </label>
-            </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="accessories" />
-              <label class="form-check-label" for="accessories">
-                Accessories
-              </label>
-            </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="accessories" />
-              <label class="form-check-label" for="accessories">
-                Bla bla bla
-              </label>
-            </div>
-          </div>
-
-          <div class="filter-group">
-            <h6 class="mb-3">Price Range</h6>
-            <input type="range" class="form-range" min="0" max="1000" value="500" />
-            <div class="d-flex justify-content-between">
-              <span class="text-muted">$0</span>
-              <span class="text-muted">$1000</span>
-            </div>
-          </div>
-
-          <div class="filter-group">
-            <h6 class="mb-3">Colors</h6>
-            <div class="d-flex gap-2">
-              <div class="color-option selected" style="background: #000000"></div>
-              <div class="color-option" style="background: #dc2626"></div>
-              <div class="color-option" style="background: #2563eb"></div>
-              <div class="color-option" style="background: #16a34a"></div>
-            </div>
-          </div>
-
-          <div class="filter-group">
-            <h6 class="mb-3">Rating</h6>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="rating" id="rating4" />
-              <label class="form-check-label" for="rating4">
-                <i class="bi bi-star-fill text-warning"></i> 4 & above
-              </label>
-            </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="rating" id="rating3" />
-              <label class="form-check-label" for="rating3">
-                <i class="bi bi-star-fill text-warning"></i> 3 & above
-              </label>
-            </div>
-          </div>
-
-          <button class="btn btn-outline-primary w-100">Apply Filters</button>
         </div>
-      </div>
 
-      <!-- Product Grid -->
-      <div class="col-lg-9">
-        <div class="row g-4">
-          <!-- Product Card 1 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/iphone-16-pro-max-titan.jpg" class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-20%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Electronics</span>
-                <h6 class="mb-1">Iphone 16 PRO MAX</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-half"></i>
-                  <span class="text-muted ms-2">(4.5)</span>
+        <div class="container py-5">
+            <div class="shop-filters-top mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="filters-left d-flex align-items-center gap-3">
+                        <button class="filter-trigger-btn d-lg-none">
+                            <i class="fas fa-filter"></i> Filters
+                        </button>
+                        <div class="showing-results">
+                            Showing <span>20</span> results
+                        </div>
+                    </div>
+                    <div class="filters-right d-flex align-items-center gap-3">
+                        <div class="view-options">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <div class="sort-options">
+                            <select class="form-select">
+                                <option>Sort by: Featured</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                                <option>Newest First</option>
+                                <option>Best Selling</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">$1.211,87</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
 
-          <!-- Product Card 2 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Electronics</span>
-                <h6 class="mb-1">Apple Watch Ultra 2 GPS</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star"></i>
-                  <span class="text-muted ms-2">(4.0)</span>
+            <div class="shop-content">
+                <div class="row g-4">
+                    <!-- Filters Sidebar -->
+                    <div class="col-lg-3">
+                        <div class="filters-sidebar">
+                            <div class="filters-header">
+                                <h5>Filters</h5>
+                                <button class="clear-filters">Clear all</button>
+                            </div>
+
+                            <div class="filter-section">
+                                <h6>Categories</h6>
+                                <div class="filter-options">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span>Phones & Tablets</span>
+                                        <span class="count">(12)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>Laptops</span>
+                                        <span class="count">(8)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>Smartwatches</span>
+                                        <span class="count">(6)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>Accessories</span>
+                                        <span class="count">(15)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filter-section">
+                                <h6>Price Range</h6>
+                                <div class="price-range">
+                                    <div class="range-slider">
+                                        <input type="range" min="0" max="2000" value="1000" class="range">
+                                    </div>
+                                    <div class="range-inputs">
+                                        <input type="number" value="0" min="0" max="2000">
+                                        <span>to</span>
+                                        <input type="number" value="1000" min="0" max="2000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-section">
+                                <h6>Brand</h6>
+                                <div class="filter-options">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span>Apple</span>
+                                        <span class="count">(15)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>Samsung</span>
+                                        <span class="count">(12)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>Dell</span>
+                                        <span class="count">(8)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span>MSI</span>
+                                        <span class="count">(6)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filter-section">
+                                <h6>Rating</h6>
+                                <div class="filter-options">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span class="stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </span>
+                                        <span class="count">(10)</span>
+                                    </label>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox">
+                                        <span class="stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </span>
+                                        <span class="count">(15)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary w-100 mt-4">Apply Filters</button>
+                        </div>
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div class="col-lg-9">
+                        <div class="row g-4" id="productsGrid">
+                            <!-- Product cards will be dynamically inserted here -->
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="pagination-container mt-5">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">$990,40</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
-
-          <!-- Product Card 3 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 4 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 5 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Product Card 6 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Product Card 7 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 8 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Product Card 9 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Product Card 10 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product" />
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 11 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 12 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 13 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 14 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Card 15 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Product Card 16 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Product Card 17 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Product Card 18 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Product Card 19 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Product Card 20 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-          <!-- Product Card 21 -->
-          <div class="col-md-4">
-            <div class="product-card shadow-sm">
-              <div class="position-relative">
-                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg"
-                  class="product-image w-100" alt="Product">
-                <span class="discount-badge">-15%</span>
-                <button class="wishlist-btn">
-                  <i class="bi bi-heart"></i>
-                </button>
-              </div>
-              <div class="p-3">
-                <span class="category-badge mb-2 d-inline-block">Accessories</span>
-                <h6 class="mb-1">Macbook Pro M4 14 inch</h6>
-                <div class="rating-stars mb-2">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <span class="text-muted ms-2">(5.0)</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="price">1.542,14</span>
-                  <button class="btn cart-btn">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
         </div>
-      </div>
-    </div>
-  </div>
+    </main>
 
-  <footer id="contact" class="mt-5">
-    <div class="footer-brand">
-      <img style="max-width: fit-content"
-        src="https://dkilluminate.com/cdn/shop/files/Untitled-2_17b8e4c7-4e5b-4aa9-a125-4231d9b8717e.png?v=1739080129&width=400"
-        alt="" />
-    </div>
-    <div class="footer-contact">
-      <ul>
-        <li>Contact FiveO5®</li>
-        <li>Email: contact@fiveo5.com</li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <ul>
-        <li><a href="#home">HOME</a></li>
-        <li><a href="#about">ABOUT</a></li>
-        <li><a href="#shop">SHOP</a></li>
-      </ul>
-    </div>
-    <div class="footer-emails">
-      <ul>
-        <li>Sign up for our newsletter</li>
-        <li>
-          <input type="email" placeholder="Enter your email" /><button>
-            Subscribe
-          </button>
-        </li>
-        <li><a href="#our-colours">Our Colours</a></li>
-        <li><a href="#shipping-returns">Shipping & Returns</a></li>
-        <li><a href="#terms-conditions">Terms & Conditions</a></li>
-        <li><a href="#privacy-policy">Privacy Policy</a></li>
-        <li><a href="#delivery-policy">Delivery Policy</a></li>
-        <li><a href="#contact-us">Contact Us</a></li>
-      </ul>
-    </div>
-    <p>© 2025 Five:05 Cosmetics</p>
-  </footer>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>About Five:05</h3>
+                <p>Your trusted source for premium tech products and accessories.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="/Page/index.html#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Refunds</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="subscribe-button">Subscribe</button>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Five:05 Store. All rights reserved.</p>
+        </div>
+    </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/authDisplay.js"></script>
+    <script src="/JS/adminCheck.js"></script>
+    <script src="/JS/shop.js"></script>
 </body>
-
 </html>

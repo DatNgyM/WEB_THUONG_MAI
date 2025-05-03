@@ -25,7 +25,7 @@
 //     }
 //   } catch (err) {
 //     console.error('Lỗi truy vấn:', err); // dòng này có rồi
-//     console.error(err.stack); // 🆕 Thêm dòng này để in ra cụ thể hơn
+//     console.error(err.stack); // Thêm dòng này để in ra cụ thể hơn
 //     res.status(500).json({ success: false, message: 'Lỗi server' });
 //   }
   
@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
       res.status(401).json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' });
     }
   } catch (err) {
-    console.error('❌ Lỗi truy vấn:', err);
+    console.error(' Lỗi truy vấn:', err);
     res.status(500).json({ success: false, message: 'Lỗi server' });
   }
 });

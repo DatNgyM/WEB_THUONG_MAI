@@ -1,159 +1,133 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Setting</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Settings - Five:05 Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/CSS/styles.css" />
+    <script src="/JS/authDisplay.js" defer></script>
+
     <style>
         body {
-            margin-top: 20px;
-            color: #1a202c;
-            text-align: left;
-            background-color: #ffffff;
-        }
-
-        .main-body {
-            padding: 15px;
-        }
-
-        .nav-link {
-            color: #4a5568;
-        }
-
-        .card {
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
-        }
-
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid rgba(0, 0, 0, .125);
-            border-radius: .25rem;
-        }
-
-        .card-body {
-            flex: 1 1 auto;
-            min-height: 1px;
-            padding: 1rem;
-        }
-
-        .gutters-sm {
-            margin-right: -8px;
-            margin-left: -8px;
-        }
-
-        .gutters-sm>.col,
-        .gutters-sm>[class*=col-] {
-            padding-right: 8px;
-            padding-left: 8px;
-        }
-
-        .mb-3,
-        .my-3 {
-            margin-bottom: 1rem !important;
-        }
-
-        .bg-gray-300 {
-            background-color: #e2e8f0;
-        }
-
-        .h-100 {
-            height: 100% !important;
-        }
-
-        .shadow-none {
-            box-shadow: none !important;
-        }
-
-        /*  */
-        /* Đảm bảo body và html chiếm toàn bộ chiều cao */
-        html,
-        body {
-            height: 100%;
             margin: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-color: var(--background-light);
         }
 
-        /* Nội dung chính sẽ chiếm toàn bộ không gian trống */
         main {
-            flex: 1 0 auto;
+            flex: 1;
+            padding: 2rem 0;
+            margin-top: 80px;
         }
 
-        /* Footer sẽ luôn nằm ở cuối */
-        footer {
-            flex-shrink: 0;
+        .settings-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-       
-        /*  */
+
+        .card {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .nav-link.has-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Footer stays at bottom */
+        footer {
+            margin-top: auto;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 0 15px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="#home">HOME</a></li>
-                <li><a href="#shop">SHOP</a></li>
-                <li><a href="#about">ABOUT</a></li>
-                <li><a href="#colours">OUR COLOURS</a></li>
-            </ul>
-        </nav>
-
-        <div class="contact-info">
-            <div class="search-container">
-                <input type="text" placeholder="🔍 Tìm kiếm sản phẩm..." onkeyup="searchProduct()" />
+        <div class="header-container">
+            <div class="logo">
+                <a href="/Page/index.html">Five:05</a>
             </div>
 
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#colours">Our Colors</a></li>
+                </ul>
+            </nav>
 
-            <div id="account-section" style="display: none;">
-                <div class="dropdown d-inline-block" id="account-menu">
-                    <span id="user-greeting" style="margin-right: 10px; font-weight: bold;"></span>
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Tài khoản của tôi
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-                        <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
-                        <li><a class="dropdown-item" href="#">Đăng ký tài khoản Premium</a></li>
-                        <li><a class="dropdown-item" href="#">Kênh người bán hàng</a></li>
-                        <li><a class="dropdown-item" href="/Page/accountsetting.html">Setting</a></li>
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search products..." onkeyup="searchProduct()">
+                    <i class="fas fa-search"></i>
+                </div>
 
-                        <li><a class="dropdown-item" href="#logout">Đăng xuất</a></li>
-                    </ul>
+                <div id="account-section" style="display: none;">
+                    <div class="dropdown" id="account-menu">
+                        <span id="user-greeting"></span>
+                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Page/accountProfile.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">My Orders</a></li>
+                            <li><a class="dropdown-item" href="#">Premium Account</a></li>
+                            <li><a class="dropdown-item" href="#">Seller Portal</a></li>
+                            <li><a class="dropdown-item" href="/Page/accountsetting.html">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="guest-section">
+                    <a href="/Page/login.html" class="auth-link">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+
+                <div class="cart-container">
+                    <a href="/Page/cart.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
                 </div>
             </div>
-            <!--  -->
-
-            <div id="guest-section">
-                <a href="/Page/login.html" style="display: inline-block; margin-left: 6px;">
-                    <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; cursor: pointer;" />
-                </a>
-            </div>
-            <div class="currency">USD($)</div>
-            <div class="cart" href="#cart">🛒</div>
         </div>
     </header>
 
     <main>
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="main-breadcrumb">
-                <ol class="breadcrumb">
-                    <!-- <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
-                    <li aria-current="page" class="breadcrumb-item active">Profile Settings</li> -->
-                </ol>
-            </nav>
-            <!-- /Breadcrumb -->
+        <div class="settings-container">
+            <h1 class="mb-4">Settings</h1>
             <div class="row gutters-sm">
                 <div class="col-md-4 d-none d-md-block">
                     <div class="card">
@@ -176,7 +150,7 @@
                                         xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="12" cy="12" r="3"></circle>
                                         <path
-                                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1-2 2 2 2 0 0 1-2-2h-.09a1.65 1.65 0 0 0-1.51 1z">
                                         </path>
                                     </svg>Account Settings
                                 </a>
@@ -214,58 +188,6 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header border-bottom mb-3 d-flex d-md-none">
-                            <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link has-icon active" data-bs-toggle="tab" href="#profile"><svg
-                                            class="feather feather-user" fill="none" height="24" stroke="currentColor"
-                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="12" cy="7" r="4"></circle>
-                                        </svg></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link has-icon" data-bs-toggle="tab" href="#account"><svg
-                                            class="feather feather-settings" fill="none" height="24"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" viewbox="0 0 24 24" width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                            <path
-                                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                                            </path>
-                                        </svg></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link has-icon" data-bs-toggle="tab" href="#security"><svg
-                                            class="feather feather-shield" fill="none" height="24" stroke="currentColor"
-                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                        </svg></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link has-icon" data-bs-toggle="tab" href="#notification"><svg
-                                            class="feather feather-bell" fill="none" height="24" stroke="currentColor"
-                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                        </svg></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link has-icon" data-bs-toggle="tab" href="#billing"><svg
-                                            class="feather feather-credit-card" fill="none" height="24"
-                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" viewbox="0 0 24 24" width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <rect height="16" rx="2" ry="2" width="22" x="1" y="4"></rect>
-                                            <line x1="1" x2="23" y1="10" y2="10"></line>
-                                        </svg></a>
-                                </li>
-                            </ul>
-                        </div>
                         <div class="card-body tab-content">
                             <div class="tab-pane active" id="profile">
                                 <h6>YOUR PROFILE INFORMATION</h6>
@@ -472,49 +394,54 @@
         </div>
     </main>
 
-    <footer id="contact">
-        <div class="footer-brand">
-            <img style="max-width: fit-content"
-                src="https://dkilluminate.com/cdn/shop/files/Untitled-2_17b8e4c7-4e5b-4aa9-a125-4231d9b8717e.png?v=1739080129&width=400"
-                alt="" />
-        </div>
-        <div class="footer-contact">
-            <ul>
-                <li>Contact FiveO5®</li>
-                <li>Email: contact@fiveo5.com</li>
-            </ul>
-        </div>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>About Five:05</h3>
+                <p>Your trusted source for premium tech products and accessories.</p>
+            </div>
 
-        <div class="footer-links">
-            <ul>
-                <li><a href="#home">HOME</a></li>
-                <li><a href="#about">ABOUT</a></li>
-                <li><a href="#shop">SHOP</a></li>
-            </ul>
-        </div>
-        <div class="footer-emails">
-            <ul>
-                <li>Sign up for our newsletter</li>
-                <li>
-                    <input type="email" placeholder="Enter your email" />
-                    <button>Subscribe</button>
-                    <br><br>
-                <li><a href="#our-colours">Our Colours</a></li>
-                <li><a href="#shipping-returns">Shipping & Returns</a></li>
-                <li><a href="#terms-conditions">Terms & Conditions</a></li>
-                <li><a href="#privacy-policy">Privacy Policy</a></li>
-                <li><a href="#delivery-policy">Delivery Policy</a></li>
-                <li><a href="#contact-us">Contact Us</a></li>
-                </li>
-            </ul>
-        </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
 
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Refunds</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
 
-        <p>© 2025 Five:05 Cosmetics</p>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="subscribe-button">Subscribe</button>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Five:05 Store. All rights reserved.</p>
+        </div>
     </footer>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/adminCheck.js"></script>
 </body>
 
 </html>

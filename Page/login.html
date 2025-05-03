@@ -1,244 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Five:05</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <link rel="stylesheet" href="/CSS/styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Five:05</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/styles.css" />
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/Page/index.html">HOME</a></li>
-        <li><a href="#shop">SHOP</a></li>
-        <li><a href="#about">ABOUT</a></li>
-        <li><a href="#colours">OUR COLOURS</a></li>
-      </ul>
-    </nav>
-
-    <div class="contact-info">
-      <div class="search-container">
-        <input type="text" placeholder="🔍 Tìm kiếm sản phẩm..." onkeyup="searchProduct()" />
-      </div>
-
-      <div class="dropdown d-inline-block">
-        <!-- <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          Tài khoản
-        </button> -->
-        <a href="login.html" style="display: inline-block; margin-left: 6px;">
-          <img src="/images/user.png" alt="User Icon" style="width: 20px; height: 20px; cursor: pointer;" />
-        </a>
-        <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-          <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
-          <li><a class="dropdown-item" href="#">Khách hàng thân thiết</a></li>
-          <li><a class="dropdown-item" href="#">Số địa chỉ nhận hàng</a></li>
-          <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
-        </ul> -->
-      </div>
-
-      <div class="currency">NZD ($)</div>
-      <div class="cart">🛒</div>
-    </div>
-  </header>
-
-  <main>
-    <section class="py-5" style="background-color: hsl(0, 0%, 96%)">
-      <div class="container">
-        <div class="row gx-lg-5 align-items-center">
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <h1 class="my-5 display-3 fw-bold ls-tight">
-              The best offer <br />
-              <span class="text-primary">for your business</span>
-            </h1>
-            <p style="color: hsl(217, 10%, 50.8%)">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, itaque accusantium odio,
-              soluta, corrupti aliquam quibusdam tempora at cupiditate quis eum maiores libero veritatis?
-              Dicta facilis sint aliquid ipsum atque?
-            </p>
-          </div>
-
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <div class="card shadow">
-              <!-- <div class="card-body py-5 px-md-5">
-                <form>
-                  <div class="form-outline mb-4">
-                    <input type="email" id="form3Example3" class="form-control" />
-                    <label class="form-label" for="form3Example3">Email address</label>
-                  </div>
-                  <div class="form-outline mb-4">
-                    <input type="password" id="form3Example4" class="form-control" />
-                    <label class="form-label" for="form3Example4">Password</label>
-                  </div>
-                  <button type="submit" class="btn btn-primary btn-block mb-4 w-100">
-                    Sign in
-                  </button>
-                  <div class="text-center">
-                    <p>or sign in with:</p>
-                    <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-facebook-f"></i></button>
-                    <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-google"></i></button>
-                    <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-twitter"></i></button>
-                    <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-github"></i></button>
-                  </div>
-                </form>
-              </div> -->
-              
-              <div class="card-body py-5 px-md-5">
-                <!-- navs -->
-                <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="tab-login" data-bs-toggle="pill" href="#pills-login" role="tab"
-                      aria-controls="pills-login" aria-selected="true">Login</a>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="tab-register" data-bs-toggle="pill" href="#pills-register" role="tab"
-                      aria-controls="pills-register" aria-selected="false">Register</a>
-                  </li>
-                </ul>
-                <!-- navs -->
-              
-                <!-- Pills content -->
-                <div class="tab-content">
-                  <!-- Login Tab -->
-                  <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                    <form id="login-form">
-                      <!-- <div class="text-center mb-3">
-                        <p>Sign in with:</p>
-                        <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-facebook-f"></i></button>
-                        <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-google"></i></button>
-                        <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-twitter"></i></button>
-                        <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-github"></i></button>
-                      </div> -->
-              
-                      <!-- <p class="text-center">or:</p> -->
-              
-                      <div class="form-outline mb-4">
-                        <input type="text" id="loginName" class="form-control" />
-                        <label class="form-label" for="loginName">Email or username</label>
-                      </div>
-              
-                      <div class="form-outline mb-4">
-                        <input type="password" id="loginPassword" class="form-control" />
-                        <label class="form-label" for="loginPassword">Password</label>
-                      </div>
-              
-                      <div class="row mb-4">
-                        <div class="col-md-6 d-flex justify-content-center">
-                          <div class="form-check mb-3 mb-md-0">
-                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
-                            <label class="form-check-label" for="loginCheck"> Remember me </label>
-                          </div>
-                        </div>
-              
-                        <div class="col-md-6 d-flex justify-content-center">
-                          <a href="#!">Forgot password?</a>
-                        </div>
-                      </div>
-              
-                      <button type="submit" class="btn btn-primary btn-block mb-4 w-100">Sign in</button>
-              
-                      <div class="text-center">
-                        <p>Not a member? <a href="#!">Register</a></p>
-                      </div>
-                    </form>
-                  </div>
-              
-                  <!-- Register Tab -->
-                  <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-                    <form id="register-form">
-                      <div class="form-outline mb-4">
-                        <input type="text" id="registerName" class="form-control" />
-                        <label class="form-label" for="registerName">Name</label>
-                      </div>
-              
-                      <div class="form-outline mb-4">
-                        <input type="text" id="registerUsername" class="form-control" />
-                        <label class="form-label" for="registerUsername">Username</label>
-                      </div>
-              
-                      <div class="form-outline mb-4">
-                        <input type="email" id="registerEmail" class="form-control" />
-                        <label class="form-label" for="registerEmail">Email</label>
-                      </div>
-              
-                      <div class="form-outline mb-4">
-                        <input type="password" id="registerPassword" class="form-control" />
-                        <label class="form-label" for="registerPassword">Password</label>
-                      </div>
-              
-                      <div class="form-outline mb-4">
-                        <input type="password" id="registerRepeatPassword" class="form-control" />
-                        <label class="form-label" for="registerRepeatPassword">Repeat password</label>
-                      </div>
-              
-                      <div class="form-check d-flex justify-content-center mb-4">
-                        <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" checked />
-                        <label class="form-check-label" for="registerCheck">
-                          I have read and agree to the terms
-                        </label>
-                      </div>
-              
-                      <button type="submit" class="btn btn-primary btn-block mb-3 w-100">Register</button>
-                    </form>
-                  </div>
-                </div>
-                <!-- Pills content -->
-              </div>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="/Page/index.html">Five:05</a>
             </div>
-          </div>
+            
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="/Page/index.html#about">About</a></li>
+                    <li><a href="/Page/index.html#colours">Our Colors</a></li>
+                </ul>
+            </nav>
 
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search products..." onkeyup="searchProduct()">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="cart-container">
+                    <a href="#cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
-  </main>
+    </header>
 
-  <footer id="contact">
-    <div class="footer-brand">
-      <img style="max-width: fit-content" src="https://dkilluminate.com/cdn/shop/files/Untitled-2_17b8e4c7-4e5b-4aa9-a125-4231d9b8717e.png?v=1739080129&width=400" alt="" />
-    </div>
-    <div class="footer-contact">
-      <ul>
-        <li>Contact FiveO5®</li>
-        <li>Email: contact@fiveo5.com</li>
-      </ul>
-    </div>
+    <main class="auth-page">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-content">
+                    <div class="auth-welcome">
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to access your account and discover our latest premium tech products</p>
+                        <img src="/images/banner_QC.png" alt="Welcome" class="welcome-image">
+                    </div>
 
-    <div class="footer-links">
-      <ul>
-        <li><a href="#home">HOME</a></li>
-        <li><a href="#about">ABOUT</a></li>
-        <li><a href="#shop">SHOP</a></li>
-      </ul>
-    </div>
-    <div class="footer-emails">
-      <ul>
-        <li>Sign up for our newsletter</li>
-        <li>
-          <input type="email" placeholder="Enter your email" />
-          <button>Subscribe</button>
-          <br><br>
-          <li><a href="#our-colours">Our Colours</a></li>
-          <li><a href="#shipping-returns">Shipping & Returns</a></li>
-          <li><a href="#terms-conditions">Terms & Conditions</a></li>
-          <li><a href="#privacy-policy">Privacy Policy</a></li>
-          <li><a href="#delivery-policy">Delivery Policy</a></li>
-          <li><a href="#contact-us">Contact Us</a></li>
-        </li>
-      </ul>
-    </div>
+                    <div class="auth-form-container">
+                        <div class="auth-tabs">
+                            <ul class="nav nav-pills nav-justified mb-4" id="auth-tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="tab-login" data-bs-toggle="pill" data-bs-target="#pills-login" role="tab">
+                                        Sign In
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab-register" data-bs-toggle="pill" data-bs-target="#pills-register" role="tab">
+                                        Create Account
+                                    </button>
+                                </li>
+                            </ul>
 
-    <p>© 2023 Five:05 Cosmetics</p>
-  </footer>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
+                                    <form id="login-form" class="auth-form">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                                <input type="text" id="loginName" class="form-control" placeholder="Email or username" required />
+                                            </div>
+                                        </div>
 
-  <script src="/JS/home.js"></script>
-  <script src="/JS/login.js"></script>
-  <script src="/JS/register.js"></script>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                <input type="password" id="loginPassword" class="form-control" placeholder="Password" required />
+                                            </div>
+                                        </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+                                        <div class="form-options">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="loginCheck" />
+                                                <label class="form-check-label" for="loginCheck">Remember me</label>
+                                            </div>
+                                            <a href="#" class="forgot-password">Forgot password?</a>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+
+                                        <div class="social-auth">
+                                            <p>Or sign in with</p>
+                                            <div class="social-buttons">
+                                                <button type="button" class="btn btn-outline-primary">
+                                                    <i class="fab fa-google"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-primary">
+                                                    <i class="fab fa-facebook-f"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-primary">
+                                                    <i class="fab fa-apple"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="tab-pane fade" id="pills-register" role="tabpanel">
+                                    <form id="register-form" class="auth-form">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                                <input type="text" id="registerName" class="form-control" placeholder="Full Name" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-at"></i>
+                                                </span>
+                                                <input type="text" id="registerUsername" class="form-control" placeholder="Username" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-envelope"></i>
+                                                </span>
+                                                <input type="email" id="registerEmail" class="form-control" placeholder="Email" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                <input type="password" id="registerPassword" class="form-control" placeholder="Password" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                <input type="password" id="registerRepeatPassword" class="form-control" placeholder="Confirm Password" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check mb-4">
+                                            <input class="form-check-input" type="checkbox" id="registerCheck" required />
+                                            <label class="form-check-label" for="registerCheck">
+                                                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                                            </label>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>About Five:05</h3>
+                <p>Your trusted source for premium tech products and accessories.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="/Page/index.html#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Refunds</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Five:05 Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/JS/home.js"></script>
+    <script src="/JS/login.js"></script>
+    <script src="/JS/register.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

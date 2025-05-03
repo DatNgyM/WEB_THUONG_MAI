@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+</head>
+
+<body id="reportsPage">
+    <nav class="navbar navbar-expand-xl">
+        <div class="container h-100">
+            <a class="navbar-brand" href="index.html">
+                <h1 class="tm-site-title mb-0">Admin Dashboard</h1>
+            </a>
+            <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                <i class="fas fa-bars tm-nav-icon"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto h-100">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="fas fa-shopping-cart"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">
+                            <i class="fas fa-shopping-bag"></i> Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="inventory.html">
+                            <i class="fas fa-boxes"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="accounts.html">
+                            <i class="far fa-user"></i> Accounts
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link d-block" href="login.html">
+                            Admin, <b>Logout</b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row tm-content-row">
+            <div class="col-12 tm-block-col">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                    <h2 class="tm-block-title">Inventory Management</h2>
+                    
+                    <!-- Inventory Summary Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="tm-bg-primary tm-block-summary">
+                                <h3>Total Products</h3>
+                                <p class="text-xl">1,250</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="tm-bg-primary tm-block-summary">
+                                <h3>Low Stock Items</h3>
+                                <p class="text-xl text-warning">15</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="tm-bg-primary tm-block-summary">
+                                <h3>Out of Stock</h3>
+                                <p class="text-xl text-danger">5</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="tm-bg-primary tm-block-summary">
+                                <h3>Total Value</h3>
+                                <p class="text-xl">$125,000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Controls -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search inventory...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#addProductModal">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                            <button class="btn btn-primary ml-2" data-toggle="modal" data-target="#adjustStockModal">
+                                <i class="fas fa-edit"></i> Adjust Stock
+                            </button>
+                            <button class="btn btn-info ml-2">
+                                <i class="fas fa-file-export"></i> Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover tm-table-striped tm-table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>In Stock</th>
+                                    <th>Reorder Level</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Value</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#P001</td>
+                                    <td>iPhone 16 Pro Max</td>
+                                    <td>Smartphones</td>
+                                    <td>25</td>
+                                    <td>10</td>
+                                    <td>$999.00</td>
+                                    <td>$24,975.00</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#adjustStockModal">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#stockHistoryModal">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- More inventory rows will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="tm-table-mt tm-table-actions-row">
+                        <div class="tm-table-actions-col-left">
+                            <span class="text-white">Showing 1 to 10 of 50 entries</span>
+                        </div>
+                        <div class="tm-table-actions-col-right">
+                            <nav aria-label="Inventory navigation">
+                                <ul class="pagination tm-pagination">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adjust Stock Modal -->
+    <div class="modal fade" id="adjustStockModal" tabindex="-1" role="dialog" aria-labelledby="adjustStockModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adjustStockModalLabel">Adjust Stock Level</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label>Product</label>
+                            <input type="text" class="form-control" value="iPhone 16 Pro Max" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Current Stock</label>
+                            <input type="number" class="form-control" value="25" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Adjustment Type</label>
+                            <select class="form-control">
+                                <option value="add">Add to Stock</option>
+                                <option value="remove">Remove from Stock</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity to Adjust</label>
+                            <input type="number" class="form-control" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Reason for Adjustment</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input type="text" class="form-control" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select class="form-control" name="category" required>
+                                        <option value="">Select Category</option>
+                                        <option value="smartphones">Smartphones</option>
+                                        <option value="laptops">Laptops</option>
+                                        <option value="accessories">Accessories</option>
+                                        <option value="watches">Watches</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>SKU</label>
+                                    <input type="text" class="form-control" name="sku" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Unit Price</label>
+                                    <input type="number" class="form-control" name="price" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Initial Stock</label>
+                                    <input type="number" class="form-control" name="stock" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Reorder Level</label>
+                                    <input type="number" class="form-control" name="reorderLevel" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Product Description</label>
+                                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Product Images</label>
+                                    <input type="file" class="form-control-file" name="images" multiple accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Details</label>
+                            <div class="row" id="additionalDetails">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control mb-2" placeholder="Key (e.g. Color)">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control mb-2" placeholder="Value (e.g. Black)">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-info" id="addDetailRow">
+                                <i class="fas fa-plus"></i> Add More Details
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveProduct">Save Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock History Modal -->
+    <div class="modal fade" id="stockHistoryModal" tabindex="-1" role="dialog" aria-labelledby="stockHistoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stockHistoryModalLabel">Stock History - iPhone 16 Pro Max</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Previous Stock</th>
+                                    <th>New Stock</th>
+                                    <th>Reason</th>
+                                    <th>Updated By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-05-01</td>
+                                    <td>Addition</td>
+                                    <td>+10</td>
+                                    <td>15</td>
+                                    <td>25</td>
+                                    <td>New shipment received</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <!-- More history entries will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="tm-footer row tm-mt-small">
+        <div class="col-12 font-weight-light">
+            <p class="text-center text-white mb-0 px-4 small">
+                Copyright &copy; <b>2025</b> All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/inventoryManagement.js"></script>
+</body>
+</html>

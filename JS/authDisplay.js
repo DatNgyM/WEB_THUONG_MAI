@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       guestSection.style.display = 'inline-block';
     }
   
-    // Xử lý logout
+    //  logout
     const logoutBtn = document.querySelector('.dropdown-item[href="#logout"]');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
