@@ -13,14 +13,19 @@ const authRoutes = require('./routes/auth');
 const requestSellerRoute = require('./routes/requestSeller');
 
 // Các route trong thư mục account/
-const profileRoutes = require('./routes/profile');
+const profileRoutes = require('../JS/profile');
 const accountRoutes = require('./routes/account');
 const securityRoutes = require('./routes/security');
+const notificationRoutes = require('./routes/notification');
+const billingRoutes = require('./routes/billing');
+
 
 // Các route admin
 const adminDashboard = require('./routes/adminDashboard');
 const adminOrders = require('./routes/adminOrders');
 const adminInventory = require('./routes/adminInventory');
+
+
 
 const PORT = 3000;
 
@@ -28,6 +33,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
 
 // Đăng ký route API
 app.use('/user/request-seller', requestSellerRoute);
@@ -40,6 +46,9 @@ app.use('/user', userRegister);           // đăng ký tài khoản người d�
 app.use('/api/profile', profileRoutes);
 app.use('/api/account', accountRoutes);
 app.use('/api/security', securityRoutes);
+app.use('/api/notification', notificationRoutes);
+app.use('/api/billing', billingRoutes);
+
 
 // Admin routes
 app.use('/api/admin/auth', adminAuthRouter);
@@ -55,7 +64,7 @@ app.use(express.static(path.join(__dirname, '../')));
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running: http://localhost:${PORT}`);
+  console.log(`Server running: http://localhost:${PORT}`);
   console.log('\n📄 Các trang chính:');
   console.log(`- Trang chủ        http://localhost:${PORT}/Page/index.html`);
   console.log(`- Đăng nhập        http://localhost:${PORT}/Page/login.html`);
