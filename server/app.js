@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+const path = require('node:path');
 const cookieParser = require('cookie-parser');
 const { router: adminAuthRouter, authenticateAdmin } = require('./routes/adminAuth');
 const app = express();
@@ -11,6 +11,7 @@ const userAuth = require('./routes/userAuth');
 const adminUsers = require('./routes/adminUsers');
 const authRoutes = require('./routes/auth');
 const requestSellerRoute = require('./routes/requestSeller');
+const chatbotRoute = require('./routes/chatbot');
 
 // Các route trong thư mục account/
 const profileRoutes = require('../JS/profile');
@@ -41,6 +42,7 @@ app.use('/userAuth', userAuth);           // login người dùng
 app.use('/auth', authRoutes);             // login admin
 app.use('/admin', adminUsers);            // quản lý user từ admin
 app.use('/user', userRegister);           // đăng ký tài khoản người dùng
+app.use('/api/chatbot', chatbotRoute);    // chatbot API
 
 // Các route account settings
 app.use('/api/profile', profileRoutes);
@@ -69,6 +71,7 @@ app.listen(PORT, () => {
   console.log(`- Trang chủ        http://localhost:${PORT}/Page/index.html`);
   console.log(`- Đăng nhập        http://localhost:${PORT}/Page/login.html`);
   console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin/index.html`);
+  console.log(`- Chatbot          http://localhost:${PORT}/Page/chatbot.html`);
 });
 
 module.exports = app;
