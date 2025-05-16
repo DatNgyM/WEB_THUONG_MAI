@@ -92,7 +92,11 @@ CREATE TABLE products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (seller_id) REFERENCES users(id)
 );
-
+ALTER TABLE products ADD COLUMN image VARCHAR(255);
+Select *from products;
+-- Thêm sản phẩm với hình ảnh
+INSERT INTO products (name, description, price, stock_quantity, seller_id, image)
+VALUES ('iPhone 16 Pro', 'Iphone 16 Pro Bản Mỹ', 28000000.00, 20, 1, 'iphone-16-pro-max-titan.jpg');
 -- 2. Tạo bảng hóa đơn (đã gộp cả thông tin đơn hàng)
 CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
