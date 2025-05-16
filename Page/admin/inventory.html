@@ -3,176 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management - Admin Dashboard</title>
+    <title>Admin - Quản lý Kho hàng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/fontawesome.min.css">
-    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="jquery-ui-datepicker/jquery-ui.min.css">
 </head>
 
-<body id="reportsPage">
-    <nav class="navbar navbar-expand-xl">
-        <div class="container h-100">
-            <a class="navbar-brand" href="index.html">
-                <h1 class="tm-site-title mb-0">Admin Dashboard</h1>
-            </a>
-            <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-                <i class="fas fa-bars tm-nav-icon"></i>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mx-auto h-100">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="orders.html">
-                            <i class="fas fa-shopping-cart"></i> Orders
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="products.html">
-                            <i class="fas fa-shopping-bag"></i> Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="inventory.html">
-                            <i class="fas fa-boxes"></i> Inventory
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="accounts.html">
-                            <i class="far fa-user"></i> Accounts
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link d-block" href="login.html">
-                            Admin, <b>Logout</b>
-                        </a>
-                    </li>
-                </ul>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>E-Shop Admin</h3>
+                <strong>ES</strong>
             </div>
-        </div>
-    </nav>
 
-    <div class="container mt-5">
-        <div class="row tm-content-row">
-            <div class="col-12 tm-block-col">
-                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-                    <h2 class="tm-block-title">Inventory Management</h2>
+            <div class="admin-profile">
+                <div class="admin-avatar-container">
+                    <i class="fas fa-user admin-avatar-icon"></i>
+                </div>
+                <h5 class="admin-name">Admin User</h5>
+                <p class="admin-role">Administrator</p>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="products.html">
+                        <i class="fas fa-box"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="inventory.html">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Inventory</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="accounts.html">
+                        <i class="fas fa-users"></i>
+                        <span>Accounts</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="add-product.html">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add Product</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn" title="Toggle Sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     
-                    <!-- Inventory Summary Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="tm-bg-primary tm-block-summary">
-                                <h3>Total Products</h3>
-                                <p class="text-xl">1,250</p>
-                            </div>
+                    <div class="navbar-tools ml-auto">
+                        <div class="notifications">
+                            <button class="nav-icon-btn" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                                <div class="notification-badge">3</div>
+                            </button>
                         </div>
-                        <div class="col-md-3">
-                            <div class="tm-bg-primary tm-block-summary">
-                                <h3>Low Stock Items</h3>
-                                <p class="text-xl text-warning">15</p>
-                            </div>
+                        <div class="messages">
+                            <button class="nav-icon-btn" title="Messages">
+                                <i class="fas fa-envelope"></i>
+                                <div class="notification-badge">5</div>
+                            </button>
                         </div>
-                        <div class="col-md-3">
-                            <div class="tm-bg-primary tm-block-summary">
-                                <h3>Out of Stock</h3>
-                                <p class="text-xl text-danger">5</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="tm-bg-primary tm-block-summary">
-                                <h3>Total Value</h3>
-                                <p class="text-xl">$125,000</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Inventory Controls -->
-                    <div class="row mb-4">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search inventory...">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">Search</button>
+                        <div class="user-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="User Menu">
+                                <div class="user-avatar">
+                                    <img src="img/admin-avatar.jpg" alt="Admin" onerror="this.src='https://via.placeholder.com/36'">
                                 </div>
+                                <div class="user-info">
+                                    <h6 class="user-name">Admin User</h6>
+                                    <p class="user-role">Administrator</p>
+                                </div>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             </div>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#addProductModal">
-                                <i class="fas fa-plus"></i> Add Product
-                            </button>
-                            <button class="btn btn-primary ml-2" data-toggle="modal" data-target="#adjustStockModal">
-                                <i class="fas fa-edit"></i> Adjust Stock
-                            </button>
-                            <button class="btn btn-info ml-2">
-                                <i class="fas fa-file-export"></i> Export
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Inventory Table -->
-                    <div class="table-responsive">
-                        <table class="table table-hover tm-table-striped tm-table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>In Stock</th>
-                                    <th>Reorder Level</th>
-                                    <th>Unit Price</th>
-                                    <th>Total Value</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#P001</td>
-                                    <td>iPhone 16 Pro Max</td>
-                                    <td>Smartphones</td>
-                                    <td>25</td>
-                                    <td>10</td>
-                                    <td>$999.00</td>
-                                    <td>$24,975.00</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#adjustStockModal">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#stockHistoryModal">
-                                                <i class="fas fa-history"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- More inventory rows will be added dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="tm-table-mt tm-table-actions-row">
-                        <div class="tm-table-actions-col-left">
-                            <span class="text-white">Showing 1 to 10 of 50 entries</span>
-                        </div>
-                        <div class="tm-table-actions-col-right">
-                            <nav aria-label="Inventory navigation">
-                                <ul class="pagination tm-pagination">
-                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
+            </nav>
+
+            <div class="container-fluid px-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="section-title">Quản lý Kho hàng</h2>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-6 col-xl-3 mb-4 mb-xl-0">
+                        <div class="stat-card">
+                            <div class="stat-card-icon bg-primary">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="stat-card-info">
+                                <p class="stat-card-title">Tổng sản phẩm</p>
+                                <h3 class="stat-card-value">1,250</h3>
+                                <p class="stat-card-change">
+                                    <i class="fas fa-arrow-up text-success"></i>
+                                    <span class="text-success">7%</span> từ tháng trước
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4 mb-xl-0">
+                        <div class="stat-card">
+                            <div class="stat-card-icon bg-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-card-info">
+                                <p class="stat-card-title">Sắp hết hàng</p>
+                                <h3 class="stat-card-value">15</h3>
+                                <p class="stat-card-change">
+                                    <span class="text-warning">Cần nhập thêm</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4 mb-xl-0">
+                        <div class="stat-card">
+                            <div class="stat-card-icon bg-danger">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="stat-card-info">
+                                <p class="stat-card-title">Hết hàng</p>
+                                <h3 class="stat-card-value">5</h3>
+                                <p class="stat-card-change">
+                                    <span class="text-danger">Cần nhập ngay</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4 mb-xl-0">
+                        <div class="stat-card">
+                            <div class="stat-card-icon bg-success">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-card-info">
+                                <p class="stat-card-title">Tổng giá trị</p>
+                                <h3 class="stat-card-value">1.250.000.000₫</h3>
+                                <p class="stat-card-change">
+                                    <i class="fas fa-arrow-up text-success"></i>
+                                    <span class="text-success">9%</span> từ tháng trước
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Management -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Danh sách Kho hàng</h5>
+                                <div class="card-actions">
+                                    <button class="btn btn-sm btn-outline-primary" title="Export Inventory">
+                                        <i class="fas fa-download me-2"></i> Xuất Excel
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success ms-2" data-toggle="modal" data-target="#adjustStockModal" title="Adjust Stock">
+                                        <i class="fas fa-edit me-2"></i> Điều chỉnh kho
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm..." aria-label="Search products">
+                                            <button class="btn btn-primary" type="button" title="Search">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-md-end">
+                                        <select class="form-control w-50 me-2" title="Filter by category" aria-label="Filter by category">
+                                            <option value="all">Tất cả danh mục</option>
+                                            <option value="smartphones">Điện thoại</option>
+                                            <option value="laptops">Laptop</option>
+                                            <option value="tablets">Tablet</option>
+                                            <option value="accessories">Phụ kiện</option>
+                                        </select>
+                                        <select class="form-control w-50" title="Filter by stock status" aria-label="Filter by stock status">
+                                            <option value="all">Tất cả trạng thái</option>
+                                            <option value="in-stock">Còn hàng</option>
+                                            <option value="low-stock">Sắp hết hàng</option>
+                                            <option value="out-of-stock">Hết hàng</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã SP</th>
+                                                <th>Tên sản phẩm</th>
+                                                <th>Danh mục</th>
+                                                <th>Số lượng</th>
+                                                <th>Mức tồn thấp</th>
+                                                <th>Giá nhập</th>
+                                                <th>Giá bán</th>
+                                                <th>Trạng thái</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>#SP001</strong></td>
+                                                <td>iPhone 16 Pro Max</td>
+                                                <td>Điện thoại</td>
+                                                <td>25</td>
+                                                <td>10</td>
+                                                <td>25.000.000₫</td>
+                                                <td>29.990.000₫</td>
+                                                <td><span class="badge bg-success text-white">Còn hàng</span></td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#viewProductModal" title="View Product">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#adjustStockModal" title="Adjust Stock">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#historyModal" title="History">
+                                                            <i class="fas fa-history"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>#SP002</strong></td>
+                                                <td>Samsung Galaxy S24 Ultra</td>
+                                                <td>Điện thoại</td>
+                                                <td>18</td>
+                                                <td>10</td>
+                                                <td>22.000.000₫</td>
+                                                <td>26.990.000₫</td>
+                                                <td><span class="badge bg-success text-white">Còn hàng</span></td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#viewProductModal" title="View Product">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#adjustStockModal" title="Adjust Stock">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#historyModal" title="History">
+                                                            <i class="fas fa-history"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>#SP003</strong></td>
+                                                <td>MacBook Pro M3</td>
+                                                <td>Laptop</td>
+                                                <td>7</td>
+                                                <td>8</td>
+                                                <td>38.000.000₫</td>
+                                                <td>42.990.000₫</td>
+                                                <td><span class="badge bg-warning text-white">Sắp hết hàng</span></td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#viewProductModal" title="View Product">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#adjustStockModal" title="Adjust Stock">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#historyModal" title="History">
+                                                            <i class="fas fa-history"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>#SP004</strong></td>
+                                                <td>AirPods Pro 2</td>
+                                                <td>Phụ kiện</td>
+                                                <td>0</td>
+                                                <td>10</td>
+                                                <td>4.500.000₫</td>
+                                                <td>5.990.000₫</td>
+                                                <td><span class="badge bg-danger text-white">Hết hàng</span></td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#viewProductModal" title="View Product">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#adjustStockModal" title="Adjust Stock">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#historyModal" title="History">
+                                                            <i class="fas fa-history"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <div>
+                                        <span>Hiển thị 1-4 của 125 sản phẩm</span>
+                                    </div>
+                                    <nav>
+                                        <ul class="pagination mb-0">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="footer mt-5">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <p>Copyright &copy; 2024 E-Shop Admin. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>
@@ -182,132 +385,53 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adjustStockModalLabel">Adjust Stock Level</h5>
+                    <h5 class="modal-title" id="adjustStockModalLabel">Điều chỉnh tồn kho</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group">
-                            <label>Product</label>
+                        <div class="form-group mb-3">
+                            <label>Sản phẩm</label>
                             <input type="text" class="form-control" value="iPhone 16 Pro Max" readonly>
                         </div>
-                        <div class="form-group">
-                            <label>Current Stock</label>
+                        <div class="form-group mb-3">
+                            <label>Tồn kho hiện tại</label>
                             <input type="number" class="form-control" value="25" readonly>
                         </div>
-                        <div class="form-group">
-                            <label>Adjustment Type</label>
+                        <div class="form-group mb-3">
+                            <label>Loại điều chỉnh</label>
                             <select class="form-control">
-                                <option value="add">Add to Stock</option>
-                                <option value="remove">Remove from Stock</option>
+                                <option value="add">Nhập thêm</option>
+                                <option value="remove">Xuất kho</option>
+                                <option value="correction">Điều chỉnh số lượng</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Quantity to Adjust</label>
+                        <div class="form-group mb-3">
+                            <label>Số lượng</label>
                             <input type="number" class="form-control" min="1">
                         </div>
-                        <div class="form-group">
-                            <label>Reason for Adjustment</label>
+                        <div class="form-group mb-3">
+                            <label>Lý do</label>
                             <textarea class="form-control" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary">Lưu thay đổi</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Product Modal -->
-    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <!-- View Product History Modal -->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addProductForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Product Name</label>
-                                    <input type="text" class="form-control" name="name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control" name="category" required>
-                                        <option value="">Select Category</option>
-                                        <option value="smartphones">Smartphones</option>
-                                        <option value="laptops">Laptops</option>
-                                        <option value="accessories">Accessories</option>
-                                        <option value="watches">Watches</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>SKU</label>
-                                    <input type="text" class="form-control" name="sku" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Unit Price</label>
-                                    <input type="number" class="form-control" name="price" min="0" step="0.01" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Initial Stock</label>
-                                    <input type="number" class="form-control" name="stock" min="0" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Reorder Level</label>
-                                    <input type="number" class="form-control" name="reorderLevel" min="0" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Product Description</label>
-                                    <textarea class="form-control" name="description" rows="3" required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Product Images</label>
-                                    <input type="file" class="form-control-file" name="images" multiple accept="image/*">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Additional Details</label>
-                            <div class="row" id="additionalDetails">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control mb-2" placeholder="Key (e.g. Color)">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control mb-2" placeholder="Value (e.g. Black)">
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-sm btn-info" id="addDetailRow">
-                                <i class="fas fa-plus"></i> Add More Details
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveProduct">Save Product</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stock History Modal -->
-    <div class="modal fade" id="stockHistoryModal" tabindex="-1" role="dialog" aria-labelledby="stockHistoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="stockHistoryModalLabel">Stock History - iPhone 16 Pro Max</h5>
+                    <h5 class="modal-title" id="historyModalLabel">Lịch sử tồn kho - iPhone 16 Pro Max</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -317,48 +441,70 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Quantity</th>
-                                    <th>Previous Stock</th>
-                                    <th>New Stock</th>
-                                    <th>Reason</th>
-                                    <th>Updated By</th>
+                                    <th>Ngày</th>
+                                    <th>Loại</th>
+                                    <th>Số lượng</th>
+                                    <th>Tồn sau</th>
+                                    <th>Lý do</th>
+                                    <th>Người thực hiện</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>2025-05-01</td>
-                                    <td>Addition</td>
+                                    <td>15/06/2024</td>
+                                    <td>Nhập kho</td>
                                     <td>+10</td>
-                                    <td>15</td>
                                     <td>25</td>
-                                    <td>New shipment received</td>
-                                    <td>Admin</td>
+                                    <td>Nhập hàng từ nhà cung cấp</td>
+                                    <td>Admin User</td>
                                 </tr>
-                                <!-- More history entries will be added dynamically -->
+                                <tr>
+                                    <td>12/06/2024</td>
+                                    <td>Xuất kho</td>
+                                    <td>-2</td>
+                                    <td>15</td>
+                                    <td>Đơn hàng #ORD-1001</td>
+                                    <td>System</td>
+                                </tr>
+                                <tr>
+                                    <td>10/06/2024</td>
+                                    <td>Điều chỉnh</td>
+                                    <td>+2</td>
+                                    <td>17</td>
+                                    <td>Trả hàng từ khách</td>
+                                    <td>Admin User</td>
+                                </tr>
+                                <tr>
+                                    <td>05/06/2024</td>
+                                    <td>Nhập kho</td>
+                                    <td>+15</td>
+                                    <td>15</td>
+                                    <td>Nhập hàng mới</td>
+                                    <td>Admin User</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary">Xuất báo cáo</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="tm-footer row tm-mt-small">
-        <div class="col-12 font-weight-light">
-            <p class="text-center text-white mb-0 px-4 small">
-                Copyright &copy; <b>2025</b> All rights reserved.
-            </p>
-        </div>
-    </footer>
-
     <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/moment.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/inventoryManagement.js"></script>
+    <script src="jquery-ui-datepicker/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toggle sidebar
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar').toggleClass('active');
+                $('#content').toggleClass('active');
+            });
+        });
+    </script>
 </body>
 </html>

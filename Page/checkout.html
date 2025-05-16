@@ -6,16 +6,369 @@
     <title>Checkout - Your Store</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/styles.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        .checkout-header {
+            background: #fff;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .checkout-page {
+            padding: 40px 0 60px;
+        }
+        .checkout-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .checkout-section {
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .checkout-section:last-child {
+            border-bottom: none;
+        }
+        .checkout-section h3 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: #212529;
+            display: flex;
+            align-items: center;
+        }
+        .checkout-section h3 i {
+            margin-right: 10px;
+            color: #4e73df;
+        }
+        .saved-addresses-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .saved-address {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .saved-address:hover {
+            border-color: #4e73df;
+            box-shadow: 0 4px 10px rgba(78, 115, 223, 0.1);
+        }
+        .saved-address input[type="radio"] {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .saved-address label {
+            display: block;
+            cursor: pointer;
+            padding-right: 30px;
+            margin-bottom: 0;
+        }
+        .add-address-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #4e73df;
+            border-radius: 8px;
+            padding: 15px;
+            background: rgba(78, 115, 223, 0.05);
+            color: #4e73df;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .add-address-btn:hover {
+            background: rgba(78, 115, 223, 0.1);
+        }
+        .delivery-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .delivery-option {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .delivery-option:hover {
+            border-color: #4e73df;
+            box-shadow: 0 4px 10px rgba(78, 115, 223, 0.1);
+        }
+        .delivery-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .delivery-option label {
+            display: flex;
+            cursor: pointer;
+            padding: 15px;
+            margin-bottom: 0;
+            width: 100%;
+            align-items: center;
+        }
+        .delivery-info {
+            flex-grow: 1;
+        }
+        .delivery-info h4 {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #212529;
+        }
+        .delivery-info p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        .delivery-price {
+            font-weight: 600;
+            color: #212529;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .payment-method {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .payment-method:hover {
+            border-color: #4e73df;
+            box-shadow: 0 4px 10px rgba(78, 115, 223, 0.1);
+        }
+        .payment-method label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        .payment-method i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        .payment-form {
+            padding: 0 15px 15px;
+            border-top: 1px solid #f1f1f1;
+        }
+        .fa-credit-card {
+            color: #1a53ff;
+        }
+        .fa-paypal {
+            color: #003087;
+        }
+        .order-summary {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+        .order-summary h3 {
+            padding: 20px 25px;
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+            border-bottom: 1px solid #eee;
+            color: #212529;
+        }
+        .order-items {
+            padding: 15px 25px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .order-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 15px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .item-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .item-details {
+            flex-grow: 1;
+        }
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: #212529;
+        }
+        .item-variant {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #212529;
+            text-align: right;
+        }
+        .summary-totals {
+            padding: 20px 25px;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .summary-line.total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #212529;
+        }
+        .btn-place-order {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #4e73df;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-place-order:hover {
+            background: #3a5bc7;
+        }
+        .secure-checkout {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            padding-bottom: 15px;
+        }
+        .secure-checkout i {
+            margin-right: 5px;
+            color: #28a745;
+        }
+        .checkout-step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        .checkout-step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: -1;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #6c757d;
+        }
+        .step.active .step-number {
+            background: #4e73df;
+            border-color: #4e73df;
+            color: white;
+        }
+        .step.completed .step-number {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        .step-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+        .step.active .step-label {
+            color: #4e73df;
+        }
+        .step.completed .step-label {
+            color: #28a745;
+        }
+        @media (min-width: 768px) {
+            .saved-addresses-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .brand-logo {
+            height: 40px;
+        }
+        .checkout-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .checkout-section-title {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .promo-code-container {
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="../images/logo.jpg" alt="Logo" height="50">
+                <span style="font-weight: 700; font-size: 1.5rem; color: #333;">Five:07</span>
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" title="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -29,6 +382,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="accountProfile.html">Account</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -37,30 +395,48 @@
     <!-- Checkout Content -->
     <div class="checkout-page">
         <div class="container">
+            <!-- Checkout Steps -->
+            <div class="checkout-step-indicator mb-4">
+                <div class="step completed">
+                    <div class="step-number">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="step-label">Cart</div>
+                </div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Checkout</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
             <div class="row">
                 <!-- Checkout Form -->
                 <div class="col-lg-8">
                     <div class="checkout-container">
                         <!-- Shipping Address Section -->
                         <div class="checkout-section">
-                            <h3>Shipping Address</h3>
+                            <h3><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
                             <div class="saved-addresses-grid">
                                 <div class="saved-address">
                                     <input type="radio" name="address" id="address1" checked>
                                     <label for="address1">
                                         <strong>Home Address</strong><br>
-                                        <span id="savedAddress"></span>
+                                        <span id="savedAddress" class="text-muted">123 Example Street, Apt 4B, City, State 12345</span>
                                     </label>
                                 </div>
-                                <button class="btn btn-outline-primary" id="addNewAddress">
-                                    <i class="fas fa-plus"></i> Add New Address
-                                </button>
+                                <div class="add-address-btn" id="addNewAddress">
+                                    <i class="fas fa-plus mr-2"></i> Add New Address
+                                </div>
                             </div>
                         </div>
 
                         <!-- Delivery Options -->
                         <div class="checkout-section">
-                            <h3>Delivery Method</h3>
+                            <h3><i class="fas fa-truck"></i> Delivery Method</h3>
                             <div class="delivery-options">
                                 <div class="delivery-option">
                                     <label>
@@ -87,7 +463,7 @@
 
                         <!-- Payment Section -->
                         <div class="checkout-section">
-                            <h3>Payment Method</h3>
+                            <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
                             <div class="payment-methods">
                                 <div class="payment-method">
                                     <label>
@@ -97,17 +473,20 @@
                                     </label>
                                     <div class="payment-form">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Card Number">
+                                            <label for="cardNumber" class="small text-muted">Card Number</label>
+                                            <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456">
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="MM/YY">
+                                                    <label for="cardExpiry" class="small text-muted">Expiry Date</label>
+                                                    <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="CVV">
+                                                    <label for="cardCvv" class="small text-muted">CVV</label>
+                                                    <input type="text" id="cardCvv" class="form-control" placeholder="123">
                                                 </div>
                                             </div>
                                         </div>
@@ -129,13 +508,48 @@
                 <div class="col-lg-4">
                     <div class="order-summary">
                         <h3>Order Summary</h3>
-                        <div id="orderItems">
-                            <!-- Order items will be dynamically inserted here -->
+                        <div class="order-items" id="orderItems">
+                            <!-- Sample order items (will be replaced dynamically) -->
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="https://via.placeholder.com/60" alt="Product">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">iPhone 14 Pro</div>
+                                    <div class="item-variant">Black, 256GB</div>
+                                    <div class="item-quantity">Qty: 1</div>
+                                </div>
+                                <div class="item-price">$999.00</div>
+                            </div>
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="https://via.placeholder.com/60" alt="Product">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">AirPods Pro</div>
+                                    <div class="item-variant">White</div>
+                                    <div class="item-quantity">Qty: 1</div>
+                                </div>
+                                <div class="item-price">$249.00</div>
+                            </div>
                         </div>
+                        
+                        <!-- Promo Code -->
+                        <div class="px-3 pb-3">
+                            <div class="promo-code-container">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Promo code" aria-label="Promo code">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="summary-totals">
                             <div class="summary-line">
                                 <span>Subtotal</span>
-                                <span id="subtotal">$0.00</span>
+                                <span id="subtotal">$1,248.00</span>
                             </div>
                             <div class="summary-line">
                                 <span>Shipping</span>
@@ -143,19 +557,19 @@
                             </div>
                             <div class="summary-line">
                                 <span>Tax</span>
-                                <span id="tax">$0.00</span>
+                                <span id="tax">$124.80</span>
                             </div>
                             <div class="summary-line total">
                                 <span>Total</span>
-                                <span id="total">$0.00</span>
+                                <span id="total">$1,372.80</span>
                             </div>
-                        </div>
-                        <button class="btn-place-order" id="placeOrderBtn">
-                            Place Order
-                        </button>
-                        <div class="secure-checkout">
-                            <i class="fas fa-lock"></i>
-                            Secure Checkout
+                            <button class="btn-place-order" id="placeOrderBtn">
+                                <i class="fas fa-lock mr-2"></i> Place Order
+                            </button>
+                            <div class="secure-checkout">
+                                <i class="fas fa-shield-alt"></i>
+                                Secure Checkout
+                            </div>
                         </div>
                     </div>
                 </div>

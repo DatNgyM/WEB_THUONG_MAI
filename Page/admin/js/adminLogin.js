@@ -1,82 +1,61 @@
-class AdminLogin {
-    constructor() {
-        this.form = document.getElementById('loginForm');
-        this.errorMessage = document.getElementById('errorMessage');
-        this.setupEventListeners();
-        this.checkAuthStatus();
-    }
-
-    setupEventListeners() {
-        this.form?.addEventListener('submit', (e) => this.handleLogin(e));
-    }
-
-    async checkAuthStatus() {
-        try {
-            const response = await fetch('/api/admin/auth/status', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                // Already logged in, redirect to dashboard
-                window.location.href = 'index.html';
-            }
-        } catch (error) {
-            console.error('Auth check failed:', error);
-        }
-    }
-
-    async handleLogin(e) {
+$(document).ready(function() {
+    const loginForm = $('#loginForm');
+    const errorMessage = $('#errorMessage');
+    
+    // Temporary admin credentials for demonstration
+    const adminUser = {
+        username: 'admin',
+        password: 'admin123'
+    };
+    
+    loginForm.on('submit', function(e) {
         e.preventDefault();
         
-        const username = document.getElementById('username')?.value;
-        const password = document.getElementById('password')?.value;
-
+        const username = $('#username').val().trim();
+        const password = $('#password').val().trim();
+        const rememberMe = $('#rememberMe').is(':checked');
+        
+        // Simple validation
         if (!username || !password) {
-            this.showError('Please fill in all fields');
+            showError('Vui lòng nhập đầy đủ thông tin đăng nhập');
             return;
         }
-
-        try {
-            const response = await fetch('/api/admin/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password }),
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                // Login successful
-                const data = await response.json();
-                // Store admin token
-                localStorage.setItem('adminToken', data.token);
-                // Redirect to dashboard
-                window.location.href = 'index.html';
+        
+        // Check credentials (in a real app, this would be an API call)
+        if (username === adminUser.username && password === adminUser.password) {
+            // Success - store login state if remember me is checked
+            if (rememberMe) {
+                localStorage.setItem('isLoggedIn', 'true');
             } else {
-                const error = await response.json();
-                this.showError(error.message || 'Invalid username or password');
+                sessionStorage.setItem('isLoggedIn', 'true');
             }
-        } catch (error) {
-            console.error('Login failed:', error);
-            this.showError('Login failed. Please try again.');
+            
+            // Redirect to admin dashboard
+            window.location.href = 'index.html';
+        } else {
+            // Failed login
+            showError('Tên đăng nhập hoặc mật khẩu không đúng!');
+            $('#password').val('').focus();
+        }
+    });
+    
+    function showError(message) {
+        errorMessage.text(message).fadeIn();
+        
+        // Hide error after 3 seconds
+        setTimeout(function() {
+            errorMessage.fadeOut();
+        }, 3000);
+    }
+    
+    // Check if user is already logged in
+    function checkLoginStatus() {
+        if (localStorage.getItem('isLoggedIn') === 'true' || 
+            sessionStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'index.html';
         }
     }
-
-    showError(message) {
-        if (this.errorMessage) {
-            this.errorMessage.textContent = message;
-            this.errorMessage.style.display = 'block';
-
-            // Hide error after 3 seconds
-            setTimeout(() => {
-                this.errorMessage.style.display = 'none';
-            }, 3000);
-        }
-    }
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const adminLogin = new AdminLogin();
+    
+    // Check login status when page loads
+    checkLoginStatus();
 });

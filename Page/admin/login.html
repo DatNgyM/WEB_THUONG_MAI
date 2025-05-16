@@ -3,42 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Dashboard</title>
+    <title>Admin - Đăng nhập</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/fontawesome.min.css">
-    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link rel="stylesheet" href="css/admin-style.css">
 </head>
 
-<body class="bg-login">
-    <div class="container">
-        <div class="row tm-mt-big">
-            <div class="col-12 mx-auto tm-login-col">
-                <div class="bg-white tm-block">
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <h2 class="tm-block-title mt-3">Admin Login</h2>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h3>E-Shop Admin</h3>
+                <p class="mt-2 mb-0">Đăng nhập để quản lý cửa hàng</p>
+            </div>
+            <div class="login-body">
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input name="username" type="text" class="form-control" id="username" required placeholder="Nhập tên đăng nhập" title="Tên đăng nhập">
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <form id="loginForm" class="tm-login-form">
-                                <div class="input-group">
-                                    <label for="username" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Username</label>
-                                    <input name="username" type="text" class="form-control validate" id="username" required>
-                                </div>
-                                <div class="input-group mt-3">
-                                    <label for="password" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Password</label>
-                                    <input name="password" type="password" class="form-control validate" id="password" required>
-                                </div>
-                                <div class="input-group mt-3">
-                                    <button type="submit" class="btn btn-primary d-inline-block mx-auto">Login</button>
-                                </div>
-                                <div class="input-group mt-3">
-                                    <p class="text-danger text-center w-100" id="errorMessage" style="display: none;"></p>
-                                </div>
-                            </form>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input name="password" type="password" class="form-control" id="password" required placeholder="Nhập mật khẩu" title="Mật khẩu">
                         </div>
                     </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <div class="alert alert-danger mt-3" role="alert" id="errorMessage" style="display: none;">
+                        Tên đăng nhập hoặc mật khẩu không đúng!
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-login">
+                        <i class="fas fa-sign-in-alt me-2"></i> Đăng nhập
+                    </button>
+                </form>
+                <div class="login-footer">
+                    <p>Quên mật khẩu? <a href="#" class="text-primary">Khôi phục</a></p>
                 </div>
             </div>
         </div>

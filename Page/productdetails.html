@@ -87,12 +87,12 @@
                         <div class="product-gallery">
                             <div class="main-image-container">
                                 <img src="/images/iphone-16-pro-max-titan-sa-mac-2.jpg" alt="iPhone 16 Pro Max" id="mainImage" class="main-image">
-                                <button class="wishlist-btn">
+                                <button class="wishlist-btn" aria-label="Add to wishlist" title="Add to wishlist">
                                     <i class="bi bi-heart"></i>
                                 </button>
                             </div>
                             <div class="thumbnail-container">
-                                <button class="thumbnail-nav prev">
+                                <button class="thumbnail-nav prev" aria-label="Previous image" title="Previous image">
                                     <i class="fas fa-chevron-left"></i>
                                 </button>
                                 <div class="thumbnails">
@@ -101,7 +101,7 @@
                                     <img src="/images/iphone-16-pro-max-titan-sa-mac-3.jpg" alt="View 3" class="thumbnail" onclick="changeImage(event, this.src)">
                                     <img src="/images/iphone-16-pro-max-titan-sa-mac-4.jpg" alt="View 4" class="thumbnail" onclick="changeImage(event, this.src)">
                                 </div>
-                                <button class="thumbnail-nav next">
+                                <button class="thumbnail-nav next" aria-label="Next image" title="Next image">
                                     <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -196,11 +196,11 @@
                                     <div class="quantity-selector">
                                         <h3>Quantity</h3>
                                         <div class="quantity-input">
-                                            <button class="quantity-btn minus">
+                                            <button class="quantity-btn minus" aria-label="Decrease quantity" title="Decrease quantity">
                                                 <i class="fas fa-minus"></i>
                                             </button>
-                                            <input type="number" value="1" min="1" max="10">
-                                            <button class="quantity-btn plus">
+                                            <input type="number" value="1" min="1" max="10" aria-label="Quantity" title="Quantity">
+                                            <button class="quantity-btn plus" aria-label="Increase quantity" title="Increase quantity">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
@@ -209,11 +209,11 @@
                             </div>
 
                             <div class="product-actions">
-                                <button class="btn-add-to-cart">
+                                <button class="btn-add-to-cart" aria-label="Add to cart" title="Add to cart">
                                     <i class="fas fa-shopping-cart"></i>
                                     Add to Cart
                                 </button>
-                                <button class="btn-buy-now">
+                                <button class="btn-buy-now" aria-label="Buy now" title="Buy now"    >
                                     Buy Now
                                 </button>
                             </div>
@@ -247,19 +247,19 @@
 
                 <!-- Product Details Tabs -->
                 <div class="product-details-tabs">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description" aria-label="Description" title="Description">
                                 Description
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specifications">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specifications" aria-label="Specifications" title="Specifications">
                                 Specifications
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" aria-label="Reviews" title="Reviews">
                                 Reviews
                             </button>
                         </li>
@@ -474,9 +474,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Photos</label>
-                                            <input type="file" class="form-control" multiple accept="image/*">
+                                            <input type="file" class="form-control" multiple accept="image/*" aria-label="Upload photos" title="Upload photos">
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                        <button type="submit" class="btn btn-primary" aria-label="Submit review" title="Submit review">Submit Review</button>
                                     </form>
                                 </div>
                             </div>
