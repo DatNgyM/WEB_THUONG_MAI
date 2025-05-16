@@ -70,7 +70,7 @@ app.listen(PORT, () => {
   console.log('\n📄 Các trang chính:');
   console.log(`- Trang chủ        http://localhost:${PORT}/Page/index.html`);
   console.log(`- Đăng nhập        http://localhost:${PORT}/Page/login.html`);
-  console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin/index.html`);
+  console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin-2_New/staradmin-2-free/dist/index.html`);
   console.log(`- Chatbot          http://localhost:${PORT}/Page/chatbot.html`);
 });
 
