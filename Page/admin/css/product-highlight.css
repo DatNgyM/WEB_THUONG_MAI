@@ -1,0 +1,161 @@
+/* CSS cho trang quản lý sản phẩm */
+
+/* Hiệu ứng highlight sản phẩm mới */
+.new-product-highlight {
+  animation: highlight-new 3s ease-in-out;
+}
+
+@keyframes highlight-new {
+  0% { background-color: rgba(40, 167, 69, 0.2); }
+  50% { background-color: rgba(40, 167, 69, 0.1); }
+  100% { background-color: transparent; }
+}
+
+/* Badge hiển thị "Mới" */
+.badge.bg-success {
+  background-color: #28a745;
+  color: white;
+  padding: 0.25em 0.6em;
+  font-size: 75%;
+  font-weight: 700;
+  border-radius: 0.25rem;
+  display: inline-block;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+/* Hiệu ứng loading */
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #6c757d;
+  padding: 20px;
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification-success {
+  background-color: #28a745;
+}
+
+.notification-error {
+  background-color: #dc3545;
+}
+
+.notification-info {
+  background-color: #007bff;
+}
+
+/* Product success notification */
+.product-success-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  animation: slide-in 0.5s ease-out forwards;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+}
+
+.notification-content i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+@keyframes slide-in {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.fade-out {
+  animation: fade-out 0.5s ease-in forwards;
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Empty state styling */
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.empty-state h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+/* Product thumbnail */
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}

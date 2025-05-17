@@ -4,12 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Admin - Thêm Sản phẩm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Admin - Thêm Sản phẩm</title>    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/fontawesome.min.css" />
     <link rel="stylesheet" href="jquery-ui-datepicker/jquery-ui.min.css" type="text/css" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <script src="/JS/checkAdmin.js"></script>
+    <script src="js/debug-product.js"></script>
   </head>
 
   <body>
@@ -68,8 +70,7 @@
           </li>
         </ul>
 
-        <div class="sidebar-footer">
-          <a href="login.html" class="logout-btn">
+        <div class="sidebar-footer">          <a href="javascript:void(0);" onclick="handleLogout()" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
           </a>
@@ -111,7 +112,7 @@
                   <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a>
                   <a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
               </div>
             </div>
@@ -127,12 +128,9 @@
 
           <div class="row">
             <div class="col-xl-10 col-lg-11 col-md-12 mx-auto">
-              <div class="card mb-5">
-                <div class="card-header">
-                  <h5 class="card-title">Thông tin sản phẩm</h5>
-                </div>
-                <div class="card-body">
-                  <form action="#" method="post" class="needs-validation" novalidate>
+              <div class="card mb-5">                <div class="card-header">
+                  <h5 class="card-title">Thông tin sản phẩm</h5>                </div>                <div class="card-body">
+                  <form class="needs-validation" enctype="multipart/form-data" novalidate id="addProductForm">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group mb-4">
@@ -140,7 +138,6 @@
                           <input id="name" name="name" type="text" class="form-control" required placeholder="Nhập tên sản phẩm">
                           <div class="invalid-feedback">Vui lòng nhập tên sản phẩm</div>
                         </div>
-                        
                         <div class="form-group mb-4">
                           <label for="category" class="form-label">Danh mục</label>
                           <select class="form-control" id="category" name="category" title="Chọn danh mục" aria-label="Product Category">
@@ -155,13 +152,13 @@
                         
                         <div class="row">
                           <div class="col-md-6">
-                            <div class="form-group mb-4">
-                              <label for="price" class="form-label">Giá bán</label>
+                            <div class="form-group mb-4">                              <label for="price" class="form-label">Giá bán</label>
                               <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input id="price" name="price" type="number" class="form-control" required placeholder="0.00">
+                                <input id="price" name="price" type="number" class="form-control" required placeholder="0.00" 
+                                  min="0" max="99999999.99" step="0.01">
                               </div>
-                              <div class="invalid-feedback">Vui lòng nhập giá sản phẩm</div>
+                              <div class="invalid-feedback">Vui lòng nhập giá sản phẩm (tối đa 99.999.999,99)</div>
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -174,10 +171,9 @@
 
                         <div class="row">
                           <div class="col-md-6">
-                            <div class="form-group mb-4">
-                              <label for="stock" class="form-label">Số lượng</label>
-                              <input id="stock" name="stock" type="number" class="form-control" required placeholder="0">
-                              <div class="invalid-feedback">Vui lòng nhập số lượng</div>
+                            <div class="form-group mb-4">                              <label for="stock" class="form-label">Số lượng</label>
+                              <input id="stock" name="stock_quantity" type="number" class="form-control" required min="0" value="0" placeholder="0">
+                              <div class="invalid-feedback">Vui lòng nhập số lượng hợp lệ (số nguyên dương)</div>
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -196,13 +192,12 @@
                         </div>
                         
                         <div class="form-group mb-4">
-                          <label class="form-label d-block">Hình ảnh sản phẩm</label>
-                          <div class="product-image-upload">
+                          <label class="form-label d-block">Hình ảnh sản phẩm</label>                          <div class="product-image-upload">
                             <div class="product-image-preview mb-3" id="imagePreview">
                               <i class="fas fa-cloud-upload-alt upload-icon"></i>
                               <span>Nhấp để tải ảnh lên</span>
                             </div>
-                            <input type="file" id="productImage" name="productImage" class="d-none" accept="image/*" aria-label="Upload product image" title="Upload product image">
+                            <input type="file" id="productImage" name="image" class="d-none" accept="image/*" aria-label="Upload product image" title="Upload product image">
                             <button type="button" class="btn btn-primary w-100" id="uploadBtn" aria-label="Upload image" title="Upload image">
                               <i class="fas fa-upload me-2"></i> Tải ảnh lên
                             </button>
@@ -245,11 +240,12 @@
           </footer>
         </div>
       </div>
-    </div>
-
-    <script src="js/jquery-3.3.1.min.js"></script>
+    </div>    <script src="js/jquery-3.3.1.min.js"></script>
     <script src="jquery-ui-datepicker/jquery-ui.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="/JS/handleLogout.js"></script>
+    <!-- Chỉ sử dụng script sửa lỗi -->
+    <script src="js/product-form-fix.js"></script>
     <script>
       $(document).ready(function() {
         // Toggle sidebar
@@ -283,25 +279,134 @@
             }
             reader.readAsDataURL(file);
           }
-        });
-
-        // Form validation
+        });        // Form validation
         (function() {
           'use strict';
           window.addEventListener('load', function() {
             var forms = document.getElementsByClassName('needs-validation');
-            var validation = Array.prototype.filter.call(forms, function(form) {
-              form.addEventListener('submit', function(event) {
+            var validation = Array.prototype.filter.call(forms, function(form) {              // Gắn sự kiện vào nút submit thay vì form submit              form.querySelector('[type="submit"]').addEventListener('click', async function(event) {
+                event.preventDefault(); // Ngăn form submit mặc định
+                console.log('Đang cố thêm sản phẩm...', new Date().toISOString());
+                
+                // Log ra các trường form để debug
+                const formInputs = form.querySelectorAll('input, textarea, select');
+                console.log('Form inputs:', Array.from(formInputs).map(input => ({
+                  name: input.name,
+                  value: input.value,
+                  type: input.type,
+                  validity: input.validity.valid
+                })));
+                
                 if (form.checkValidity() === false) {
-                  event.preventDefault();
                   event.stopPropagation();
+                  form.classList.add('was-validated');
+                  console.log('Form không hợp lệ');
+                  return;
                 }
+                
                 form.classList.add('was-validated');
+                
+                // Lấy dữ liệu từ form
+                const formData = new FormData(form);
+                
+                // Thêm thông tin seller_id (giả sử là 1 cho admin)
+                formData.append('seller_id', 1);
+                  
+                // Hiển thị loading overlay
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'loading-overlay';
+                loadingOverlay.innerHTML = `
+                  <div class="loading-spinner"></div>
+                  <div class="loading-text">Đang xử lý thêm sản phẩm...</div>
+                `;
+                document.body.appendChild(loadingOverlay);
+                
+                // Kiểm tra dữ liệu trước khi gửi
+                const price = parseFloat(formData.get('price'));
+                const stock = parseInt(formData.get('stock_quantity'));
+                
+                // Đảm bảo giá trị hợp lệ
+                if (isNaN(price) || price < 0 || price >= 100000000) {
+                  loadingOverlay.remove();
+                  alert('Giá sản phẩm không hợp lệ. Vui lòng nhập giá nhỏ hơn 100.000.000');
+                  return;
+                }
+                
+                if (isNaN(stock) || stock < 0) {
+                  // Nếu số lượng không hợp lệ, đặt giá trị mặc định là 0
+                  formData.set('stock_quantity', '0');
+                  console.log('Đã đặt số lượng mặc định: 0');
+                }
+                
+                // Sử dụng debug utility để ghi log dữ liệu form
+                window.debugProduct.logFormData(formData);
+                  try {
+                  console.log('Đang gửi dữ liệu đến API...');
+                  // Gửi request tới API
+                  const response = await fetch('/api/admin/products', {
+                    method: 'POST',
+                    body: formData,
+                    // Không điều hướng tự động
+                    redirect: 'follow'
+                  });
+                  
+                  console.log('Nhận phản hồi:', response.status, response.statusText);
+                  
+                  if (!response.ok) {
+                    // Clone response trước khi đọc body
+                    const clonedResp = response.clone();
+                    let errorMessage;
+                    
+                    try {
+                      const errorData = await response.json();
+                      errorMessage = errorData.details || errorData.error || 'Có lỗi xảy ra';
+                    } catch (jsonError) {
+                      const textError = await clonedResp.text();
+                      errorMessage = 'Lỗi không xác định: ' + (textError || response.statusText);
+                    }
+                    
+                    throw new Error(errorMessage);
+                  }
+                  
+                  const responseData = await response.json();
+                  console.log('Sản phẩm đã được thêm thành công:', responseData);
+                  
+                  // Hiển thị thông báo thành công và chuyển hướng
+                  alert('Thêm sản phẩm thành công!');
+                  
+                  // Chuyển hướng đến trang sản phẩm với tham số success=true
+                  window.location.href = 'products.html?success=true&newProductId=' + responseData.product.id;
+                  
+                } catch (error) {
+                  console.error('Lỗi:', error);
+                  alert('Lỗi khi thêm sản phẩm: ' + error.message);
+                } finally {
+                  // Xóa loading overlay bất kể thành công hay thất bại
+                  const loadingOverlay = document.querySelector('.loading-overlay');
+                  if (loadingOverlay) {
+                    loadingOverlay.remove();
+                  }
+                }
               }, false);
             });
           }, false);
         })();
       });
     </script>
+    <!-- Sử dụng script sửa lỗi và bỏ qua inline script cũ -->
+    <script>
+      // Vô hiệu hóa các handler cũ để tránh xung đột
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Cleaning up old handlers');
+        const form = document.getElementById('addProductForm');
+        if (form) {
+          // Xóa tất cả các event listener trực tiếp 
+          const newForm = form.cloneNode(true);
+          form.parentNode.replaceChild(newForm, form);
+        }
+      });
+    </script>
+    <!-- Script xử lý form submission đã được sửa -->
+    <script src="js/product-form-fix.js"></script>
   </body>
 </html>

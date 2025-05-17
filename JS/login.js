@@ -29,12 +29,11 @@ async function loginAdmin(username, password) {
 
     const result = await res.json();
 
-    if (result.success) {
-      localStorage.setItem('isLoggedIn', 'true');
+    if (result.success) {      localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'admin');
       localStorage.setItem('name', result.name || 'Admin');
 
-      window.location.href = '/Page/admin-2_New/staradmin-2-free/dist/index.html';
+      window.location.href = '/Page/admin/index.html';
     } else {
       alert(result.message || 'Sai tài khoản hoặc mật khẩu admin!');
     }

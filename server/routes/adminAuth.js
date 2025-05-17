@@ -55,7 +55,12 @@ router.post('/login', async (req, res) => {
         maxAge: 3600000 // 1 hour
     });
 
-    res.json({ token });
+    res.json({ 
+        success: true,
+        token: token,
+        role: 'admin',
+        name: 'Administrator'
+    });
 });
 
 // Check auth status route

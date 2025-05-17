@@ -25,6 +25,7 @@ const billingRoutes = require('./routes/billing');
 const adminDashboard = require('./routes/adminDashboard');
 const adminOrders = require('./routes/adminOrders');
 const adminInventory = require('./routes/adminInventory');
+const adminProducts = require('./routes/adminProducts');
 
 
 
@@ -55,6 +56,9 @@ app.use('/api/billing', billingRoutes);
 // Admin routes
 app.use('/api/admin/auth', adminAuthRouter);
 
+// Unprotected products API (tạm thời để test) 
+app.use('/api/admin/products', adminProducts);
+
 // Protected admin routes
 app.use('/api/admin', authenticateAdmin);
 app.use('/api/admin/dashboard', adminDashboard);
@@ -70,7 +74,7 @@ app.listen(PORT, () => {
   console.log('\n📄 Các trang chính:');
   console.log(`- Trang chủ        http://localhost:${PORT}/Page/index.html`);
   console.log(`- Đăng nhập        http://localhost:${PORT}/Page/login.html`);
-  console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin-2_New/staradmin-2-free/dist/index.html`);
+  console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin/index.html`);
   console.log(`- Chatbot          http://localhost:${PORT}/Page/chatbot.html`);
 });
 

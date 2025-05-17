@@ -20,10 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     //  logout
     const logoutBtn = document.querySelector('.dropdown-item[href="#logout"]');
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.clear();
-        window.location.href = '/Page/login.html';
-      });
+      logoutBtn.addEventListener('click', logout);
     }
   });
-  
+
+// Hàm xử lý logout có thể gọi từ bất kỳ trang nào
+function logout() {
+  localStorage.clear();
+  window.location.href = '/Page/login.html';
+}

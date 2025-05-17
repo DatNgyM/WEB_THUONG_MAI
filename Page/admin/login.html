@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Đăng nhập</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/fontawesome.min.css">
     <link rel="stylesheet" href="css/admin-style.css">
+    <script>
+        // Kiểm tra trạng thái đăng nhập khi trang tải
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Đang kiểm tra trạng thái đăng nhập admin...');
+            console.log('localStorage:', {
+                isLoggedIn: localStorage.getItem('isLoggedIn'),
+                role: localStorage.getItem('role')
+            });
+            console.log('sessionStorage:', {
+                isAdmin: sessionStorage.getItem('isAdmin')
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -49,9 +61,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <script src="js/jquery-3.3.1.min.js"></script>
+    </div>    <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/adminLogin.js"></script>
 </body>
