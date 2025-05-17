@@ -1,6 +1,4 @@
-/* CSS cho trang quản lý sản phẩm */
-
-/* Hiệu ứng highlight sản phẩm mới */
+/* Custom CSS for product highlighting */
 .new-product-highlight {
   animation: highlight-new 3s ease-in-out;
 }
@@ -11,22 +9,7 @@
   100% { background-color: transparent; }
 }
 
-/* Badge hiển thị "Mới" */
-.badge.bg-success {
-  background-color: #28a745;
-  color: white;
-  padding: 0.25em 0.6em;
-  font-size: 75%;
-  font-weight: 700;
-  border-radius: 0.25rem;
-  display: inline-block;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-}
-
-/* Hiệu ứng loading */
+/* Loader styling */
 .loader {
   border: 3px solid #f3f3f3;
   border-top: 3px solid #3498db;
@@ -48,7 +31,7 @@
   padding: 20px;
 }
 
-/* Notification */
+/* Notification styling */
 .notification {
   position: fixed;
   top: 20px;
@@ -79,55 +62,6 @@
 
 .notification-info {
   background-color: #007bff;
-}
-
-/* Product success notification */
-.product-success-notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #28a745;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 4px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  z-index: 9999;
-  animation: slide-in 0.5s ease-out forwards;
-}
-
-.notification-content {
-  display: flex;
-  align-items: center;
-}
-
-.notification-content i {
-  font-size: 20px;
-  margin-right: 10px;
-}
-
-.close-btn {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  margin-left: 15px;
-}
-
-@keyframes slide-in {
-  0% { transform: translateX(100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-.fade-out {
-  animation: fade-out 0.5s ease-in forwards;
-}
-
-@keyframes fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
 }
 
 /* Empty state styling */
