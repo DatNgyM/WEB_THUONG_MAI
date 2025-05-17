@@ -29,7 +29,7 @@ async function fetchProducts() {
         const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout sau 10 giây
         
         try {
-            const response = await fetch('/api/admin/products', {
+            const response = await fetch('http://localhost:3000/api/admin/products', {
                 signal: controller.signal
             });
             
@@ -275,17 +275,16 @@ function updateProductStats() {
     // Sản phẩm sắp hết hàng (stock < 10)
     const lowStockProducts = productData.filter(p => p.stock_quantity > 0 && p.stock_quantity < 10).length;
     
-    // Cập nhật các phần tử hiển thị
-    const statsContainer = document.querySelector('.card:last-child .card-body');
-    if (statsContainer) {
-        const statElements = statsContainer.querySelectorAll('div');
-        if (statElements.length >= 4) {
-            statElements[0].querySelector('strong').textContent = totalProducts;
-            statElements[1].querySelector('strong').textContent = availableProducts;
-            statElements[2].querySelector('strong').textContent = outOfStockProducts;
-            statElements[3].querySelector('strong').textContent = lowStockProducts;
-        }
-    }
+    // Cập nhật các phần tử hiển thị bằng ID
+    const totalEl = document.getElementById('statTotalProducts');
+    const availableEl = document.getElementById('statAvailableProducts');
+    const outOfStockEl = document.getElementById('statOutOfStockProducts');
+    const lowStockEl = document.getElementById('statLowStockProducts');
+
+    if (totalEl) totalEl.textContent = totalProducts;
+    if (availableEl) availableEl.textContent = availableProducts;
+    if (outOfStockEl) outOfStockEl.textContent = outOfStockProducts;
+    if (lowStockEl) lowStockEl.textContent = lowStockProducts;
 }
 
 // Thiết lập sự kiện cho các nút xóa sản phẩm
@@ -303,7 +302,7 @@ function setupDeleteButtons() {
 // Hàm xóa sản phẩm
 async function deleteProduct(productId) {
     try {
-        const response = await fetch(`/api/admin/products/${productId}`, {
+        const response = await fetch(`http://localhost:3000/api/admin/products/${productId}`, {
             method: 'DELETE'
         });
         
@@ -430,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const nameInput = this.querySelector('input[type="text"]').value.toLowerCase();
             
             // Lọc sản phẩm theo tên
-            fetch('/api/admin/products')
+            fetch('http://localhost:3000/api/admin/products')
                 .then(response => response.json())
                 .then(data => {
                     productData = data.filter(product => {

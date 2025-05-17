@@ -250,13 +250,13 @@
       $(document).ready(function() {
         // Toggle sidebar
         $('#sidebarCollapse').on('click', function() {
-          $('#sidebar').toggleClass('active');
+          $('#sidebar').toggleClass('active'); // Đảm bảo #sidebar được toggle
           $('#content').toggleClass('active');
         });
 
         // Initialize datepicker
         $('#expiry_date').datepicker({
-          dateFormat: 'dd/mm/yy',
+          dateFormat: 'dd/mm/yy', // Định dạng ngày tháng năm
           changeMonth: true,
           changeYear: true
         });
@@ -266,147 +266,52 @@
           $('#productImage').click();
         });
 
+        // Cho phép click vào vùng preview để chọn ảnh
         $('#imagePreview').on('click', function() {
           $('#productImage').click();
         });
 
         $('#productImage').on('change', function() {
           const file = this.files[0];
+          const imagePreview = $('#imagePreview'); // Cache selector
           if (file) {
-            let reader = new FileReader();
-            reader.onload = function(event) {
-              $('#imagePreview').html('<img src="' + event.target.result + '" class="img-fluid">');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              imagePreview.css('background-image', `url(${e.target.result})`)
+                         .addClass('has-image')
+                         .html(''); // Xóa chữ và icon bên trong
             }
             reader.readAsDataURL(file);
+          } else {
+            // Reset preview nếu không có file nào được chọn
+            imagePreview.css('background-image', 'none')
+                       .removeClass('has-image')
+                       .html(`
+                          <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                          </div>
+                          <span>Nhấp để tải ảnh lên</span>
+                        `);
           }
-        });        // Form validation
-        (function() {
-          'use strict';
-          window.addEventListener('load', function() {
-            var forms = document.getElementsByClassName('needs-validation');
-            var validation = Array.prototype.filter.call(forms, function(form) {              // Gắn sự kiện vào nút submit thay vì form submit              form.querySelector('[type="submit"]').addEventListener('click', async function(event) {
-                event.preventDefault(); // Ngăn form submit mặc định
-                console.log('Đang cố thêm sản phẩm...', new Date().toISOString());
-                
-                // Log ra các trường form để debug
-                const formInputs = form.querySelectorAll('input, textarea, select');
-                console.log('Form inputs:', Array.from(formInputs).map(input => ({
-                  name: input.name,
-                  value: input.value,
-                  type: input.type,
-                  validity: input.validity.valid
-                })));
-                
-                if (form.checkValidity() === false) {
-                  event.stopPropagation();
-                  form.classList.add('was-validated');
-                  console.log('Form không hợp lệ');
-                  return;
-                }
-                
-                form.classList.add('was-validated');
-                
-                // Lấy dữ liệu từ form
-                const formData = new FormData(form);
-                
-                // Thêm thông tin seller_id (giả sử là 1 cho admin)
-                formData.append('seller_id', 1);
-                  
-                // Hiển thị loading overlay
-                const loadingOverlay = document.createElement('div');
-                loadingOverlay.className = 'loading-overlay';
-                loadingOverlay.innerHTML = `
-                  <div class="loading-spinner"></div>
-                  <div class="loading-text">Đang xử lý thêm sản phẩm...</div>
-                `;
-                document.body.appendChild(loadingOverlay);
-                
-                // Kiểm tra dữ liệu trước khi gửi
-                const price = parseFloat(formData.get('price'));
-                const stock = parseInt(formData.get('stock_quantity'));
-                
-                // Đảm bảo giá trị hợp lệ
-                if (isNaN(price) || price < 0 || price >= 100000000) {
-                  loadingOverlay.remove();
-                  alert('Giá sản phẩm không hợp lệ. Vui lòng nhập giá nhỏ hơn 100.000.000');
-                  return;
-                }
-                
-                if (isNaN(stock) || stock < 0) {
-                  // Nếu số lượng không hợp lệ, đặt giá trị mặc định là 0
-                  formData.set('stock_quantity', '0');
-                  console.log('Đã đặt số lượng mặc định: 0');
-                }
-                
-                // Sử dụng debug utility để ghi log dữ liệu form
-                window.debugProduct.logFormData(formData);
-                  try {
-                  console.log('Đang gửi dữ liệu đến API...');
-                  // Gửi request tới API
-                  const response = await fetch('/api/admin/products', {
-                    method: 'POST',
-                    body: formData,
-                    // Không điều hướng tự động
-                    redirect: 'follow'
-                  });
-                  
-                  console.log('Nhận phản hồi:', response.status, response.statusText);
-                  
-                  if (!response.ok) {
-                    // Clone response trước khi đọc body
-                    const clonedResp = response.clone();
-                    let errorMessage;
-                    
-                    try {
-                      const errorData = await response.json();
-                      errorMessage = errorData.details || errorData.error || 'Có lỗi xảy ra';
-                    } catch (jsonError) {
-                      const textError = await clonedResp.text();
-                      errorMessage = 'Lỗi không xác định: ' + (textError || response.statusText);
-                    }
-                    
-                    throw new Error(errorMessage);
-                  }
-                  
-                  const responseData = await response.json();
-                  console.log('Sản phẩm đã được thêm thành công:', responseData);
-                  
-                  // Hiển thị thông báo thành công và chuyển hướng
-                  alert('Thêm sản phẩm thành công!');
-                  
-                  // Chuyển hướng đến trang sản phẩm với tham số success=true
-                  window.location.href = 'products.html?success=true&newProductId=' + responseData.product.id;
-                  
-                } catch (error) {
-                  console.error('Lỗi:', error);
-                  alert('Lỗi khi thêm sản phẩm: ' + error.message);
-                } finally {
-                  // Xóa loading overlay bất kể thành công hay thất bại
-                  const loadingOverlay = document.querySelector('.loading-overlay');
-                  if (loadingOverlay) {
-                    loadingOverlay.remove();
-                  }
-                }
-              }, false);
-            });
-          }, false);
-        })();
+        });
+
+        // Form validation (Bootstrap 5 style) - Phần này đã có trong product-form-fix.js, có thể bỏ nếu gây xung đột
+        // (function() {
+        //   'use strict';
+        //   window.addEventListener('load', function() {
+        //     var forms = document.getElementsByClassName('needs-validation');
+        //     Array.prototype.filter.call(forms, function(form) {
+        //       form.addEventListener('submit', function(event) {
+        //         if (form.checkValidity() === false) {
+        //           event.preventDefault();
+        //           event.stopPropagation();
+        //         }
+        //         form.classList.add('was-validated');
+        //       }, false);
+        //     });
+        //   }, false);
+        // })();
       });
     </script>
-    <!-- Sử dụng script sửa lỗi và bỏ qua inline script cũ -->
-    <script>
-      // Vô hiệu hóa các handler cũ để tránh xung đột
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log('Cleaning up old handlers');
-        const form = document.getElementById('addProductForm');
-        if (form) {
-          // Xóa tất cả các event listener trực tiếp 
-          const newForm = form.cloneNode(true);
-          form.parentNode.replaceChild(newForm, form);
-        }
-      });
-    </script>
-    <!-- Script xử lý form submission đã được sửa -->
-    <script src="js/product-form-fix.js"></script>
   </body>
 </html>
