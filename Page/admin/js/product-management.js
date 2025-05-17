@@ -167,7 +167,7 @@ function renderProductTable() {
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
-                        <img src="${imagePath}" alt="${product.name}" class="product-thumbnail me-2" onerror="this.src='img/no-image.svg'">
+                        <img src="${imagePath}" alt="${product.name}" class="product-thumbnail me-2" onerror="this.onerror=null; this.src='img/no-image.svg'">
                         <span>${product.name || 'Sản phẩm không tên'}</span>
                         ${product.isNew ? '<span class="badge bg-success ms-2">Mới</span>' : ''}
                     </div>
@@ -373,13 +373,15 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchProducts();
     
     // Thiết lập timeout để kiểm tra nếu dữ liệu không được tải
+    /*
     setTimeout(() => {
-        if (document.querySelector('table tbody .loading-text')) {
+        if (document.querySelector('table tbody .loading-text')) { 
             console.log('Loading timeout triggered - retrying fetch');
             showNotification('info', 'Đang thử lại tải dữ liệu sản phẩm...');
-            fetchProducts(); // Thử lại nếu vẫn đang hiển thị loading sau 5 giây
+            fetchProducts(); 
         }
     }, 5000);
+    */
     
     // Xử lý nút "Xóa đã chọn"
     const deleteSelectedButton = document.getElementById('deleteSelected');
