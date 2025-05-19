@@ -21,6 +21,13 @@ CREATE TABLE user_roles (
 
 -- Ví dụ thêm dữ liệu người dùng & vai trò
 INSERT INTO users (cccd, name, username, email, password) VALUES ('079203001234', 'Nguyen Minh Dat', 'datuser', 'dat@gmail.com', '123456');
+INSERT INTO users (cccd, name, username, email, password) VALUES ('079203012345', 'Le Ba Phat', 'phatuser', 'phat@gmail.com', '123456');
+SELECT * FROM users WHERE id = 2;
+
+INSERT INTO users (id, cccd, name, username, email, password)
+VALUES (2, '012345678901', 'Le Ba Phat', 'lephat', 'phat@gmail.com', '123456');
+DELETE FROM users WHERE id = 4;
+DELETE FROM billing_info WHERE user_id = 1;
 
 -- . Tạo bảng admin
 CREATE TABLE admins (
@@ -68,14 +75,10 @@ SELECT * FROM notification_settings;
 -- Truy vấn bảng billing_info
 SELECT * FROM billing_info;
 
-SELECT * FROM admins WHERE username = 'admin@gmail.com' AND password = 'admin123';
-
-
-
--- 9. Gợi ý mở rộng: cập nhật bảng invoices để lưu thời điểm đã thanh toán (nếu cần)
+-- Gợi ý mở rộng: cập nhật bảng invoices để lưu thời điểm đã thanh toán (nếu cần)
 ALTER TABLE invoices ADD COLUMN paid_at TIMESTAMP;
 
--- 10. Gợi ý mở rộng: cập nhật bảng invoices để lưu phương thức thanh toán (nếu muốn linh hoạt)
+-- Gợi ý mở rộng: cập nhật bảng invoices để lưu phương thức thanh toán (nếu muốn linh hoạt)
 ALTER TABLE invoices ADD COLUMN payment_method VARCHAR(50);
 
 
@@ -94,9 +97,11 @@ CREATE TABLE products (
 );
 ALTER TABLE products ADD COLUMN image VARCHAR(255);
 Select *from products;
+
 -- Thêm sản phẩm với hình ảnh
 INSERT INTO products (name, description, price, stock_quantity, seller_id, image)
-VALUES ('iPhone 16 Pro', 'Iphone 16 Pro Bản Mỹ', 28000000.00, 20, 1, 'iphone-16-pro-max-titan.jpg');
+VALUES ('iPhone 16 Pro Max', 'Iphone 16 Pro Bản Mỹ', 28000000.00, 20, 1, 'iphone-16-pro-max-titan.jpg');
+SELECT * FROM products ORDER BY id DESC;
 -- 2. Tạo bảng hóa đơn (đã gộp cả thông tin đơn hàng)
 CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
@@ -147,3 +152,52 @@ CREATE TABLE payment_session_details (
     FOREIGN KEY (session_id) REFERENCES payment_sessions(id) ON DELETE CASCADE,
     FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
 );
+
+
+-- Thêm cài đặt thông báo cho user_id = 1
+INSERT INTO notification_settings (user_id, comments, updates, reminders, events, pages_you_follow, alert_login, alert_password)
+VALUES (1, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+ON CONFLICT (user_id) DO UPDATE 
+SET comments = EXCLUDED.comments,
+    updates = EXCLUDED.updates,
+    reminders = EXCLUDED.reminders,
+    events = EXCLUDED.events,
+    pages_you_follow = EXCLUDED.pages_you_follow,
+    alert_login = EXCLUDED.alert_login,
+    alert_password = EXCLUDED.alert_password;
+-- 
+INSERT INTO notification_settings (user_id, comments, updates, reminders, events, pages_you_follow, alert_login, alert_password)
+VALUES (2, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+ON CONFLICT (user_id) DO UPDATE 
+SET comments = EXCLUDED.comments,
+    updates = EXCLUDED.updates,
+    reminders = EXCLUDED.reminders,
+    events = EXCLUDED.events,
+    pages_you_follow = EXCLUDED.pages_you_follow,
+    alert_login = EXCLUDED.alert_login,
+    alert_password = EXCLUDED.alert_password;
+-- 
+select *FROM notification_settings
+SELECT * FROM users WHERE id = 2;
+
+-- Thêm thông tin thanh toán cho user_id = 1
+INSERT INTO billing_info (user_id, is_premium, payment_method, account_number, account_name, bank_name, billing_email)
+VALUES (1, FALSE, '96111222333444', '079000123456', 'NGUYEN MINH DAT', 'Techcombank', 'dat@gmail.com')
+ON CONFLICT (user_id) DO UPDATE
+SET is_premium = EXCLUDED.is_premium,
+    payment_method = EXCLUDED.payment_method,
+    account_number = EXCLUDED.account_number,
+    account_name = EXCLUDED.account_name,
+    bank_name = EXCLUDED.bank_name,
+    billing_email = EXCLUDED.billing_email;
+SELECT * FROM billing_info ORDER BY user_id ASC;
+
+INSERT INTO billing_info (user_id, is_premium, payment_method, account_number, account_name, bank_name, billing_email)
+VALUES (2, FALSE, '1026666666', '079000123456', 'LE BA PHAT', 'Vietcombank', 'phat@gmail.com')
+ON CONFLICT (user_id) DO UPDATE
+SET is_premium = EXCLUDED.is_premium,
+    payment_method = EXCLUDED.payment_method,
+    account_number = EXCLUDED.account_number,
+    account_name = EXCLUDED.account_name,
+    bank_name = EXCLUDED.bank_name,
+    billing_email = EXCLUDED.billing_email;
