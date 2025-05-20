@@ -57,6 +57,21 @@ async function loginUser(username, password) {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', result.role || 'buyer');
       localStorage.setItem('name', result.name || '');
+      // Bỏ qua việc lưu token
+      
+      if (result.user) { 
+        localStorage.setItem('user', JSON.stringify(result.user)); // Lưu đối tượng user (chuyển thành chuỗi JSON)
+      } else {
+        // Nếu API không trả về đối tượng user hoàn chỉnh, 
+        // tạo một đối tượng user cơ bản từ thông tin có sẵn
+        const basicUser = {
+          name: result.name || '',
+          email: username, // Giả sử username có thể là email
+          role: result.role || 'buyer'
+          // Thêm id nếu có, ví dụ: id: result.userId 
+        };
+        localStorage.setItem('user', JSON.stringify(basicUser));
+      }
 
       window.location.href = '/Page/index.html';
     } else {

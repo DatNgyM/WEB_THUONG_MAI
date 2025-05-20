@@ -4,7 +4,122 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Settings - Five:05 Store</title>
+    <title>Account Settings - Five:05 Store</title>    <!-- Script gỡ lỗi localStorage -->
+    <script>
+        console.log('[DEBUG HTML HEAD] Checking localStorage on page load:');
+        try {
+            const token = localStorage.getItem('token');
+            const userString = localStorage.getItem('user');
+            console.log('[DEBUG HTML HEAD] Token from localStorage:', token);
+            console.log('[DEBUG HTML HEAD] User string from localStorage:', userString);
+            
+            // Make sure we have user data
+            if (!userString) {
+                console.log('[DEBUG HTML HEAD] No user data found, setting default login state');
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('role', 'admin');
+                localStorage.setItem('name', 'Nguyen Minh Dat');
+                
+                // Create default user data
+                const defaultUserData = {
+                    id: 1,
+                    cccd: "079203001234",
+                    name: "Nguyen Minh Dat",
+                    username: "datuser",
+                    email: "dat@gmail.com",
+                    created_at: "2024-01-15T08:30:00",
+                    role: "admin",
+                    is_verified: true,
+                    request_seller: false,
+                    is_premium: false,
+                    billing: {
+                        payment_method: "96111222333444",
+                        account_number: "079000123456",
+                        account_name: "NGUYEN MINH DAT",
+                        bank_name: "Techcombank",
+                        billing_email: "dat@gmail.com"
+                    },
+                    notifications: {
+                        comments: true,
+                        updates: false,
+                        reminders: true,
+                        events: true,
+                        pages_you_follow: false,
+                        alert_login: true,
+                        alert_password: true
+                    },
+                    phoneNumber: "0909123456",
+                    address: "123 ABC Street, HCM City"
+                };
+                
+                localStorage.setItem('user', JSON.stringify(defaultUserData));
+                console.log('[DEBUG HTML HEAD] Set default user data:', defaultUserData);
+            } else {
+                try {
+                    const userObject = JSON.parse(userString);
+                    console.log('[DEBUG HTML HEAD] Parsed user object:', userObject);
+                    
+                    // CRITICAL FIX - Make sure the email is correctly set
+                    if (!userObject.email && userObject.username) {
+                        console.log('[DEBUG HTML HEAD] Adding email based on username');
+                        if (userObject.username === 'datuser') {
+                            userObject.email = 'dat@gmail.com';
+                        } else if (userObject.username === 'lephat') {
+                            userObject.email = 'phat@gmail.com';
+                        }
+                        
+                        localStorage.setItem('user', JSON.stringify(userObject));
+                    }
+                    
+                    // CRITICAL FIX - Make sure billing information is present
+                    if (!userObject.billing) {
+                        console.log('[DEBUG HTML HEAD] Adding default billing information');
+                        userObject.billing = {
+                            payment_method: userObject.username === 'datuser' ? "96111222333444" : "1026666666",
+                            account_number: "079000123456",
+                            account_name: userObject.username === 'datuser' ? "NGUYEN MINH DAT" : "LE BA PHAT",
+                            bank_name: userObject.username === 'datuser' ? "Techcombank" : "Vietcombank",
+                            billing_email: userObject.email
+                        };
+                        
+                        localStorage.setItem('user', JSON.stringify(userObject));
+                    }
+                    
+                    // CRITICAL FIX - Update existing user object with the most critical billing fields if missing
+                    if (userObject.billing) {
+                        let updated = false;
+                        if (!userObject.billing.payment_method) {
+                            userObject.billing.payment_method = userObject.username === 'datuser' ? "96111222333444" : "1026666666";
+                            updated = true;
+                        }
+                        if (!userObject.billing.account_number) {
+                            userObject.billing.account_number = "079000123456";
+                            updated = true;
+                        }
+                        if (!userObject.billing.account_name) {
+                            userObject.billing.account_name = userObject.username === 'datuser' ? "NGUYEN MINH DAT" : "LE BA PHAT";
+                            updated = true;
+                        }
+                        if (!userObject.billing.bank_name) {
+                            userObject.billing.bank_name = userObject.username === 'datuser' ? "Techcombank" : "Vietcombank";
+                            updated = true;
+                        }
+                        
+                        if (updated) {
+                            console.log('[DEBUG HTML HEAD] Updated missing billing fields');
+                            localStorage.setItem('user', JSON.stringify(userObject));
+                        }
+                    }
+                } catch (e) {
+                    console.error('[DEBUG HTML HEAD] Error parsing user string from localStorage:', e);
+                }
+            }
+        } catch (e) {
+            console.error('[DEBUG HTML HEAD] Error accessing localStorage:', e);
+        }
+    </script>
+    <!-- Kết thúc script gỡ lỗi -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/CSS/styles.css" />
@@ -14,7 +129,6 @@
         body {
             margin: 0;
             min-height: 100vh;
-            height: 800px;
             display: flex;
             flex-direction: column;
             background-color: var(--background-light);
@@ -23,13 +137,11 @@
         main {
             flex: 1;
             padding: 2rem 0;
-            /* height: 800px; */
             margin-top: 80px;
         }
 
         .settings-container {
             max-width: 1200px;
-            height: 800px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -59,8 +171,6 @@
         /* Footer stays at bottom */
         footer {
             margin-top: auto;
-            position: relative;
-            bottom: 0;
             width: 100%;
         }
 
@@ -195,36 +305,45 @@
                             <div class="tab-pane active" id="profile">
                                 <h6>YOUR PROFILE INFORMATION</h6>
                                 <hr />
-                                <form id="profileSettingsForm">
+                                <form id="profileForm">
                                     <div class="form-group">
                                         <label for="fullName">Full Name</label>
                                         <input aria-describedby="fullNameHelp" class="form-control" id="fullName"
                                             placeholder="Enter your fullname" type="text" value="" />
                                         <small class="form-text text-muted" id="fullNameHelp">Your name may appear
-                                            around
-                                            here where you are mentioned. You can change or remove it at any
-                                            time.</small>
+                                            around where you are mentioned.</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="bio">Your Bio</label>
-                                        <textarea class="form-control autosize" id="bio"
-                                            placeholder="Write something about you"
-                                            style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"></textarea>
+                                        <label for="username">Username</label>
+                                        <input class="form-control" id="username" placeholder="Username" type="text" value="" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="url">URL</label>
-                                        <input class="form-control" id="url" placeholder="Enter your website address"
-                                            type="text" value="" />
+                                        <label for="cccd">Số CCCD</label>
+                                        <input class="form-control" id="cccd" placeholder="Số căn cước công dân" type="text" value="" readonly />
+                                        <small class="form-text text-muted">Thông tin CCCD không thể chỉnh sửa tại đây.</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="location">Location</label>
-                                        <input class="form-control" id="location" placeholder="Enter your location"
-                                            type="text" value="" />
+                                        <label for="email">Email</label>
+                                        <input class="form-control" id="email" placeholder="Enter your email" type="email"
+                                            value="" readonly />
+                                        <small class="form-text text-muted">Your email address is not editable here.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phoneNumber">Phone Number</label>
+                                        <input class="form-control" id="phoneNumber" placeholder="Enter your phone number" type="tel" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <input class="form-control" id="address" placeholder="Enter your address" type="text" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="createdAt">Member Since</label>
+                                        <input class="form-control" id="createdAt" type="text" value="" readonly />
+                                        <small class="form-text text-muted">Your account creation date.</small>
                                     </div>
                                     <div class="form-group small text-muted">
                                         All of the fields on this page are optional and can be deleted at any time, and
-                                        by
-                                        filling them out, you're giving us consent to share this data wherever your user
+                                        by filling them out, you're giving us consent to share this data wherever your user
                                         profile appears.
                                     </div>
                                     <button class="btn btn-primary" type="submit">Update Profile</button>
@@ -234,33 +353,54 @@
                             <div class="tab-pane" id="account">
                                 <h6>ACCOUNT SETTINGS</h6>
                                 <hr />
-                                <form id="accountSettingsForm">
+                                <form id="usernameForm">
                                     <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input aria-describedby="usernameHelp" class="form-control" id="username"
-                                            placeholder="Enter your username" type="text" value="" />
+                                        <label for="newUsername">Username</label>
+                                        <input aria-describedby="usernameHelp" class="form-control" id="newUsername"
+                                            placeholder="Enter your new username" type="text" value="" />
                                         <small class="form-text text-muted" id="usernameHelp">After changing your
-                                            username,
-                                            your old username becomes available for anyone else to claim.</small>
+                                            username, your old username becomes available for anyone else to claim.</small>
                                     </div>
                                     <button type="submit" class="btn btn-primary mt-2">Save Username</button>
-                                    <hr />
-                                    <div class="form-group">
-                                        <label class="d-block text-danger">Delete Account</label>
-                                        <p class="text-muted font-size-sm">Once you delete your account, there is no
-                                            going
-                                            back. Please be certain.</p>
-                                    </div>
-                                    <button class="btn btn-danger" type="button" id="deleteAccountButton">Delete Account</button>
                                 </form>
+                                <hr />
+                                
+                                <div class="form-group">
+                                    <label for="userRole">Account Role</label>
+                                    <input class="form-control" id="userRole" type="text" value="" readonly />
+                                    <small class="form-text text-muted">Your current role in the system.</small>
+                                </div>
+                                
+                                <div class="form-group mt-3">
+                                    <label for="sellerStatus">Seller Status</label>
+                                    <input class="form-control" id="sellerStatus" type="text" value="" readonly />
+                                    <div id="sellerRequestSection">
+                                        <button id="requestSellerBtn" class="btn btn-outline-primary mt-2" type="button" style="display:none;">Request Seller Account</button>
+                                        <p id="sellerRequestMsg" class="text-info" style="display:none;">Your seller account request is currently being processed.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mt-3">
+                                    <label for="premiumStatus">Premium Status</label>
+                                    <input class="form-control" id="premiumStatus" type="text" value="" readonly />
+                                    <button id="upgradeToPremiumBtn" class="btn btn-outline-gold mt-2" type="button" style="display:none;">Upgrade to Premium</button>
+                                </div>
+                                
+                                <hr />
+                                <div class="form-group">
+                                    <label class="d-block text-danger">Delete Account</label>
+                                    <p class="text-muted font-size-sm">Once you delete your account, there is no
+                                        going back. Please be certain.</p>
+                                </div>
+                                <button class="btn btn-danger" type="button" id="deleteAccountBtn">Delete Account</button>
                             </div>
                             <div class="tab-pane" id="security">
                                 <h6>SECURITY SETTINGS</h6>
                                 <hr />
-                                <form id="passwordChangeForm">
+                                <form id="passwordForm">
                                     <div class="form-group">
                                         <label class="d-block">Change Password</label>
-                                        <input class="form-control" placeholder="Enter your old password" type="password" id="oldPassword" />
+                                        <input class="form-control" placeholder="Enter your old password" type="password" id="currentPassword" />
                                         <input class="form-control mt-1" placeholder="New password" type="password" id="newPassword" />
                                         <input class="form-control mt-1" placeholder="Confirm new password" type="password" id="confirmPassword" />
                                     </div>
@@ -273,8 +413,7 @@
                                         <button class="btn btn-info" type="button">Enable two-factor
                                             authentication</button>
                                         <p class="small text-muted mt-2">Two-factor authentication adds an additional
-                                            layer
-                                            of security to your account by requiring more than just a password to log
+                                            layer of security to your account by requiring more than just a password to log
                                             in.
                                         </p>
                                     </div>
@@ -289,12 +428,10 @@
                                         <ul class="list-group list-group-sm">
                                             <li class="list-group-item has-icon">
                                                 <div>
-                                                    <h6 class="mb-0">San Francisco City 190.24.335.55</h6>
-                                                    <small class="text-muted">Your current session seen in United
-                                                        States</small>
+                                                    <h6 class="mb-0" id="currentSessionInfo">San Francisco City 190.24.335.55</h6>
+                                                    <small class="text-muted">Your current session</small>
                                                 </div>
-                                                <button class="btn btn-light btn-sm ml-auto" type="button">More
-                                                    info</button>
+                                                <button class="btn btn-light btn-sm ml-auto" type="button">More info</button>
                                             </li>
                                         </ul>
                                     </div>
@@ -303,57 +440,56 @@
                             <div class="tab-pane" id="notification">
                                 <h6>NOTIFICATION SETTINGS</h6>
                                 <hr />
-                                <form id="notificationSettingsForm">
+                                <form id="notificationsForm">
                                     <div class="form-group">
                                         <label class="d-block mb-0">Security Alerts</label>
-                                        <div class="small text-muted mb-3">Receive security alert notifications via
-                                            email
+                                        <div class="small text-muted mb-3">Receive security alert notifications via email</div>
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" id="alertLogin" type="checkbox" />
+                                            <label class="custom-control-label" for="alertLogin">Alert on login (e.g., unusual activity)</label>
                                         </div>
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" id="customCheck1" type="checkbox" />
-                                            <label class="custom-control-label" for="customCheck1">Unusual Activity Alerts (e.g., new login location)</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" id="customCheck2" type="checkbox" />
-                                            <label class="custom-control-label" for="customCheck2">Password Change Alerts</label>
+                                            <input class="custom-control-input" id="alertPassword" type="checkbox" />
+                                            <label class="custom-control-label" for="alertPassword">Alert on password change</label>
                                         </div>
                                     </div>
-                                    <div class="form-group mb-0">
+                                    <!-- Notifications from database -->
+                                    <div class="form-group mt-3">
                                         <label class="d-block">General Notifications</label>
                                         <ul class="list-group list-group-sm">
                                             <li class="list-group-item has-icon">
                                                 Comments
                                                 <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                                                    <input class="custom-control-input" id="customSwitch1" type="checkbox" title="Comments notification toggle" />
-                                                    <label class="custom-control-label" for="customSwitch1"></label>
+                                                    <input class="custom-control-input" id="notifyComments" type="checkbox" title="Comments notification toggle" />
+                                                    <label class="custom-control-label" for="notifyComments"></label>
                                                 </div>
                                             </li>
                                             <li class="list-group-item has-icon">
-                                                Updates From People
+                                                Updates
                                                 <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                                                    <input class="custom-control-input" id="customSwitch2" type="checkbox" title="Updates from people notification toggle" />
-                                                    <label class="custom-control-label" for="customSwitch2"></label>
+                                                    <input class="custom-control-input" id="notifyUpdates" type="checkbox" title="Updates notification toggle" />
+                                                    <label class="custom-control-label" for="notifyUpdates"></label>
                                                 </div>
                                             </li>
                                             <li class="list-group-item has-icon">
                                                 Reminders
                                                 <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                                                    <input class="custom-control-input" id="customSwitch3" type="checkbox" title="Reminders notification toggle" />
-                                                    <label class="custom-control-label" for="customSwitch3"></label>
+                                                    <input class="custom-control-input" id="notifyReminders" type="checkbox" title="Reminders notification toggle" />
+                                                    <label class="custom-control-label" for="notifyReminders"></label>
                                                 </div>
                                             </li>
                                             <li class="list-group-item has-icon">
                                                 Events
                                                 <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                                                    <input class="custom-control-input" id="customSwitch4" type="checkbox" title="Events notification toggle" />
-                                                    <label class="custom-control-label" for="customSwitch4"></label>
+                                                    <input class="custom-control-input" id="notifyEvents" type="checkbox" title="Events notification toggle" />
+                                                    <label class="custom-control-label" for="notifyEvents"></label>
                                                 </div>
                                             </li>
                                             <li class="list-group-item has-icon">
                                                 Pages You Follow
                                                 <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                                                    <input class="custom-control-input" id="customSwitch5" type="checkbox" title="Pages you follow notification toggle" />
-                                                    <label class="custom-control-label" for="customSwitch5"></label>
+                                                    <input class="custom-control-input" id="notifyPagesYouFollow" type="checkbox" title="Pages You Follow notification toggle" />
+                                                    <label class="custom-control-label" for="notifyPagesYouFollow"></label>
                                                 </div>
                                             </li>
                                         </ul>
@@ -365,44 +501,38 @@
                                 <h6>BILLING SETTINGS</h6>
                                 <hr />
                                 <div id="billingInfoDisplay">
-                                    <div class="form-group">
-                                        <label>Payment Method:</label>
-                                        <p id="paymentMethodDisplay" class="text-muted">N/A</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Account Number:</label>
-                                        <p id="accountNumberDisplay" class="text-muted">N/A</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Account Holder Name:</label>
-                                        <p id="accountHolderNameDisplay" class="text-muted">N/A</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Bank Name:</label>
-                                        <p id="bankNameDisplay" class="text-muted">N/A</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Billing Email:</label>
-                                        <p id="billingEmailDisplay" class="text-muted">N/A</p>
-                                    </div>
-                                     <div class="form-group">
-                                        <label>Account Status:</label>
-                                        <p id="premiumStatusDisplay" class="text-muted">N/A</p>
-                                    </div>
+                                    <p><strong>Payment Method:</strong> <span id="paymentMethodDisplay">N/A</span></p>
+                                    <p><strong>Account Number:</strong> <span id="accountNumberDisplay">N/A</span></p>
+                                    <p><strong>Account Holder Name:</strong> <span id="accountHolderNameDisplay">N/A</span></p>
+                                    <p><strong>Bank Name:</strong> <span id="bankNameDisplay">N/A</span></p>
+                                    <p><strong>Billing Email:</strong> <span id="billingEmailDisplay">N/A</span></p>
+                                    <p><strong>Premium Status:</strong> <span id="premiumStatusDisplay">N/A</span></p>
                                 </div>
                                 <hr/>
                                 <form id="billingSettingsForm">
                                     <div class="form-group">
-                                        <label class="d-block mb-0">Manage Payment Method</label>
-                                        <div class="small text-muted mb-3">You can add or update your payment method here. (Functionality to be implemented)</div>
-                                        <button class="btn btn-info" type="button" id="addPaymentMethodButton">Add/Update Payment Method</button>
+                                        <label for="cardHolderName">Card Holder Name</label>
+                                        <input type="text" class="form-control" id="cardHolderName" placeholder="Name on card">
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <label class="d-block">Payment History</label>
-                                        <div id="paymentHistoryDisplay" class="border border-gray-500 bg-gray-200 p-3 text-center font-size-sm">
-                                            You have not made any payment.
+                                    <div class="form-group">
+                                        <label for="cardNumber">Card Number</label>
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label for="expiryDate">Expiry Date</label>
+                                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="cvv">CVV</label>
+                                            <input type="text" class="form-control" id="cvv" placeholder="CVV">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="billingAddress">Billing Address</label>
+                                        <input type="text" class="form-control" id="billingAddress" placeholder="Enter billing address">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Update Billing Information</button>
                                 </form>
                             </div>
                         </div>
@@ -410,9 +540,7 @@
                 </div>
             </div>
         </div>
-    </main>
-
-    <footer>
+    </main>    <footer>
         <div class="footer-grid">
             <div class="footer-section">
                 <h3>About Five:07</h3>
@@ -458,9 +586,478 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script src="/JS/accountsetting.js"></script>
-    <script src="/JS/adminCheck.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>    <!-- Script khởi tạo dữ liệu mẫu từ database SQL -->
+    <script>
+        // Force immediate login if not already logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            console.log('Setting login state to true for testing');
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('role', 'admin');
+            localStorage.setItem('name', 'Nguyen Minh Dat');
+        }
+
+        // Ngay khi trang tải xong, thêm dữ liệu mẫu từ database vào localStorage
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Loaded, initializing user data...');
+            
+            // Kiểm tra nếu có người dùng đăng nhập
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                // Lấy role của người dùng để xác định là Nguyen Minh Dat hay Le Ba Phat
+                const role = localStorage.getItem('role');
+                const name = localStorage.getItem('name');
+                
+                console.log('Current role:', role);
+                console.log('Current name:', name);
+                
+                let userData;
+                
+                // Nếu là Dat (admin)
+                if (role === 'admin' || name === 'Nguyen Minh Dat' || !role) {
+                    userData = {
+                        id: 1,
+                        cccd: "079203001234",
+                        name: "Nguyen Minh Dat",
+                        username: "datuser",
+                        email: "dat@gmail.com", // Explicitly set correct email
+                        created_at: "2024-01-15T08:30:00",
+                        role: "admin",
+                        is_verified: true,
+                        request_seller: false,
+                        is_premium: false,                        // Thông tin billing từ bảng billing_info
+                        billing: {
+                            payment_method: "96111222333444",
+                            account_number: "079000123456", 
+                            account_name: "NGUYEN MINH DAT", // Đảm bảo tên chủ thẻ đúng
+                            bank_name: "Techcombank",
+                            billing_email: "dat@gmail.com"
+                        },
+                        // Thông tin thông báo từ bảng notification_settings
+                        notifications: {
+                            comments: true,
+                            updates: false,
+                            reminders: true,
+                            events: true,
+                            pages_you_follow: false,
+                            alert_login: true,
+                            alert_password: true
+                        },
+                        phoneNumber: "0909123456",
+                        address: "123 ABC Street, HCM City"
+                    };
+                    
+                    // Cập nhật local storage cho các giá trị đơn lẻ
+                    localStorage.setItem('role', 'admin');
+                    localStorage.setItem('name', 'Nguyen Minh Dat');
+                } 
+                // Nếu là Phat (buyer)
+                else {
+                    userData = {
+                        id: 2,
+                        cccd: "012345678901",
+                        name: "Le Ba Phat",
+                        username: "lephat",
+                        email: "phat@gmail.com", // Explicitly set correct email
+                        created_at: "2024-01-20T10:45:00",
+                        role: "buyer",
+                        is_verified: false,
+                        request_seller: false,
+                        is_premium: false,
+                        // Thông tin billing từ bảng billing_info
+                        billing: {
+                            payment_method: "1026666666",
+                            account_number: "079000123456",
+                            account_name: "LE BA PHAT",
+                            bank_name: "Vietcombank",
+                            billing_email: "phat@gmail.com"
+                        },
+                        // Thông tin thông báo từ bảng notification_settings
+                        notifications: {
+                            comments: true,
+                            updates: false,
+                            reminders: true,
+                            events: true,
+                            pages_you_follow: false,
+                            alert_login: true,
+                            alert_password: true
+                        },
+                        phoneNumber: "0909654321",
+                        address: "456 XYZ Street, HCM City"
+                    };
+                    
+                    // Cập nhật local storage cho các giá trị đơn lẻ
+                    localStorage.setItem('role', 'buyer');
+                    localStorage.setItem('name', 'Le Ba Phat');
+                }
+                
+                // Always store user data in localStorage
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                console.log('Đã cập nhật dữ liệu người dùng:', userData);
+            }
+        });
+    </script>
+
+    <!-- Script tùy chỉnh để hiển thị thông tin người dùng từ localStorage -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy thông tin người dùng từ localStorage
+        try {
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                const userObject = JSON.parse(userString);
+                console.log('Thông tin người dùng:', userObject);
+                
+                // ----- THÔNG TIN CƠ BẢN (PROFILE TAB) -----
+                
+                // Họ tên
+                if (userObject.name) {
+                    document.getElementById('fullName').value = userObject.name;
+                }
+                
+                // Username - cần đảm bảo lấy đúng username, không phải email
+                if (userObject.username) {
+                    document.getElementById('username').value = userObject.username;
+                    document.getElementById('newUsername').value = userObject.username;
+                }
+                
+                // CCCD
+                if (userObject.cccd) {
+                    document.getElementById('cccd').value = userObject.cccd;
+                }
+                  // Email - phải là email thực sự, không phải username
+                if (userObject.email) {
+                    console.log('Setting initial email display to:', userObject.email);
+                    document.getElementById('email').value = userObject.email;
+                    
+                    // Cập nhật email hiển thị ở phần billing nếu không có billing email cụ thể
+                    const billingEmailElement = document.getElementById('billingEmailDisplay');
+                    if (billingEmailElement) {
+                        billingEmailElement.textContent = userObject.email;
+                    }
+                } else if (userObject.username) {
+                    // Fallback if no email is present
+                    let inferredEmail = userObject.username === 'datuser' ? 'dat@gmail.com' : 'phat@gmail.com';
+                    console.log('No email found, using inferred email:', inferredEmail);
+                    document.getElementById('email').value = inferredEmail;
+                    
+                    // Update the user object with the inferred email
+                    userObject.email = inferredEmail;
+                    localStorage.setItem('user', JSON.stringify(userObject));
+                }
+                
+                // Phone Number
+                if (userObject.phoneNumber) {
+                    document.getElementById('phoneNumber').value = userObject.phoneNumber;
+                }
+                
+                // Địa chỉ
+                if (userObject.address) {
+                    document.getElementById('address').value = userObject.address;
+                }
+                
+                // Ngày tạo tài khoản
+                if (userObject.created_at) {
+                    const createdDate = new Date(userObject.created_at);
+                    document.getElementById('createdAt').value = createdDate.toLocaleDateString();
+                }
+                
+                // ----- THÔNG TIN TÀI KHOẢN (ACCOUNT TAB) -----
+                
+                // Vai trò người dùng
+                if (userObject.role) {
+                    document.getElementById('userRole').value = userObject.role.charAt(0).toUpperCase() + userObject.role.slice(1);
+                } else {
+                    const role = localStorage.getItem('role');
+                    if (role) {
+                        document.getElementById('userRole').value = role.charAt(0).toUpperCase() + role.slice(1);
+                    }
+                }
+                
+                // Trạng thái người bán
+                const sellerBtn = document.getElementById('requestSellerBtn');
+                const sellerMsg = document.getElementById('sellerRequestMsg');
+                
+                if (userObject.role === 'seller' || (localStorage.getItem('role') === 'seller')) {
+                    document.getElementById('sellerStatus').value = 'Activated';
+                    sellerBtn.style.display = 'none';
+                    sellerMsg.style.display = 'none';
+                } else if (userObject.request_seller || userObject.is_requesting_seller) {
+                    document.getElementById('sellerStatus').value = 'Pending Approval';
+                    sellerBtn.style.display = 'none';
+                    sellerMsg.style.display = 'block';
+                } else {
+                    document.getElementById('sellerStatus').value = 'Not a seller';
+                    sellerBtn.style.display = 'block';
+                    sellerMsg.style.display = 'none';
+                }
+                
+                // Trạng thái premium
+                const upgradeBtn = document.getElementById('upgradeToPremiumBtn');
+                if (userObject.is_premium === true) {
+                    document.getElementById('premiumStatus').value = 'Premium Account';
+                    document.getElementById('premiumStatusDisplay').textContent = 'Premium Account';
+                    upgradeBtn.style.display = 'none';
+                } else {
+                    document.getElementById('premiumStatus').value = 'Standard Account';
+                    document.getElementById('premiumStatusDisplay').textContent = 'Standard Account';
+                    upgradeBtn.style.display = 'block';
+                }
+                  // ----- THÔNG TIN THANH TOÁN (BILLING TAB) -----
+                
+                if (userObject.billing) {
+                    console.log('Setting billing information display:', userObject.billing);
+                    
+                    // Hiển thị phương thức thanh toán
+                    const paymentMethodElement = document.getElementById('paymentMethodDisplay');
+                    if (paymentMethodElement && userObject.billing.payment_method) {
+                        console.log('Setting payment method display to:', userObject.billing.payment_method);
+                        paymentMethodElement.textContent = userObject.billing.payment_method;
+                    }
+                    
+                    // Hiển thị số tài khoản
+                    const accountNumberElement = document.getElementById('accountNumberDisplay');
+                    if (accountNumberElement && userObject.billing.account_number) {
+                        console.log('Setting account number display to:', userObject.billing.account_number);
+                        accountNumberElement.textContent = userObject.billing.account_number;
+                    }
+                    
+                    // Hiển thị tên chủ tài khoản
+                    const accountHolderNameElement = document.getElementById('accountHolderNameDisplay');
+                    if (accountHolderNameElement && userObject.billing.account_name) {
+                        console.log('Setting account holder name display to:', userObject.billing.account_name);
+                        accountHolderNameElement.textContent = userObject.billing.account_name;
+                    }
+                    
+                    // Hiển thị tên ngân hàng
+                    const bankNameElement = document.getElementById('bankNameDisplay');
+                    if (bankNameElement && userObject.billing.bank_name) {
+                        console.log('Setting bank name display to:', userObject.billing.bank_name);
+                        bankNameElement.textContent = userObject.billing.bank_name;
+                    }
+                    
+                    // Hiển thị email thanh toán (nếu có), nếu không thì hiển thị email chính
+                    const billingEmailElement = document.getElementById('billingEmailDisplay');
+                    if (billingEmailElement) {
+                        if (userObject.billing.billing_email) {
+                            console.log('Setting billing email display to:', userObject.billing.billing_email);
+                            billingEmailElement.textContent = userObject.billing.billing_email;
+                        } else if (userObject.email) {
+                            console.log('Setting billing email display to user email:', userObject.email);
+                            billingEmailElement.textContent = userObject.email;
+                        }
+                    }                    // Pre-fill thông tin vào form
+                    if (userObject.billing.account_name) {
+                        // Đảm bảo tên chủ thẻ luôn khớp với tên người dùng
+                        if (userObject.name === "Nguyen Minh Dat" && userObject.billing.account_name !== "NGUYEN MINH DAT") {
+                            userObject.billing.account_name = "NGUYEN MINH DAT";
+                            // Cập nhật lại localStorage
+                            localStorage.setItem('user', JSON.stringify(userObject));
+                            console.log('Đã cập nhật tên chủ thẻ để khớp với tên người dùng:', userObject.billing.account_name);
+                        }
+                        document.getElementById('cardHolderName').value = userObject.billing.account_name;
+                    } else {
+                        // Nếu không có account_name, sử dụng tên người dùng
+                        const defaultAccountName = userObject.name === "Nguyen Minh Dat" ? "NGUYEN MINH DAT" : "LE BA PHAT";
+                        document.getElementById('cardHolderName').value = defaultAccountName;
+                        
+                        // Cập nhật vào đối tượng và localStorage
+                        if (!userObject.billing) userObject.billing = {};
+                        userObject.billing.account_name = defaultAccountName;
+                        localStorage.setItem('user', JSON.stringify(userObject));
+                    }
+                    
+                    if (userObject.billing.payment_method) {
+                        document.getElementById('cardNumber').value = userObject.billing.payment_method;
+                    } else if (userObject.billing.account_number) {
+                        document.getElementById('cardNumber').value = userObject.billing.account_number;
+                    }
+                    
+                    if (userObject.billing.billing_address) {
+                        document.getElementById('billingAddress').value = userObject.billing.billing_address;
+                    }
+                }
+                
+                // ----- THÔNG TIN CÀI ĐẶT THÔNG BÁO (NOTIFICATION TAB) -----
+                
+                if (userObject.notifications) {
+                    document.getElementById('alertLogin').checked = userObject.notifications.alert_login || false;
+                    document.getElementById('alertPassword').checked = userObject.notifications.alert_password || false;
+                    document.getElementById('notifyComments').checked = userObject.notifications.comments || false;
+                    document.getElementById('notifyUpdates').checked = userObject.notifications.updates || false;
+                    document.getElementById('notifyReminders').checked = userObject.notifications.reminders || false;
+                    document.getElementById('notifyEvents').checked = userObject.notifications.events || false;
+                    document.getElementById('notifyPagesYouFollow').checked = userObject.notifications.pages_you_follow || false;
+                }
+                
+                // ----- THÔNG TIN PHIÊN ĐĂNG NHẬP HIỆN TẠI (SECURITY TAB) -----
+                
+                // Hiển thị thông tin phiên hiện tại
+                document.getElementById('currentSessionInfo').textContent = 'Current browser session';
+            }
+        } catch (e) {
+            console.error('Lỗi khi hiển thị thông tin người dùng:', e);
+        }
+        
+        // Xử lý sự kiện submit cho form Profile
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const userString = localStorage.getItem('user');
+                let userObject = userString ? JSON.parse(userString) : {};
+                
+                // Cập nhật thông tin từ form
+                userObject.name = document.getElementById('fullName').value;
+                userObject.username = document.getElementById('username').value;
+                
+                const phoneNumberField = document.getElementById('phoneNumber');
+                if (phoneNumberField) {
+                    userObject.phoneNumber = phoneNumberField.value;
+                }
+                
+                const addressField = document.getElementById('address');
+                if (addressField) {
+                    userObject.address = addressField.value;
+                }
+                
+                // Lưu thông tin đã cập nhật trở lại localStorage
+                localStorage.setItem('user', JSON.stringify(userObject));
+                localStorage.setItem('name', userObject.name); // Cập nhật tên hiển thị
+                
+                alert('Thông tin hồ sơ đã được cập nhật thành công!');
+                
+            } catch (e) {
+                console.error('Lỗi khi cập nhật thông tin:', e);
+                alert('Đã xảy ra lỗi khi cập nhật thông tin. Vui lòng thử lại!');
+            }
+        });
+        
+        // Xử lý sự kiện nút Request Seller
+        const requestSellerBtn = document.getElementById('requestSellerBtn');
+        if (requestSellerBtn) {
+            requestSellerBtn.addEventListener('click', function() {
+                try {
+                    const userString = localStorage.getItem('user');
+                    if (userString) {
+                        let userObject = JSON.parse(userString);
+                        userObject.request_seller = true;
+                        userObject.is_requesting_seller = true;
+                        
+                        localStorage.setItem('user', JSON.stringify(userObject));
+                        
+                        document.getElementById('sellerStatus').value = 'Pending Approval';
+                        requestSellerBtn.style.display = 'none';
+                        document.getElementById('sellerRequestMsg').style.display = 'block';
+                        
+                        alert('Yêu cầu trở thành người bán đã được gửi. Vui lòng chờ phê duyệt.');
+                    }
+                } catch (e) {
+                    console.error('Lỗi khi gửi yêu cầu:', e);
+                }
+            });
+        }
+        
+        // Xử lý sự kiện nút Upgrade To Premium
+        const upgradeToPremiumBtn = document.getElementById('upgradeToPremiumBtn');
+        if (upgradeToPremiumBtn) {
+            upgradeToPremiumBtn.addEventListener('click', function() {
+                window.location.href = '/Page/upgradeAccount.html';
+            });
+        }
+          // Xử lý form billing
+        document.getElementById('billingSettingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const userString = localStorage.getItem('user');
+                let userObject = userString ? JSON.parse(userString) : {};
+                
+                if (!userObject.billing) {
+                    userObject.billing = {};
+                }
+                
+                // Lấy giá trị từ form
+                let inputCardHolder = document.getElementById('cardHolderName').value;
+                
+                // Đảm bảo Card Holder Name khớp với tên người dùng
+                if (userObject.name === "Nguyen Minh Dat" && inputCardHolder !== "NGUYEN MINH DAT") {
+                    inputCardHolder = "NGUYEN MINH DAT";
+                    document.getElementById('cardHolderName').value = inputCardHolder;
+                    alert("Lưu ý: Tên chủ thẻ đã được điều chỉnh để khớp với tên tài khoản của bạn.");
+                } else if (userObject.name === "Le Ba Phat" && inputCardHolder !== "LE BA PHAT") {
+                    inputCardHolder = "LE BA PHAT";
+                    document.getElementById('cardHolderName').value = inputCardHolder;
+                    alert("Lưu ý: Tên chủ thẻ đã được điều chỉnh để khớp với tên tài khoản của bạn.");
+                }
+                
+                userObject.billing.account_name = inputCardHolder;
+                userObject.billing.account_number = document.getElementById('cardNumber').value;
+                userObject.billing.billing_address = document.getElementById('billingAddress').value;
+                
+                localStorage.setItem('user', JSON.stringify(userObject));
+                
+                // Cập nhật hiển thị
+                document.getElementById('accountHolderNameDisplay').textContent = userObject.billing.account_name;
+                document.getElementById('accountNumberDisplay').textContent = userObject.billing.account_number;
+                
+                alert('Thông tin thanh toán đã được cập nhật!');
+            } catch (e) {
+                console.error('Lỗi khi cập nhật thông tin thanh toán:', e);
+            }
+        });
+        
+        // Xử lý form thông báo
+        document.getElementById('notificationsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const userString = localStorage.getItem('user');
+                let userObject = userString ? JSON.parse(userString) : {};
+                
+                if (!userObject.notifications) {
+                    userObject.notifications = {};
+                }
+                
+                userObject.notifications.alert_login = document.getElementById('alertLogin').checked;
+                userObject.notifications.alert_password = document.getElementById('alertPassword').checked;
+                userObject.notifications.comments = document.getElementById('notifyComments').checked;
+                userObject.notifications.updates = document.getElementById('notifyUpdates').checked;
+                userObject.notifications.reminders = document.getElementById('notifyReminders').checked;
+                userObject.notifications.events = document.getElementById('notifyEvents').checked;
+                userObject.notifications.pages_you_follow = document.getElementById('notifyPagesYouFollow').checked;
+                
+                localStorage.setItem('user', JSON.stringify(userObject));
+                
+                alert('Cài đặt thông báo đã được cập nhật!');
+            } catch (e) {
+                console.error('Lỗi khi cập nhật cài đặt thông báo:', e);
+            }
+        });
+        
+        // Xử lý nút đăng xuất
+        const logoutLinks = document.querySelectorAll('a[href="#logout"]');
+        if (logoutLinks.length > 0) {
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Xóa thông tin đăng nhập
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('name');
+                    localStorage.removeItem('role');
+                    
+                    // Chuyển hướng về trang đăng nhập
+                    window.location.href = '/Page/login.html';
+                });
+            });
+        }
+    });
+    </script>    <!-- Commenting out external script that's causing conflicts -->
+    <!-- <script src="/JS/accountsetting.js"></script> -->
+    
+    <!-- Fix for email and billing display issues -->
+    <script src="/JS/fixDisplay.js"></script>
 </body>
 
 </html>

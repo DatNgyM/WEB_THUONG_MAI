@@ -12,6 +12,7 @@ const adminUsers = require('./routes/adminUsers');
 const authRoutes = require('./routes/auth');
 const requestSellerRoute = require('./routes/requestSeller');
 const chatbotRoute = require('./routes/chatbot');
+const featuredProductsRoute = require('./routes/featuredProducts'); // Thêm dòng này
 
 // Các route trong thư mục account/
 const profileRoutes = require('../JS/profile');
@@ -44,6 +45,7 @@ app.use('/auth', authRoutes);             // login admin
 app.use('/admin', adminUsers);            // quản lý user từ admin
 app.use('/user', userRegister);           // đăng ký tài khoản người dùng
 app.use('/api/chatbot', chatbotRoute);    // chatbot API
+app.use('/server/featured-products', featuredProductsRoute); // Thêm dòng này
 
 // Các route account settings
 app.use('/api/profile', profileRoutes);
