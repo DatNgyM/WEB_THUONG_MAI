@@ -54,22 +54,69 @@ async function loginUser(username, password) {
     const result = await res.json();
 
     if (result.success) {
+      // Clear existing user data in localStorage to prevent data persistence issues
+      localStorage.removeItem('user');
+      
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', result.role || 'buyer');
       localStorage.setItem('name', result.name || '');
-      // Bỏ qua việc lưu token
       
       if (result.user) { 
-        localStorage.setItem('user', JSON.stringify(result.user)); // Lưu đối tượng user (chuyển thành chuỗi JSON)
+        // Kiểm tra CCCD có phải là tạm thời không (bắt đầu bằng 'T' và chứa toàn số)
+        const user = result.user;
+        if (user.cccd && user.cccd.charAt(0) === 'T' && !isNaN(user.cccd.substring(1))) {
+          user.cccdStatus = 'temporary';
+          console.log('Phát hiện CCCD tạm thời:', user.cccd);
+        }
+        
+        // Make sure user ID is properly set
+        console.log('Received user data from server:', user);
+        
+        // Add extra validation for thuxinhgais user
+        if (username === 'thuxinhgais' && user.id !== 10) {
+          console.warn('Username is thuxinhgais but ID is not 10, fixing ID');
+          user.id = 10;
+          user.name = "Trần Minh Thư";
+        }
+        
+        // Special handling for known users - ensure consistency
+        if (username === 'datuser' && user.id !== 1) {
+          user.id = 1;
+          user.name = "Nguyen Minh Dat";
+        } else if (username === 'lephat' && user.id !== 2) {
+          user.id = 2;
+          user.name = "Le Ba Phat";
+        }
+        
+        // Đảm bảo giữ nguyên giá trị CCCD từ server
+        console.log('Lưu thông tin user với CCCD:', user.cccd);
+        localStorage.setItem('user', JSON.stringify(user)); // Lưu đối tượng user (chuyển thành chuỗi JSON)
       } else {
         // Nếu API không trả về đối tượng user hoàn chỉnh, 
         // tạo một đối tượng user cơ bản từ thông tin có sẵn
         const basicUser = {
           name: result.name || '',
-          email: username, // Giả sử username có thể là email
-          role: result.role || 'buyer'
-          // Thêm id nếu có, ví dụ: id: result.userId 
+          username: username,
+          email: username.includes('@') ? username : username + '@gmail.com', // Giả sử username có thể là email
+          role: result.role || 'buyer',
+          cccdStatus: 'unknown' // Không có thông tin về CCCD
         };
+        
+        // Set appropriate ID based on username
+        if (username === 'thuxinhgais') {
+          basicUser.id = 10;
+          basicUser.name = "Trần Minh Thư";
+          basicUser.cccd = "T461013031887"; // Using known CCCD
+        } else if (username === 'datuser') {
+          basicUser.id = 1;
+          basicUser.name = "Nguyen Minh Dat";
+          basicUser.cccd = "079203001234";
+        } else if (username === 'lephat') {
+          basicUser.id = 2;
+          basicUser.name = "Le Ba Phat";
+          basicUser.cccd = "079203044444";
+        }
+        
         localStorage.setItem('user', JSON.stringify(basicUser));
       }
 

@@ -8,8 +8,10 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-
+-- Thêm trường phone vào bảng users
+ALTER TABLE users ADD COLUMN phone VARCHAR(15);
+-- Thêm trường address vào bảng users
+ALTER TABLE users ADD COLUMN address VARCHAR(255);
 -- Bảng vai trò & trạng thái đăng ký bán hàng của người dùng
 CREATE TABLE user_roles (
     cccd VARCHAR(20) PRIMARY KEY REFERENCES users(cccd), -- Liên kết bằng CCCD
@@ -99,8 +101,7 @@ ALTER TABLE products ADD COLUMN image VARCHAR(255);
 Select *from products;
 
 -- Thêm sản phẩm với hình ảnh
-INSERT INTO products (name, description, price, stock_quantity, seller_id, image)
-VALUES ('iPhone 16 Pro Max', 'Iphone 16 Pro Bản Mỹ', 28000000.00, 20, 1, 'iphone-16-pro-max-titan.jpg');
+
 SELECT * FROM products ORDER BY id DESC;
 -- 2. Tạo bảng hóa đơn (đã gộp cả thông tin đơn hàng)
 CREATE TABLE invoices (
@@ -119,7 +120,7 @@ CREATE TABLE invoices (
     FOREIGN KEY (buyer_id) REFERENCES users(id),
     FOREIGN KEY (seller_id) REFERENCES users(id)
 );
-
+select *from invoices
 -- 3. Bảng chi tiết hóa đơn (sản phẩm trong từng hóa đơn)
 CREATE TABLE invoice_items (
     id SERIAL PRIMARY KEY,
@@ -152,6 +153,26 @@ CREATE TABLE payment_session_details (
     FOREIGN KEY (session_id) REFERENCES payment_sessions(id) ON DELETE CASCADE,
     FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
 );
+
+-- Cho phép NULL trong trường hợp người dùng thông thường
+ALTER TABLE users ALTER COLUMN cccd DROP NOT NULL;
+
+-- HOẶC nếu muốn giữ NOT NULL, sử dụng trigger để tự động tạo mã tạm thời
+CREATE OR REPLACE FUNCTION generate_temp_cccd()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.cccd IS NULL THEN
+        NEW.cccd := 'TEMP' || to_char(NOW(), 'YYMMDD') || lpad(nextval('temp_cccd_seq')::text, 4, '0');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER generate_temp_cccd_trigger
+BEFORE INSERT ON users
+FOR EACH ROW
+EXECUTE PROCEDURE generate_temp_cccd();
+
 
 
 -- Thêm cài đặt thông báo cho user_id = 1

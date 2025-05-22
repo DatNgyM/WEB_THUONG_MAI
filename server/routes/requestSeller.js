@@ -7,10 +7,32 @@ router.post('/', async (req, res) => {
   if (!username) return res.status(400).json({ success: false, message: 'Thiếu username' });
 
   try {
+    // Kiểm tra CCCD của người dùng trước khi cho đăng ký
+    const userCheck = await db.query(
+      `SELECT cccd FROM users WHERE username = $1`,
+      [username]
+    );
+    
+    if (userCheck.rowCount === 0) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
+    }
+    
+    // Kiểm tra CCCD có hợp lệ không (không phải tạm thời)
+    const cccd = userCheck.rows[0].cccd;
+    if (!cccd || (cccd.charAt(0) === 'T' && !isNaN(cccd.substring(1)))) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Bạn cần cập nhật CCCD hợp lệ trước khi đăng ký người bán',
+        needCccdUpdate: true
+      });
+    }
+    
+    // Nếu CCCD hợp lệ, tiếp tục đăng ký
     const result = await db.query(
       `UPDATE users SET request_seller = TRUE WHERE username = $1 RETURNING *`,
       [username]
     );
+    
     if (result.rowCount === 0) {
       return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
     }

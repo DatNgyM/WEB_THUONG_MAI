@@ -51,10 +51,26 @@ router.post('/login', async (req, res) => {
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
+      
+      // Tạo đối tượng user để trả về cho client với đầy đủ thông tin
+      const userResponse = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        cccd: user.cccd, // Bao gồm cả CCCD
+        role: user.role,
+        created_at: user.created_at,
+        is_verified: user.is_verified || false,
+        request_seller: user.request_seller || false,
+        is_premium: user.is_premium || false
+      };
+      
       res.json({
         success: true,
         name: user.name,
-        role: user.role
+        role: user.role,
+        user: userResponse // Trả về toàn bộ thông tin user
       });
     } else {
       res.status(401).json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' });

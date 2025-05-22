@@ -15,6 +15,23 @@ function checkAuthAndRole() {
         window.location.href = 'login.html';
         return;
     }
+    
+    // Check if user has valid CCCD
+    try {
+        const userString = localStorage.getItem('user');
+        if (userString) {
+            const user = JSON.parse(userString);
+            // Check if CCCD is temporary (starts with T)
+            if (!user.cccd || (user.cccd.charAt(0) === 'T' && !isNaN(user.cccd.substring(1)))) {
+                // Redirect to account settings with a message
+                alert('Bạn cần cập nhật CCCD hợp lệ trước khi sử dụng cổng người bán.');
+                window.location.href = 'accountsetting.html#profile';
+                return;
+            }
+        }
+    } catch (e) {
+        console.error("Error checking CCCD:", e);
+    }
 
     // Verify if user is a seller
     fetch('../server/routes/auth/verify-seller', {

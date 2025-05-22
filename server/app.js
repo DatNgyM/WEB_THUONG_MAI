@@ -8,6 +8,7 @@ const app = express();
 // Các route chính
 const userRegister = require('./routes/userRegister');
 const userAuth = require('./routes/userAuth');
+const userUpdate = require('./routes/userUpdate'); // Thêm route cập nhật thông tin người dùng
 const adminUsers = require('./routes/adminUsers');
 const authRoutes = require('./routes/auth');
 const requestSellerRoute = require('./routes/requestSeller');
@@ -44,6 +45,7 @@ app.use('/userAuth', userAuth);           // login người dùng
 app.use('/auth', authRoutes);             // login admin
 app.use('/admin', adminUsers);            // quản lý user từ admin
 app.use('/user', userRegister);           // đăng ký tài khoản người dùng
+app.use('/users', userUpdate);            // cập nhật thông tin người dùng
 app.use('/api/chatbot', chatbotRoute);    // chatbot API
 app.use('/server/featured-products', featuredProductsRoute); // Thêm dòng này
 

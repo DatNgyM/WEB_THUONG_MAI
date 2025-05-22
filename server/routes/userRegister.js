@@ -4,7 +4,7 @@ const pool = require('../db');
 
 // Đăng ký tài khoản người dùng
 router.post('/register', async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { name, username, email, password, cccd } = req.body;
   console.log('BODY:', req.body); 
   try {
     // Check trùng username hoặc email
@@ -13,9 +13,13 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ success: false, message: 'Email hoặc username đã tồn tại' });
     }
 
+    // Generate temporary CCCD if not provided
+    // Sử dụng format ngắn hơn, tối đa 20 ký tự
+    const userCccd = cccd || `T${Math.floor(Math.random() * 1000000000000).toString().padStart(12, '0')}`;
+
     const result = await pool.query(
-      'INSERT INTO users(name, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, username, email, password]
+      'INSERT INTO users(name, username, email, password, cccd) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, username, email, password, userCccd]
     );
 
     res.status(201).json({ success: true, message: 'Đăng ký thành công', user: result.rows[0] });
