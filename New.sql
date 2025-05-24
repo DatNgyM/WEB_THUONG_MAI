@@ -222,3 +222,16 @@ SET is_premium = EXCLUDED.is_premium,
     account_name = EXCLUDED.account_name,
     bank_name = EXCLUDED.bank_name,
     billing_email = EXCLUDED.billing_email;
+
+
+
+	-- Tạo bảng sessions để lưu trữ phiên đăng nhập
+CREATE TABLE sessions (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL,
+  CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+);
+
+-- Tạo chỉ mục cho phép truy vấn nhanh sessions theo thời hạn
+CREATE INDEX "IDX_session_expire" ON "sessions" ("expire");

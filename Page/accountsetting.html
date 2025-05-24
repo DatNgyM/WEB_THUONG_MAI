@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Settings - Five:05 Store</title>    <!-- Script kiểm tra localStorage -->
-    <script>
+    <title>Account Settings - Five:05 Store</title>    <!-- Script kiểm tra localStorage -->    <script>
         // Kiểm tra xem người dùng đã đăng nhập chưa
         if (!localStorage.getItem('isLoggedIn') || !localStorage.getItem('user')) {
             console.log('Chuyển hướng đến trang đăng nhập');
@@ -13,9 +12,12 @@
         }
     </script><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="/CSS/styles.css" />    <script src="/JS/authDisplay.js" defer></script>
+    <link rel="stylesheet" href="/CSS/styles.css" />    <script src="/JS/cookieCleaner.js"></script>
+    <script src="/JS/sessionAuthCheck.js" defer></script>
+    <script src="/JS/authDisplay.js" defer></script>
     <script src="/JS/cccdUtils.js" defer></script>
     <script src="/JS/userDataManager.js" defer></script>
+    <script src="/JS/sessionUserManager.js" defer></script>
     <script src="/JS/cccdSynchronizer.js" defer></script>
     <script src="/JS/checkUserInfo.js" defer></script>
 
@@ -476,15 +478,16 @@
         <div class="footer-bottom">
             <p>&copy; 2025 Five:07 Store. All rights reserved.</p>
         </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>    <!-- Script cập nhật thông tin người dùng -->
+    </footer>    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/sessionLogout.js"></script>
+    <!-- Script cập nhật thông tin người dùng -->
     <script>
         console.log('Trang thiết lập tài khoản đã sẵn sàng');
-    </script>    <!-- Script tùy chỉnh để hiển thị thông tin người dùng từ localStorage -->
+    </script>
+    <!-- Script tùy chỉnh để hiển thị thông tin người dùng từ localStorage/session -->
     <script>
-    // UserDataManager.js sẽ xử lý tất cả chức năng hiển thị và xử lý dữ liệu
+    // UserDataManager.js và sessionUserManager.js sẽ xử lý tất cả chức năng hiển thị và xử lý dữ liệu
     </script>
 </body>
 

@@ -11,11 +11,23 @@ document.querySelector('#login-form').addEventListener('submit', async function 
 
   // input là admin (dựa trên định dạng @admin hoặc username chứa "admin")
   const isAdmin = input.toLowerCase().includes('admin');
+  
+  // Check if we should use session-based authentication
+  const useSession = document.querySelector('#use-session')?.checked || false;
+  localStorage.setItem('useSession', useSession.toString());
 
   if (isAdmin) {
-    await loginAdmin(input, password);
+    if (useSession && typeof loginAdminWithSession === 'function') {
+      await loginAdminWithSession(input, password);
+    } else {
+      await loginAdmin(input, password);
+    }
   } else {
-    await loginUser(input, password);
+    if (useSession && typeof loginUserWithSession === 'function') {
+      await loginUserWithSession(input, password);
+    } else {
+      await loginUser(input, password);
+    }
   }
 });
 

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Authentication Tests</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/styles.css" />
+    <style>
+        .test-container {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .test-passed {
+            color: green;
+        }
+        .test-failed {
+            color: red;
+        }
+        .test-skipped {
+            color: orange;
+        }
+        .action-buttons {
+            margin: 20px 0;
+        }
+        .action-buttons button {
+            margin-right: 10px;
+        }
+    </style>
+    <script src="/JS/sessionLogin.js"></script>
+    <script src="/JS/sessionLogout.js"></script>
+    <script src="/JS/sessionAdminLogin.js"></script>
+    <script src="/JS/sessionAuthTests.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Session Authentication Test Page</h1>
+        <div class="mb-4">
+            <p>This page tests the functionality of the new session-based authentication system.</p>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">Authentication Status</div>
+            <div class="card-body">
+                <div id="auth-status">Loading authentication status...</div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="check-status" class="btn btn-primary">Check Session Status</button>
+            <button id="logout-button" class="btn btn-warning">Logout</button>
+            <button id="login-redirect" class="btn btn-success">Go to Login</button>
+            <button id="clear-storage" class="btn btn-danger">Clear Local Storage</button>
+        </div>
+        
+        <div class="test-container">
+            <h2>Test Results</h2>
+            <div id="session-test-results">
+                Tests are running, please wait...
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">Session Storage</div>
+            <div class="card-body">
+                <h3>Local Storage Data</h3>
+                <pre id="local-storage-display"></pre>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display auth status
+            updateAuthStatus();
+            
+            // Display localStorage data
+            updateLocalStorageDisplay();
+            
+            // Add button handlers
+            document.getElementById('check-status').addEventListener('click', checkSessionStatus);
+            document.getElementById('login-redirect').addEventListener('click', () => {
+                window.location.href = '/Page/login.html';
+            });
+            document.getElementById('clear-storage').addEventListener('click', () => {
+                localStorage.clear();
+                updateLocalStorageDisplay();
+                updateAuthStatus();
+            });
+            
+            // Add event listener for logout button
+            const logoutButton = document.getElementById('logout-button');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', async () => {
+                    if (localStorage.getItem('isLoggedIn') === 'true') {
+                        if (localStorage.getItem('useSession') === 'true') {
+                            // Use session logout
+                            if (localStorage.getItem('role') === 'admin') {
+                                await logoutAdminSession();
+                            } else {
+                                await logoutSession();
+                            }
+                        } else {
+                            // Use simple logout
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('role');
+                            localStorage.removeItem('name');
+                            localStorage.removeItem('user');
+                            updateAuthStatus();
+                            updateLocalStorageDisplay();
+                        }
+                    } else {
+                        alert('Not logged in');
+                    }
+                });
+            }
+        });
+        
+        async function checkSessionStatus() {
+            try {
+                const res = await fetch('/session/status', {
+                    credentials: 'include'
+                });
+                
+                const data = await res.json();
+                
+                const statusDiv = document.getElementById('auth-status');
+                if (statusDiv) {
+                    const useSession = localStorage.getItem('useSession') === 'true';
+                    statusDiv.innerHTML = `
+                        <p><strong>Using Session Auth:</strong> ${useSession ? 'Yes' : 'No'}</p>
+                        <p><strong>Server Session Status:</strong> ${data.isAuthenticated ? 'Authenticated' : 'Not Authenticated'}</p>
+                        <p><strong>Local Login Status:</strong> ${localStorage.getItem('isLoggedIn') === 'true' ? 'Logged In' : 'Not Logged In'}</p>
+                        <p><strong>Role:</strong> ${localStorage.getItem('role') || 'None'}</p>
+                        <p><strong>Name:</strong> ${localStorage.getItem('name') || 'None'}</p>
+                    `;
+                    
+                    if (data.isAuthenticated && data.user) {
+                        statusDiv.innerHTML += `
+                            <h4>Session User Info:</h4>
+                            <pre>${JSON.stringify(data.user, null, 2)}</pre>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking session status:', error);
+                const statusDiv = document.getElementById('auth-status');
+                if (statusDiv) {
+                    statusDiv.innerHTML = `<p>Error checking session: ${error.message}</p>`;
+                }
+            }
+        }
+        
+        function updateAuthStatus() {
+            const statusDiv = document.getElementById('auth-status');
+            if (!statusDiv) return;
+            
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const role = localStorage.getItem('role');
+            const name = localStorage.getItem('name');
+            const useSession = localStorage.getItem('useSession') === 'true';
+            
+            statusDiv.innerHTML = `
+                <p><strong>Using Session Auth:</strong> ${useSession ? 'Yes' : 'No'}</p>
+                <p><strong>Local Login Status:</strong> ${isLoggedIn ? 'Logged In' : 'Not Logged In'}</p>
+                <p><strong>Role:</strong> ${role || 'None'}</p>
+                <p><strong>Name:</strong> ${name || 'None'}</p>
+            `;
+        }
+        
+        function updateLocalStorageDisplay() {
+            const display = document.getElementById('local-storage-display');
+            if (!display) return;
+            
+            const storageData = {};
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                let value = localStorage.getItem(key);
+                
+                // Try to parse JSON values
+                try {
+                    if (value.startsWith('{') || value.startsWith('[')) {
+                        value = JSON.parse(value);
+                    }
+                } catch (e) {
+                    // Keep as string if not valid JSON
+                }
+                
+                storageData[key] = value;
+            }
+            
+            display.textContent = JSON.stringify(storageData, null, 2);
+        }
+    </script>
+</body>
+</html>

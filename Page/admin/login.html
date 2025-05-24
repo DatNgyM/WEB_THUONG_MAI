@@ -64,5 +64,30 @@
     </div>    <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/adminLogin.js"></script>
+    <script src="/JS/sessionAdminLogin.js"></script>
+    <script>
+        // Initialize session-based authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup form submission to use session auth instead of JWT
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                // Use session-based login
+                loginAdminWithSession(username, password);
+            });
+            
+            // Check if already has a session
+            checkAdminSessionStatus().then(isAuthenticated => {
+                if (isAuthenticated) {
+                    window.location.href = '/Page/admin/index.html';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

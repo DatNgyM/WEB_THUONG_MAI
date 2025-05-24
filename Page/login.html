@@ -94,6 +94,13 @@
                                             </div>
                                             <a href="#" class="forgot-password">Forgot password?</a>
                                         </div>
+                                        
+                                        <div class="form-options mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="use-session" checked />
+                                                <label class="form-check-label" for="use-session">Sử dụng xác thực phiên (Session)</label>
+                                            </div>
+                                        </div>
 
                                         <button type="submit" class="btn btn-primary w-100">Sign In</button>
 
@@ -230,7 +237,12 @@
         </div>
     </footer>
 
+    <script src="/JS/cookieCleaner.js"></script>
+    <script src="/JS/preventAutoLogin.js"></script>
     <script src="/JS/home.js"></script>
+    <!-- Session-based authentication scripts -->
+    <script src="/JS/sessionLogin.js"></script>
+    <script src="/JS/sessionAdminLogin.js"></script>
     <script src="/JS/login.js"></script>
     <script src="/JS/register.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

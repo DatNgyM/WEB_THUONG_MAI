@@ -407,8 +407,19 @@
     <script src="js/Chart.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="/JS/handleLogout.js"></script>
+    <script src="/JS/sessionAdminLogin.js"></script>
+    <script src="/JS/sessionAdminLogout.js"></script>
+    <script src="/JS/cookieCleaner.js"></script>
     <script>
         $(document).ready(function () {
+            // Check for valid admin session first
+            checkAdminSessionStatus().then(isAuthenticated => {
+                if (!isAuthenticated) {
+                    window.location.href = '/Page/admin/login.html';
+                    return;
+                }
+            });
+            
             // Toggle sidebar
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
