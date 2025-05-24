@@ -34,14 +34,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/profile'); 
             if (!response.ok) throw new Error('Failed to fetch profile');
             const data = await response.json();
-            document.getElementById('fullName').value = data.fullName || '';
-            document.getElementById('phoneNumber').value = data.phoneNumber || '';
-            document.getElementById('address').value = data.address || '';
+            document.getElementById('fullName').value = data.fullName || user.name || '';
+            document.getElementById('phoneNumber').value = data.phoneNumber || user.phone || '';
+            document.getElementById('address').value = data.address || user.address || '';
             document.getElementById('email').value = user.email; // Email from localStorage, typically not editable here
+            
+            // Lưu thông tin địa chỉ vào localStorage để có thể sử dụng trong trang checkout
+            if (data.address && !user.address) {
+                user.address = data.address;
+                localStorage.setItem('user', JSON.stringify(user));
+            }
+            
+            // Nếu có thông tin thanh toán, lưu vào localStorage
+            if (data.paymentMethods) {
+                savePaymentInfo(data.paymentMethods);
+            }
         } catch (error) {
             console.error('Error fetching profile:', error);
-            alert('Could not load your profile information.');
+            // Nếu API lỗi, vẫn hiển thị thông tin từ localStorage
+            if (user) {
+                document.getElementById('fullName').value = user.name || '';
+                document.getElementById('phoneNumber').value = user.phone || '';
+                document.getElementById('address').value = user.address || '';
+                document.getElementById('email').value = user.email || '';
+            }
         }
+    }
+    
+    // Lưu thông tin thanh toán vào localStorage
+    function savePaymentInfo(paymentMethods) {
+        // Kiểm tra xem đã có thông tin thanh toán trong localStorage chưa
+        const existingPaymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        
+        // Cập nhật thông tin thẻ tín dụng nếu có
+        if (paymentMethods.creditCard) {
+            existingPaymentInfo.creditCard = paymentMethods.creditCard;
+        }
+        
+        // Cập nhật thông tin tài khoản ngân hàng nếu có
+        if (paymentMethods.bankAccount) {
+            existingPaymentInfo.bankAccount = paymentMethods.bankAccount;
+        }
+        
+        // Lưu thông tin thanh toán cập nhật vào localStorage
+        localStorage.setItem('userPaymentInfo', JSON.stringify(existingPaymentInfo));
     }
 
     // Function to fetch notifications settings
@@ -101,12 +137,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to update profile');
             }
+            
+            // Cập nhật thông tin trong localStorage
+            if (user) {
+                user.name = fullName;
+                user.phone = phoneNumber;
+                user.address = address;
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                // Nếu đây là địa chỉ mặc định, thêm vào danh sách địa chỉ
+                saveAddressToUserAddresses(fullName, address);
+            }
+            
             alert('Profile updated successfully!');
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert(`Error: ${error.message}`);
+            
+            // Ngay cả khi API lỗi, vẫn cập nhật localStorage để sử dụng ở trang checkout
+            if (user) {
+                user.name = fullName;
+                user.phone = phoneNumber;
+                user.address = address;
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                // Lưu địa chỉ vào danh sách địa chỉ
+                saveAddressToUserAddresses(fullName, address);
+            }
+            
+            alert('Your information has been saved locally, but could not be synchronized with the server');
         }
     });
+    
+    /**
+     * Lưu địa chỉ vào danh sách địa chỉ người dùng
+     */
+    function saveAddressToUserAddresses(name, address) {
+        if (!address) return;
+        
+        // Lấy danh sách địa chỉ hiện có
+        const addresses = JSON.parse(localStorage.getItem('userAddresses')) || [];
+        
+        // Kiểm tra xem địa chỉ đã tồn tại chưa
+        const existingAddressIndex = addresses.findIndex(addr => addr.address === address);
+        
+        if (existingAddressIndex !== -1) {
+            // Nếu đã tồn tại, cập nhật
+            addresses[existingAddressIndex].name = name || 'Home Address';
+            addresses[existingAddressIndex].isDefault = true;
+        } else {
+            // Nếu chưa tồn tại, đánh dấu các địa chỉ khác không phải mặc định
+            addresses.forEach(addr => {
+                addr.isDefault = false;
+            });
+            
+            // Thêm địa chỉ mới
+            addresses.push({
+                name: name || 'Home Address',
+                address: address,
+                isDefault: true,
+                dateAdded: new Date().toISOString()
+            });
+        }
+        
+        // Lưu lại vào localStorage
+        localStorage.setItem('userAddresses', JSON.stringify(addresses));
+    }
 
     // Handle Username Change Form Submission
     document.getElementById('usernameForm')?.addEventListener('submit', async (event) => {

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmation - Five:07 Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/styles.css" />
+    <script src="/JS/authDisplay.js" defer></script>
+    <script src="/JS/chatWidget.js" defer></script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        .confirmation-header {
+            background: #fff;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .confirmation-page {
+            padding: 40px 0 60px;
+        }
+        .confirmation-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .confirmation-section {
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .confirmation-section:last-child {
+            border-bottom: none;
+        }
+        .confirmation-section h3 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: #212529;
+            display: flex;
+            align-items: center;
+        }
+        .confirmation-section h3 i {
+            margin-right: 10px;
+            color: #4e73df;
+        }
+        .success-icon {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .order-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .order-details {
+            margin-bottom: 20px;
+        }
+        .order-details dl {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+        }
+        .order-details dt {
+            font-weight: 600;
+        }
+        .order-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .order-total {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order-total-row:last-child {
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+        }
+        .btn-continue-shopping {
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-continue-shopping:hover {
+            background-color: #3756a4;
+        }
+        @media (min-width: 768px) {
+            .saved-addresses-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .delivery-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="confirmation-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <a href="/Page/index.html" class="text-decoration-none">
+                        <h1 class="m-0">Five:07 Store</h1>
+                    </a>
+                </div>
+                <div class="col-auto">
+                    <div id="auth-display" class="d-flex align-items-center">
+                        <a href="/Page/login.html" class="btn btn-outline-primary me-2">Login</a>
+                        <a href="/Page/login.html?register=true" class="btn btn-primary">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="confirmation-page">
+        <div class="container">
+            <div class="confirmation-container">
+                <div class="confirmation-section">
+                    <div class="order-header">
+                        <i class="fas fa-check-circle success-icon"></i>
+                        <h2>Order Confirmation</h2>
+                        <p class="text-muted">Thank you for your purchase!</p>
+                    </div>
+
+                    <div class="confirmation-section">
+                        <h3><i class="fas fa-info-circle"></i> Order Information</h3>
+                        <div class="order-details">
+                            <dl>
+                                <dt>Order ID:</dt>
+                                <dd id="orderId"></dd>
+                                
+                                <dt>Order Date:</dt>
+                                <dd id="orderDate"></dd>
+                                
+                                <dt>Payment Method:</dt>
+                                <dd id="paymentMethod"></dd>
+                                
+                                <dt>Status:</dt>
+                                <dd><span class="badge bg-success" id="orderStatus"></span></dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Shipping Information</h3>
+                        <div class="order-details">
+                            <dl>
+                                <dt>Name:</dt>
+                                <dd id="customerName"></dd>
+                                
+                                <dt>Address:</dt>
+                                <dd id="shippingAddress"></dd>
+                                
+                                <dt>Delivery Option:</dt>
+                                <dd id="deliveryOption"></dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-section">
+                        <h3><i class="fas fa-shopping-bag"></i> Order Summary</h3>
+                        <div id="orderItems" class="order-items">
+                            <!-- Order items will be inserted here -->
+                        </div>
+                        
+                        <div class="order-total">
+                            <div class="order-total-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotal"></span>
+                            </div>
+                            <div class="order-total-row">
+                                <span>Shipping:</span>
+                                <span id="shipping"></span>
+                            </div>
+                            <div class="order-total-row">
+                                <span>Tax:</span>
+                                <span id="tax"></span>
+                            </div>
+                            <div class="order-total-row">
+                                <span>Total:</span>
+                                <span id="total"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/Page/index.html" class="btn btn-continue-shopping">Continue Shopping</a>
+                        <a href="/Page/accountProfile.html" class="btn btn-outline-secondary ms-2">My Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Five:07 Store</h5>
+                    <p>Your one-stop shop for all your needs.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/Page/index.html" class="text-white">Home</a></li>
+                        <li><a href="/Page/product.html" class="text-white">Products</a></li>
+                        <li><a href="/Page/accountProfile.html" class="text-white">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>Email: info@five07store.com<br>Phone: (123) 456-7890</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <p class="mb-0">© 2023 Five:07 Store. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/JS/orderConfirmation.js"></script>
+</body>
+</html>
