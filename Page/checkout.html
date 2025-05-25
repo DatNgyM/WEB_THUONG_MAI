@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
+<head>    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout - Five:07 Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/CSS/styles.css" />
     <script src="/JS/authDisplay.js" defer></script>
+    <script src="/JS/home.js"></script>
     <script src="/JS/chatWidget.js" defer></script>
     <script src="/JS/cccdUtils.js" defer></script>
     <script src="/JS/cccdNotification.js" defer></script>
@@ -365,17 +365,16 @@
         }
     </style>
 </head>
-<body>
-        <header>
-        <div class="header-container">            <div class="logo">
-                <a href="/Page/index.html">Five:07</a>
-            </div>
-            <nav class="nav-links">
+<body>        <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">Five:07</a>
+            </div>            <nav class="nav-links">
                 <ul>
-                    <li><a href="/Page/index.html">Home</a></li>
-                    <li><a href="/Page/product.html">Shop</a></li>
-                    <li><a href="/Page/index.html#about">About</a></li>
-                    <li><a href="/Page/index.html#colours">Our Colors</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#shop">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#colours">Our Colors</a></li>
                 </ul>
             </nav>
 
@@ -608,13 +607,14 @@
                 <h3>About Five:07</h3>
                 <p>Your trusted source for premium tech products and accessories.</p>
             </div>
-              <div class="footer-section">
+            
+            <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="/Page/index.html">Home</a></li>
-                    <li><a href="/Page/product.html">Shop</a></li>
-                    <li><a href="/Page/index.html#about">About</a></li>
-                    <li><a href="/Page/index.html#contact">Contact</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#shop">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
             </div>
             
@@ -643,13 +643,11 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 Five:07 Store. All rights reserved.</p>
-        </div>
-    </footer>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>    <script src="/JS/checkout.js"></script>
+        </div>    </footer>    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/bankUtils.js"></script>
+    <script src="/JS/checkout.js"></script>
+    <script src="/JS/bankAccountFix.js"></script>
     <script src="/JS/adminCheck.js"></script>
-    <script src="/JS/authDisplay.js"></script>
-    <script src="/JS/cccdUtils.js"></script>
 </body>
 </html>

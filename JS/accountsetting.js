@@ -116,6 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchProfile();
     fetchNotifications();
     fetchBilling();
+    
+    // Update billing display with information from localStorage
+    updateBillingDisplay();
+    updateBillingDisplay(); // Update billing display with localStorage data
 
     // Handle Profile Information Form Submission
     document.getElementById('profileForm')?.addEventListener('submit', async (event) => {
@@ -335,4 +339,238 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('role'); // Thêm dòng này
         window.location.href = '/Page/login.html';
     });
+    
+    // Handle Billing Information Form Submission
+    document.getElementById('billingSettingsForm')?.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Get the active tab
+        const activeTab = document.querySelector('#billingTabs .nav-link.active');
+        const isCardTab = activeTab && activeTab.id === 'credit-card-tab';
+        
+        // Create payment info object
+        const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        
+        if (isCardTab) {
+            // Get credit card details
+            const cardHolderName = document.getElementById('cardHolderName').value;
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            
+            // Validate input
+            if (!cardHolderName || !cardNumber || !expiryDate || !cvv) {
+                alert('Please fill in all credit card details.');
+                return;
+            }
+            
+            // Check if the card number is masked (already saved)
+            let finalCardNumber = cardNumber;
+            if (cardNumber.includes('••••')) {
+                // Use the original number stored in data attribute
+                const originalNumber = document.getElementById('cardNumber').getAttribute('data-original');
+                if (originalNumber) {
+                    finalCardNumber = originalNumber;
+                }
+            }
+            
+            // Update credit card info
+            paymentInfo.creditCard = {
+                holderName: cardHolderName,
+                number: finalCardNumber,
+                expiry: expiryDate,
+                cvv: cvv
+            };
+        } else {
+            // Get bank account details
+            const bankName = document.getElementById('bankName').value;
+            const accountName = document.getElementById('accountName').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            
+            // Validate input
+            if (!bankName || !accountName || !accountNumber) {
+                alert('Please fill in all bank account details.');
+                return;
+            }
+            
+            // Update bank account info
+            paymentInfo.bankAccount = {
+                bankName: bankName,
+                accountName: accountName,
+                accountNumber: accountNumber
+            };
+        }
+        
+        // Save payment info to localStorage
+        localStorage.setItem('userPaymentInfo', JSON.stringify(paymentInfo));
+        
+        // Also update user data if needed
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (userData) {
+            if (!userData.paymentMethods) {
+                userData.paymentMethods = {};
+            }
+            
+            if (isCardTab && paymentInfo.creditCard) {
+                userData.paymentMethods.creditCard = paymentInfo.creditCard;
+            } else if (paymentInfo.bankAccount) {
+                userData.paymentMethods.bankAccount = paymentInfo.bankAccount;
+            }
+            
+            localStorage.setItem('user', JSON.stringify(userData));
+        }
+        
+        // Display success message
+        alert('Payment information updated successfully!');
+        
+        // Update the display
+        updateBillingDisplay();
+    });
+    
+    // Function to update billing display with payment info
+    function updateBillingDisplay() {
+        // Get payment info from localStorage
+        const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        const userData = JSON.parse(localStorage.getItem('user')) || {};
+        
+        // Get display elements
+        const paymentMethodDisplay = document.getElementById('paymentMethodDisplay');
+        const accountNumberDisplay = document.getElementById('accountNumberDisplay');
+        const accountHolderNameDisplay = document.getElementById('accountHolderNameDisplay');
+        const bankNameDisplay = document.getElementById('bankNameDisplay');
+        const billingEmailDisplay = document.getElementById('billingEmailDisplay');
+        
+        // Display credit card info if available
+        if (paymentInfo.creditCard) {
+            if (paymentMethodDisplay) paymentMethodDisplay.textContent = 'Credit Card';
+            if (accountNumberDisplay && paymentInfo.creditCard.number) {
+                accountNumberDisplay.textContent = '•••• •••• •••• ' + paymentInfo.creditCard.number.slice(-4);
+            }
+            if (accountHolderNameDisplay) {
+                accountHolderNameDisplay.textContent = paymentInfo.creditCard.holderName || 'N/A';
+            }
+            if (bankNameDisplay) bankNameDisplay.textContent = 'N/A';
+            
+            // Fill in form fields
+            const cardHolderNameInput = document.getElementById('cardHolderName');
+            const cardNumberInput = document.getElementById('cardNumber');
+            const expiryDateInput = document.getElementById('expiryDate');
+            
+            if (cardHolderNameInput) cardHolderNameInput.value = paymentInfo.creditCard.holderName || '';
+            if (cardNumberInput && paymentInfo.creditCard.number) {
+                cardNumberInput.value = '•••• •••• •••• ' + paymentInfo.creditCard.number.slice(-4);
+                cardNumberInput.setAttribute('data-original', paymentInfo.creditCard.number);
+            }
+            if (expiryDateInput) expiryDateInput.value = paymentInfo.creditCard.expiry || '';
+        } 
+        // Display bank account info if available
+        else if (paymentInfo.bankAccount) {
+            if (paymentMethodDisplay) paymentMethodDisplay.textContent = 'Bank Transfer';
+            if (accountNumberDisplay && paymentInfo.bankAccount.accountNumber) {
+                accountNumberDisplay.textContent = paymentInfo.bankAccount.accountNumber;
+            }
+            if (accountHolderNameDisplay) {
+                accountHolderNameDisplay.textContent = paymentInfo.bankAccount.accountName || 'N/A';
+            }
+            if (bankNameDisplay) {
+                bankNameDisplay.textContent = paymentInfo.bankAccount.bankName || 'N/A';
+            }
+            
+            // Fill form fields
+            const bankNameInput = document.getElementById('bankName');
+            const accountNameInput = document.getElementById('accountName');
+            const accountNumberInput = document.getElementById('accountNumber');
+            
+            if (bankNameInput) bankNameInput.value = paymentInfo.bankAccount.bankName || '';
+            if (accountNameInput) accountNameInput.value = paymentInfo.bankAccount.accountName || '';
+            if (accountNumberInput) accountNumberInput.value = paymentInfo.bankAccount.accountNumber || '';
+        }
+        // Try from user data if not found in paymentInfo
+        else if (userData.paymentMethods) {
+            if (userData.paymentMethods.creditCard) {
+                if (paymentMethodDisplay) paymentMethodDisplay.textContent = 'Credit Card';
+                if (accountNumberDisplay && userData.paymentMethods.creditCard.number) {
+                    accountNumberDisplay.textContent = '•••• •••• •••• ' + userData.paymentMethods.creditCard.number.slice(-4);
+                }
+                if (accountHolderNameDisplay) {
+                    accountHolderNameDisplay.textContent = userData.paymentMethods.creditCard.holderName || 'N/A';
+                }
+                if (bankNameDisplay) bankNameDisplay.textContent = 'N/A';
+                
+                // Fill form fields
+                const cardHolderNameInput = document.getElementById('cardHolderName');
+                const cardNumberInput = document.getElementById('cardNumber');
+                const expiryDateInput = document.getElementById('expiryDate');
+                
+                if (cardHolderNameInput) cardHolderNameInput.value = userData.paymentMethods.creditCard.holderName || '';
+                if (cardNumberInput && userData.paymentMethods.creditCard.number) {
+                    cardNumberInput.value = '•••• •••• •••• ' + userData.paymentMethods.creditCard.number.slice(-4);
+                    cardNumberInput.setAttribute('data-original', userData.paymentMethods.creditCard.number);
+                }
+                if (expiryDateInput) expiryDateInput.value = userData.paymentMethods.creditCard.expiry || '';
+            } 
+            else if (userData.paymentMethods.bankAccount) {
+                if (paymentMethodDisplay) paymentMethodDisplay.textContent = 'Bank Transfer';
+                if (accountNumberDisplay && userData.paymentMethods.bankAccount.accountNumber) {
+                    accountNumberDisplay.textContent = userData.paymentMethods.bankAccount.accountNumber;
+                }
+                if (accountHolderNameDisplay) {
+                    accountHolderNameDisplay.textContent = userData.paymentMethods.bankAccount.accountName || 'N/A';
+                }
+                if (bankNameDisplay) {
+                    bankNameDisplay.textContent = userData.paymentMethods.bankAccount.bankName || 'N/A';
+                }
+                
+                // Fill form fields
+                const bankNameInput = document.getElementById('bankName');
+                const accountNameInput = document.getElementById('accountName');
+                const accountNumberInput = document.getElementById('accountNumber');
+                
+                if (bankNameInput) bankNameInput.value = userData.paymentMethods.bankAccount.bankName || '';
+                if (accountNameInput) accountNameInput.value = userData.paymentMethods.bankAccount.accountName || '';
+                if (accountNumberInput) accountNumberInput.value = userData.paymentMethods.bankAccount.accountNumber || '';
+            }
+        }
+        
+        // Set email from user data
+        if (billingEmailDisplay && userData.email) {
+            billingEmailDisplay.textContent = userData.email;
+        }
+    }
+    
+    // FOR TESTING: Add real bank account data if not exists
+    function addSampleBankData() {
+        const existingPaymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        
+        // Only add if no bank account exists yet
+        if (!existingPaymentInfo.bankAccount) {
+            existingPaymentInfo.bankAccount = {
+                bankName: "Vietcombank",
+                accountName: "LE BA PHAT",
+                accountNumber: "1026666666"
+            };
+            
+            localStorage.setItem('userPaymentInfo', JSON.stringify(existingPaymentInfo));
+            console.log("Real bank account data added");
+            
+            // Also add to user object
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (userData) {
+                if (!userData.paymentMethods) {
+                    userData.paymentMethods = {};
+                }
+                userData.paymentMethods.bankAccount = existingPaymentInfo.bankAccount;
+                localStorage.setItem('user', JSON.stringify(userData));
+            }
+        }
+    }
+
+    // Automatically add sample bank data for testing purposes
+    // This ensures that there's always bank account data available for checkout
+    addSampleBankData();
+    
+    // If bankUtils.js is included, also use its functionality
+    if (typeof ensureBankAccountInfo === 'function') {
+        ensureBankAccountInfo();
+    }
 });

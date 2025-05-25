@@ -1,46 +1,5 @@
-// Danh sách sản phẩm
-const products = [
-    {
-        id: 1,
-        name: "iPhone 16 Pro Max Titan",
-        price: 1211.87,
-        image: "/images/iphone-16-pro-max-titan.jpg",
-        category: "Phones & Tablets",
-        brand: "Apple",
-        rating: 5,
-        description: "Latest iPhone model with titanium frame"
-    },
-    {
-        id: 2,
-        name: "Laptop MSI Gaming Stealth 14 AI Studio",
-        price: 1969.54,
-        image: "/images/msi-stealth-14-ai-studio-a1vfg-ultra-7-085vn.jpg",
-        category: "Laptops",
-        brand: "MSI",
-        rating: 4,
-        description: "High-performance gaming laptop"
-    },
-    {
-        id: 3,
-        name: "Macbook Pro M4 14 inch",
-        price: 1542.14,
-        image: "/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg",
-        category: "Laptops",
-        brand: "Apple",
-        rating: 5,
-        description: "Powerful MacBook with M4 chip"
-    },
-    {
-        id: 4,
-        name: "Apple Watch Ultra 2 GPS",
-        price: 990.40,
-        image: "/images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg",
-        category: "Smartwatches",
-        brand: "Apple",
-        rating: 5,
-        description: "Premium smartwatch with advanced features"
-    }
-];
+// Danh sách sản phẩm - mặc định sẽ được tải từ API
+let products = [];
 
 // Lưu trữ trạng thái bộ lọc
 let filters = {
@@ -53,6 +12,108 @@ let filters = {
     rating: null,
     search: ""
 };
+
+// Hàm để tải sản phẩm từ API
+async function fetchProducts() {
+    try {
+        const apiUrl = new URL('http://localhost:3000/api/products');
+        
+        // Thêm các tham số filter nếu có
+        if (filters.categories.length > 0) {
+            apiUrl.searchParams.append('category', filters.categories.join(','));
+        }
+        
+        if (filters.priceRange.min > 0) {
+            apiUrl.searchParams.append('min_price', filters.priceRange.min);
+        }
+        
+        if (filters.priceRange.max < 2000) {
+            apiUrl.searchParams.append('max_price', filters.priceRange.max);
+        }
+        
+        if (filters.search.trim() !== '') {
+            apiUrl.searchParams.append('search', filters.search);
+        }
+        
+        console.log('Fetching products from API:', apiUrl.toString());
+        const response = await fetch(apiUrl.toString());
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Nếu API không trả về dữ liệu, sử dụng mẫu
+        if (!data || data.length === 0) {
+            console.warn('No products returned from API, using sample data');
+            return getSampleProducts();
+        }
+        
+        // Map data từ API sang định dạng cần thiết
+        return data.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: parseFloat(item.price),
+            image: item.image || '/images/products/default-product.jpg',
+            category: item.category || 'Other',
+            brand: item.brand || 'Unknown',
+            rating: item.rating || 4,
+            description: item.description || 'No description available',
+            seller: item.seller_name || 'Unknown Seller'
+        }));
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        // Trả về dữ liệu mẫu nếu có lỗi
+        return getSampleProducts();
+    }
+}
+
+// Dữ liệu mẫu để sử dụng khi API không hoạt động
+function getSampleProducts() {
+    return [
+        {
+            id: 1,
+            name: "iPhone 16 Pro Max Titan",
+            price: 1211.87,
+            image: "/images/iphone-16-pro-max-titan.jpg",
+            category: "Phones & Tablets",
+            brand: "Apple",
+            rating: 5,
+            description: "Latest iPhone model with titanium frame"
+        },
+        {
+            id: 2,
+            name: "Laptop MSI Gaming Stealth 14 AI Studio",
+            price: 1969.54,
+            image: "/images/msi-stealth-14-ai-studio-a1vfg-ultra-7-085vn.jpg",
+            category: "Laptops",
+            brand: "MSI",
+            rating: 4,
+            description: "High-performance gaming laptop"
+        },
+        {
+            id: 3,
+            name: "Macbook Pro M4 14 inch",
+            price: 1542.14,
+            image: "/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg",
+            category: "Laptops",
+            brand: "Apple",
+            rating: 5,
+            description: "Powerful MacBook with M4 chip"
+        },
+        {
+            id: 4,
+            name: "Apple Watch Ultra 2 GPS",
+            price: 990.40,
+            image: "/images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg",
+            category: "Smartwatches",
+            brand: "Apple",
+            rating: 5,
+            description: "Premium smartwatch with advanced features"
+        }
+    ];
+}
 
 // Render một sản phẩm
 function renderProduct(product) {

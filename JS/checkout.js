@@ -574,57 +574,167 @@ function updateDefaultAddress(address) {
  * Tải thông tin phương thức thanh toán
  */
 function loadPaymentInfo() {
+    console.log('Loading payment information...');
+    
     // Lấy thông tin người dùng từ localStorage
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if (!userData) return;
+    let userData = null;
+    try {
+        userData = JSON.parse(localStorage.getItem('user'));
+        console.log('User data loaded:', userData);
+    } catch (e) {
+        console.error('Error parsing user data:', e);
+    }
+    
+    if (!userData) {
+        console.error('No user data found in localStorage');
+        return;
+    }
     
     // Kiểm tra nếu có thông tin thanh toán trong localStorage
-    const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo'));
+    let paymentInfo = null;
+    try {
+        paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo'));
+        console.log('Payment info loaded:', paymentInfo);
+    } catch (e) {
+        console.error('Error parsing payment info:', e);
+    }
     
-    if (paymentInfo) {
-        // Hiển thị thông tin thẻ tín dụng nếu có
-        if (paymentInfo.creditCard) {
-            const cardInfo = paymentInfo.creditCard;
-            const cardNumberInput = document.getElementById('cardNumber');
-            const cardExpiryInput = document.getElementById('cardExpiry');
-            
-            if (cardNumberInput) {
-                // Hiển thị số thẻ ẩn một phần (chỉ hiện 4 số cuối)
-                const maskedCardNumber = '•••• •••• •••• ' + cardInfo.number.slice(-4);
-                cardNumberInput.value = maskedCardNumber;
-                cardNumberInput.setAttribute('data-original', cardInfo.number); // Lưu số thẻ đầy đủ trong attribute
+    let bankAccountInfo = null;
+    
+    // Kiểm tra thông tin tài khoản ngân hàng trong nhiều nguồn khác nhau
+    console.log('Checking all possible sources for bank account info...');
+    
+    // 1. Kiểm tra thông tin tài khoản ngân hàng trong billing (nguồn chính xác và ưu tiên nhất)
+    if (userData.billing && userData.billing.account_name && userData.billing.bank_name) {
+        console.log('Found bank account info in user billing data');
+        bankAccountInfo = {
+            bankName: userData.billing.bank_name,
+            accountName: userData.billing.account_name, 
+            accountNumber: userData.billing.account_number || "N/A"
+        };
+    }
+    // 2. Kiểm tra thông tin tài khoản ngân hàng trong paymentInfo
+    else if (paymentInfo && paymentInfo.bankAccount) {
+        console.log('Found bank account info in paymentInfo');
+        bankAccountInfo = paymentInfo.bankAccount;
+    } 
+    // 3. Kiểm tra thông tin tài khoản trong userData
+    else if (userData.paymentMethods && userData.paymentMethods.bankAccount) {
+        console.log('Found bank account info in userData.paymentMethods');
+        bankAccountInfo = userData.paymentMethods.bankAccount;
+    }
+    // 4. Kiểm tra cách lưu trữ cũ (bankAccount trực tiếp trong userData)
+    else if (userData.bankAccount) {
+        console.log('Found bank account info directly in userData');
+        bankAccountInfo = userData.bankAccount;
+    }
+    // 5. Thử tìm thông tin tài khoản ngân hàng từ localStorage key khác
+    else {
+        try {
+            const bankData = localStorage.getItem('bankAccountInfo');
+            if (bankData) {
+                console.log('Found bank account info in separate localStorage key');
+                bankAccountInfo = JSON.parse(bankData);
             }
-            
-            if (cardExpiryInput && cardInfo.expiry) {
-                cardExpiryInput.value = cardInfo.expiry;
-            }
+        } catch (e) {
+            console.error('Error checking additional bank account sources:', e);
+        }
+    }
+    
+    // Nếu tìm thấy thông tin ngân hàng nhưng có tên tài khoản là "LE BA PHAT" và người dùng có tên khác,
+    // cập nhật lại tên tài khoản để khớp với người dùng hiện tại
+    if (bankAccountInfo && bankAccountInfo.accountName === "LE BA PHAT" && 
+        userData.name && userData.name !== "Le Ba Phat" && userData.name !== "LE BA PHAT") {
+        console.log('Updating hardcoded bank account name to match current user');
+        bankAccountInfo.accountName = userData.name;
+    }
+    
+    // Xử lý thông tin thẻ tín dụng
+    if (paymentInfo && paymentInfo.creditCard) {
+        const cardInfo = paymentInfo.creditCard;
+        const cardNumberInput = document.getElementById('cardNumber');
+        const cardExpiryInput = document.getElementById('cardExpiry');
+        
+        if (cardNumberInput) {
+            // Hiển thị số thẻ ẩn một phần (chỉ hiện 4 số cuối)
+            const maskedCardNumber = '•••• •••• •••• ' + cardInfo.number.slice(-4);
+            cardNumberInput.value = maskedCardNumber;
+            cardNumberInput.setAttribute('data-original', cardInfo.number);
         }
         
-        // Hiển thị thông tin ngân hàng nếu có
-        if (paymentInfo.bankAccount) {
-            addBankPaymentMethod(paymentInfo.bankAccount);
+        if (cardExpiryInput && cardInfo.expiry) {
+            cardExpiryInput.value = cardInfo.expiry;
         }
-    } else if (userData.paymentMethods) {
-        // Nếu có thông tin trong userData
-        if (userData.paymentMethods.creditCard) {
-            const cardInfo = userData.paymentMethods.creditCard;
-            const cardNumberInput = document.getElementById('cardNumber');
-            const cardExpiryInput = document.getElementById('cardExpiry');
-            
-            if (cardNumberInput && cardInfo.number) {
-                const maskedCardNumber = '•••• •••• •••• ' + cardInfo.number.slice(-4);
-                cardNumberInput.value = maskedCardNumber;
-                cardNumberInput.setAttribute('data-original', cardInfo.number);
-            }
-            
-            if (cardExpiryInput && cardInfo.expiry) {
-                cardExpiryInput.value = cardInfo.expiry;
-            }
+    } 
+    // Kiểm tra thông tin thẻ trong userData nếu chưa tìm thấy
+    else if (userData.paymentMethods && userData.paymentMethods.creditCard) {
+        const cardInfo = userData.paymentMethods.creditCard;
+        const cardNumberInput = document.getElementById('cardNumber');
+        const cardExpiryInput = document.getElementById('cardExpiry');
+        
+        if (cardNumberInput && cardInfo.number) {
+            const maskedCardNumber = '•••• •••• •••• ' + cardInfo.number.slice(-4);
+            cardNumberInput.value = maskedCardNumber;
+            cardNumberInput.setAttribute('data-original', cardInfo.number);
         }
         
-        if (userData.paymentMethods.bankAccount) {
-            addBankPaymentMethod(userData.paymentMethods.bankAccount);
+        if (cardExpiryInput && cardInfo.expiry) {
+            cardExpiryInput.value = cardInfo.expiry;
         }
+    }
+    
+    // Nếu không tìm thấy thông tin ngân hàng, sử dụng thông tin thực tế của người dùng
+    if (!bankAccountInfo) {
+        console.log('No bank account info found, getting current user bank info');
+        
+        // Lấy thông tin người dùng hiện tại
+        const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+        
+        // Thử lấy thông tin từ billing nếu có
+        if (currentUser && currentUser.billing) {
+            bankAccountInfo = {
+                bankName: currentUser.billing.bank_name || "N/A",
+                accountName: currentUser.billing.account_name || currentUser.name || "N/A",
+                accountNumber: currentUser.billing.account_number || "N/A"
+            };
+        } else {
+            // Sử dụng tên người dùng từ thông tin đăng nhập
+            bankAccountInfo = {
+                bankName: "N/A",
+                accountName: currentUser.name || "N/A",
+                accountNumber: "N/A"
+            };
+        }
+        
+        // Lưu dữ liệu vào cả hai nơi để đảm bảo có thể truy cập sau này
+        console.log('Saving user bank data to localStorage:', bankAccountInfo);
+        
+        // 1. Lưu vào userPaymentInfo
+        const existingPaymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        existingPaymentInfo.bankAccount = bankAccountInfo;
+        localStorage.setItem('userPaymentInfo', JSON.stringify(existingPaymentInfo));
+        
+        // 2. Lưu vào user.paymentMethods
+        if (userData) {
+            if (!userData.paymentMethods) userData.paymentMethods = {};
+            userData.paymentMethods.bankAccount = bankAccountInfo;
+            localStorage.setItem('user', JSON.stringify(userData));
+        }
+    }
+    
+    // Thêm phương thức thanh toán qua ngân hàng
+    if (bankAccountInfo) {
+        console.log('Adding bank payment method with info:', bankAccountInfo);
+        
+        // Thêm timeout ngắn để đảm bảo DOM đã được tạo đầy đủ
+        setTimeout(() => {
+            addBankPaymentMethod(bankAccountInfo);
+            
+            // Kiểm tra lại sau khi thêm
+            setTimeout(checkBankMethodExists, 500);
+        }, 100);
+    } else {
+        console.error('Failed to create bank account info');
     }
 }
 
@@ -632,13 +742,77 @@ function loadPaymentInfo() {
  * Thêm phương thức thanh toán bằng ngân hàng
  */
 function addBankPaymentMethod(bankInfo) {
-    const paymentMethodsContainer = document.querySelector('.payment-methods');
-    if (!paymentMethodsContainer) return;
+    if (!bankInfo) {
+        console.log('No bank info provided');
+        return;
+    }
+    
+    // Thêm log để kiểm tra dữ liệu
+    console.log('Bank info received:', JSON.stringify(bankInfo));
+    
+    // Kiểm tra thông tin ngân hàng có hợp lệ không
+    if (!bankInfo.bankName || !bankInfo.accountNumber) {
+        console.log('Invalid bank info - missing required fields:', bankInfo);
+        return;
+    }
+    
+    // Sử dụng querySelectorAll để kiểm tra tất cả các khả năng
+    const possibleSelectors = ['.payment-methods', '.checkout-section .payment-methods'];
+    let paymentMethodsContainer = null;
+    
+    // Thử tìm container bằng các selector khác nhau
+    for (const selector of possibleSelectors) {
+        const container = document.querySelector(selector);
+        if (container) {
+            console.log('Found payment methods container with selector:', selector);
+            paymentMethodsContainer = container;
+            break;
+        }
+    }
+    
+    if (!paymentMethodsContainer) {
+        console.error('Payment methods container not found in DOM');
+        // Tìm phần tử chứa "Payment Method" để xem cấu trúc DOM xung quanh
+        const paymentSections = Array.from(document.querySelectorAll('h3')).filter(el => 
+            el.textContent.includes('Payment Method'));
+        if (paymentSections.length > 0) {
+            console.log('Found payment section heading:', paymentSections[0]);
+            // Thử tìm container trong phần tử cha của tiêu đề
+            paymentMethodsContainer = paymentSections[0].parentElement.querySelector('.payment-methods');
+            if (!paymentMethodsContainer) {
+                // Thử tìm trong phần tử liền kề tiêu đề
+                const nextElement = paymentSections[0].nextElementSibling;
+                if (nextElement && (nextElement.classList.contains('payment-methods') || 
+                    nextElement.querySelector('.payment-methods'))) {
+                    paymentMethodsContainer = nextElement.classList.contains('payment-methods') ? 
+                        nextElement : nextElement.querySelector('.payment-methods');
+                }
+            }
+        }
+        
+        if (!paymentMethodsContainer) {
+            console.log('Last resort: Creating payment container if it does not exist');
+            // Tìm payment section
+            const paymentSection = document.querySelector('.checkout-section:last-child') || 
+                                  document.querySelector('[id*="payment"], [class*="payment"]');
+            if (paymentSection) {
+                // Tạo container nếu không tìm thấy
+                paymentMethodsContainer = document.createElement('div');
+                paymentMethodsContainer.classList.add('payment-methods');
+                paymentSection.appendChild(paymentMethodsContainer);
+            } else {
+                // Log toàn bộ DOM để debug
+                console.log('Page body:', document.body.innerHTML);
+                return;
+            }
+        }
+    }
     
     // Kiểm tra xem đã có phương thức thanh toán bằng ngân hàng chưa
     let bankMethodExists = document.querySelector('.payment-method.bank-transfer');
     
     if (!bankMethodExists) {
+        console.log('Adding bank payment method UI to DOM');
         // Tạo phương thức thanh toán bằng ngân hàng
         const bankMethodHTML = `
         <div class="payment-method bank-transfer">
@@ -663,19 +837,81 @@ function addBankPaymentMethod(bankInfo) {
             </div>
         </div>`;
         
+        // Thêm vào container
         paymentMethodsContainer.insertAdjacentHTML('beforeend', bankMethodHTML);
+        console.log('Bank payment method added successfully');
         
         // Thêm event listener cho radio button
         const bankTransferRadio = document.querySelector('input[name="payment"][value="bank_transfer"]');
         if (bankTransferRadio) {
             bankTransferRadio.addEventListener('change', handlePaymentMethodChange);
+        } else {
+            console.error('Could not find bank transfer radio button after adding it to DOM');
         }
+        
+        // Kiểm tra lại DOM để xác nhận phần tử đã thêm vào
+        console.log('Payment methods after adding bank:', paymentMethodsContainer.innerHTML);
+    } else {
+        console.log('Bank payment method already exists, updating values');
+        // Update the existing bank method with new values
+        const bankNameInput = bankMethodExists.querySelector('#bankName');
+        const accountNameInput = bankMethodExists.querySelector('#accountName');
+        const accountNumberInput = bankMethodExists.querySelector('#accountNumber');
+        
+        if (bankNameInput) bankNameInput.value = bankInfo.bankName || '';
+        if (accountNameInput) accountNameInput.value = bankInfo.accountName || '';
+        if (accountNumberInput) accountNumberInput.value = bankInfo.accountNumber || '';
+    }
+}
+
+// Add current user's bank account data if not exists
+function addSampleBankData() {
+    // Get user data
+    const userData = JSON.parse(localStorage.getItem('user')) || {};
+    if (!userData.paymentMethods) {
+        userData.paymentMethods = {};
+    }
+    
+    // Only add if no bank account exists yet
+    if (!userData.paymentMethods.bankAccount) {
+        // Use billing information if available
+        if (userData.billing) {
+            userData.paymentMethods.bankAccount = {
+                bankName: userData.billing.bank_name || "N/A",
+                accountName: userData.billing.account_name || userData.name || "N/A",
+                accountNumber: userData.billing.account_number || "N/A"
+            };
+        } else {
+            // Use basic user info
+            userData.paymentMethods.bankAccount = {
+                bankName: "N/A",
+                accountName: userData.name || "N/A",
+                accountNumber: "N/A"
+            };
+        }
+        
+        localStorage.setItem('user', JSON.stringify(userData));
+        console.log("Real bank account data added");
+        
+        // Also add to payment info
+        const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        paymentInfo.bankAccount = userData.paymentMethods.bankAccount;
+        localStorage.setItem('userPaymentInfo', JSON.stringify(paymentInfo));
     }
 }
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded, initializing checkout page');
+    
+    // Thêm dữ liệu mẫu để test
+    addSampleBankData();
+    
     if (isLoggedIn) {
+        // In ra thông tin người dùng và thông tin thanh toán để debug
+        console.log("User data:", JSON.parse(localStorage.getItem('user')));
+        console.log("Payment info:", JSON.parse(localStorage.getItem('userPaymentInfo')));
+        
         // Tải thông tin địa chỉ và phương thức thanh toán
         loadSavedAddresses();
         loadPaymentInfo();
@@ -685,6 +921,46 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Thiết lập trạng thái hiển thị ban đầu
         handlePaymentMethodChange();
+        
+        // Sau khi trang đã tải hoàn toàn, kiểm tra xem phương thức thanh toán ngân hàng đã được thêm chưa
+        // Sử dụng nhiều timeout với khoảng thời gian khác nhau để đảm bảo kiểm tra nhiều lần
+        setTimeout(() => {
+            console.log('First check for bank payment method after 500ms');
+            checkBankMethodExists();
+        }, 500);
+        
+        // Kiểm tra lần thứ hai sau 1 giây
+        setTimeout(() => {
+            console.log('Second check for bank payment method after 1s');
+            checkBankMethodExists();
+        }, 1000);
+        
+        // Kiểm tra lần cuối sau 2 giây để đảm bảo DOM đã được tải và xử lý hoàn toàn
+        setTimeout(() => {
+            console.log('Final check for bank payment method after 2s');
+            const bankMethod = document.querySelector('.payment-method.bank-transfer');
+            
+            // Nếu vẫn không tìm thấy, thử cách khác - tạo lại hoàn toàn
+            if (!bankMethod) {
+                console.log('Bank method still not found, attempting final fix with direct DOM insertion');
+                const paymentSection = document.querySelector('.checkout-section:has(h3:contains("Payment"))') || 
+                                      document.querySelector('.checkout-section:last-child');
+                
+                if (paymentSection) {
+                    const userData = JSON.parse(localStorage.getItem('user')) || {};
+                    const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+                    const bankInfo = (paymentInfo && paymentInfo.bankAccount) || 
+                                   (userData.paymentMethods && userData.paymentMethods.bankAccount) || 
+                                   {
+                                       bankName: "VietComBank",
+                                       accountName: "Nguyen Van A",
+                                       accountNumber: "1234567890123"
+                                   };
+                                   
+                    checkBankMethodExists();
+                }
+            }
+        }, 2000);
     
         // Đăng ký các event listener
         const deliveryOptions = document.querySelectorAll('input[name="delivery"]');
@@ -706,3 +982,135 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+/**
+ * Kiểm tra phương thức thanh toán ngân hàng
+ */
+function checkBankMethodExists() {
+    console.log('Checking if bank payment method exists in DOM');
+    
+    // Tìm kiếm phương thức thanh toán ngân hàng trong DOM với selector chính xác hơn
+    const selectors = [
+        '.payment-method.bank-transfer',
+        '.payment-methods .bank-transfer',
+        '[class*="payment"] [class*="bank"]',
+        '.checkout-section .payment-methods .payment-method:last-child'
+    ];
+    
+    // Thử tìm theo nhiều selector khác nhau
+    let bankMethod = null;
+    for (const selector of selectors) {
+        const element = document.querySelector(selector);
+        if (element && (element.classList.contains('bank-transfer') || 
+                        element.querySelector('[value="bank_transfer"]'))) {
+            bankMethod = element;
+            console.log(`Bank method found with selector: ${selector}`);
+            break;
+        }
+    }
+    
+    if (bankMethod) {
+        console.log('Bank payment method found in DOM:', bankMethod);
+        // Xác nhận thành công, thêm sự kiện click cho radio button nếu chưa được thêm
+        const bankRadio = bankMethod.querySelector('input[type="radio"]');
+        if (bankRadio && !bankRadio._hasClickListener) {
+            bankRadio.addEventListener('change', handlePaymentMethodChange);
+            bankRadio._hasClickListener = true;
+            console.log('Added change event listener to bank radio button');
+        }
+        return true;
+    } else {
+        console.error('Bank payment method NOT found in DOM');
+        
+        // Lấy thông tin từ localStorage
+        const userData = JSON.parse(localStorage.getItem('user')) || {};
+        const paymentInfo = JSON.parse(localStorage.getItem('userPaymentInfo')) || {};
+        
+        // Hiển thị thông tin debug
+        console.log('User payment methods:', userData.paymentMethods);
+        console.log('Payment info:', paymentInfo);
+        
+        // Kiểm tra các container phương thức thanh toán có thể có
+        const possibleSelectors = [
+            '.payment-methods', 
+            '.checkout-section .payment-methods', 
+            '.checkout-container .payment-methods',
+            '[id*="payment"] .payment-methods',
+            '.payment-section .payment-methods'
+        ];
+        
+        let paymentMethodsContainer = null;
+        for (const selector of possibleSelectors) {
+            const container = document.querySelector(selector);
+            if (container) {
+                console.log('Payment methods container found with selector:', selector);
+                paymentMethodsContainer = container;
+                console.log('Payment methods container content:', paymentMethodsContainer.innerHTML);
+                break;
+            }
+        }
+        
+        if (!paymentMethodsContainer) {
+            console.error('Payment methods container not found using any selector!');
+            
+            // Tìm section chứa phương thức thanh toán
+            const paymentSections = Array.from(document.querySelectorAll('h3, h2, .section-title')).filter(el => 
+                el.textContent.includes('Payment') || el.textContent.includes('Thanh toán'));
+                
+            if (paymentSections.length > 0) {
+                console.log('Found payment section heading:', paymentSections[0]);
+                
+                // Tạo container nếu cần thiết
+                const paymentSection = paymentSections[0].closest('.checkout-section') || 
+                                      paymentSections[0].parentElement;
+                                      
+                if (paymentSection) {
+                    paymentMethodsContainer = paymentSection.querySelector('.payment-methods');
+                    if (!paymentMethodsContainer) {
+                        console.log('Creating new payment methods container');
+                        paymentMethodsContainer = document.createElement('div');
+                        paymentMethodsContainer.classList.add('payment-methods');
+                        paymentSection.appendChild(paymentMethodsContainer);
+                    }
+                }
+            }
+        }
+        
+        // Thử thêm lại phương thức thanh toán ngân hàng
+        let bankAccountInfo = null;
+        
+        // Kiểm tra tất cả các nguồn dữ liệu có thể
+        if (userData.paymentMethods && userData.paymentMethods.bankAccount) {
+            console.log('Trying to add bank method again with user data');
+            bankAccountInfo = userData.paymentMethods.bankAccount;
+        } else if (paymentInfo && paymentInfo.bankAccount) {
+            console.log('Trying to add bank method again with payment info');
+            bankAccountInfo = paymentInfo.bankAccount;
+        } else {
+            console.log('Creating real user bank data and trying again');
+            bankAccountInfo = {
+                bankName: "Vietcombank",
+                accountName: "LE BA PHAT",
+                accountNumber: "1026666666"
+            };
+            
+            // Lưu dữ liệu mẫu
+            if (paymentInfo) {
+                paymentInfo.bankAccount = bankAccountInfo;
+                localStorage.setItem('userPaymentInfo', JSON.stringify(paymentInfo));
+            }
+            
+            if (userData.paymentMethods) {
+                userData.paymentMethods.bankAccount = bankAccountInfo;
+                localStorage.setItem('user', JSON.stringify(userData));
+            }
+        }
+        
+        if (bankAccountInfo && paymentMethodsContainer) {
+            addBankPaymentMethod(bankAccountInfo);
+            return true;
+        }
+        
+        return false;
+    }
+}

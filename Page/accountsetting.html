@@ -401,29 +401,54 @@
                                     <p><strong>Billing Email:</strong> <span id="billingEmailDisplay">N/A</span></p>
                                     <p><strong>Premium Status:</strong> <span id="premiumStatusDisplay">N/A</span></p>
                                 </div>
-                                <hr/>
-                                <form id="billingSettingsForm">
-                                    <div class="form-group">
-                                        <label for="cardHolderName">Card Holder Name</label>
-                                        <input type="text" class="form-control" id="cardHolderName" placeholder="Name on card">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cardNumber">Card Number</label>
-                                        <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <label for="expiryDate">Expiry Date</label>
-                                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                <hr/>                                <form id="billingSettingsForm">
+                                    <ul class="nav nav-tabs mb-3" id="billingTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="credit-card-tab" data-bs-toggle="tab" data-bs-target="#credit-card-section" type="button" role="tab" aria-controls="credit-card-section" aria-selected="true">Credit Card</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="bank-account-tab" data-bs-toggle="tab" data-bs-target="#bank-account-section" type="button" role="tab" aria-controls="bank-account-section" aria-selected="false">Bank Account</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="billingTabsContent">
+                                        <div class="tab-pane fade show active" id="credit-card-section" role="tabpanel" aria-labelledby="credit-card-tab">
+                                            <div class="form-group">
+                                                <label for="cardHolderName">Card Holder Name</label>
+                                                <input type="text" class="form-control" id="cardHolderName" placeholder="Name on card">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cardNumber">Card Number</label>
+                                                <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="expiryDate">Expiry Date</label>
+                                                    <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="cvv">CVV</label>
+                                                    <input type="text" class="form-control" id="cvv" placeholder="CVV">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="billingAddress">Billing Address</label>
+                                                <input type="text" class="form-control" id="billingAddress" placeholder="Enter billing address">
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="cvv">CVV</label>
-                                            <input type="text" class="form-control" id="cvv" placeholder="CVV">
+                                        <div class="tab-pane fade" id="bank-account-section" role="tabpanel" aria-labelledby="bank-account-tab">
+                                            <div class="form-group">
+                                                <label for="bankName">Bank Name</label>
+                                                <input type="text" class="form-control" id="bankName" placeholder="Enter bank name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="accountName">Account Holder Name</label>
+                                                <input type="text" class="form-control" id="accountName" placeholder="Enter account holder name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="accountNumber">Account Number</label>
+                                                <input type="text" class="form-control" id="accountNumber" placeholder="Enter account number">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="billingAddress">Billing Address</label>
-                                        <input type="text" class="form-control" id="billingAddress" placeholder="Enter billing address">
                                     </div>
                                     <button type="submit" class="btn btn-primary mt-3">Update Billing Information</button>
                                 </form>
@@ -476,13 +501,12 @@
         <div class="footer-bottom">
             <p>&copy; 2025 Five:07 Store. All rights reserved.</p>
         </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>    <!-- Script cập nhật thông tin người dùng -->
+    </footer>    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/bankUtils.js"></script>    <!-- Script cập nhật thông tin người dùng -->
     <script>
         console.log('Trang thiết lập tài khoản đã sẵn sàng');
-    </script>    <!-- Script tùy chỉnh để hiển thị thông tin người dùng từ localStorage -->
+    </script><!-- Script tùy chỉnh để hiển thị thông tin người dùng từ localStorage -->
     <script>
     // UserDataManager.js sẽ xử lý tất cả chức năng hiển thị và xử lý dữ liệu
     </script>
