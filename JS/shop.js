@@ -120,6 +120,7 @@ function renderProduct(product) {
                     <img src="${product.image}" alt="${product.name}" />
                     <div class="product-overlay">
                         <a href="/Page/productdetails.html?id=${product.id}" class="btn btn-primary">View Details</a>
+                        
                         <button class="btn btn-outline-primary add-to-cart" data-product-id="${product.id}">
                             <i class="fas fa-shopping-cart"></i> Add to Cart
                         </button>
