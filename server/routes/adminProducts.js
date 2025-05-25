@@ -88,22 +88,24 @@ router.post('/', upload.single('image'), async (req, res) => {
   // Xử lý ảnh nếu có
   if (req.file) {
     // Lưu đường dẫn tương đối đến ảnh
-    imagePath = path.relative(path.join(__dirname, '../..'), req.file.path)
+    imagePath = path.relative(path.join(__dirname, '../../'), req.file.path)
       .replace(/\\/g, '/'); // Chuyển dấu \ thành / cho chuẩn URL
+  } else {
+    imagePath = '/images/products/default-product.jpg'; // Use default image if none is uploaded
   }
   
   try {
-    // Thêm sản phẩm vào database
+    // Thêm sản phẩm vào database - bao gồm cả trường category
     const query = `
-      INSERT INTO products (name, description, price, stock_quantity, seller_id, image) 
-      VALUES ($1, $2, $3, $4, $5, $6) 
+      INSERT INTO products (name, description, price, stock_quantity, seller_id, image, category) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7) 
       RETURNING *`;
       // Xác thực và chuyển đổi giá trị số
     const numericPrice = parseFloat(price);
     if (isNaN(numericPrice) || numericPrice < 0 || numericPrice >= 100000000) {
       throw new Error('Giá sản phẩm không hợp lệ. Giá phải nhỏ hơn 100.000.000');
     }
-      const numericStock = parseInt(stock_quantity);
+    const numericStock = parseInt(stock_quantity);
     if (isNaN(numericStock) || numericStock < 0) {
       throw new Error('Số lượng không hợp lệ');
     }
@@ -114,7 +116,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       numericPrice.toFixed(2), // Định dạng số thập phân đúng 
       numericStock, 
       seller_id || 1, // Mặc định là 1 nếu không có
-      imagePath
+      imagePath,
+      category || 'Khác' // Thêm category vào câu lệnh INSERT
     ];
     
     const result = await pool.query(query, values);
@@ -139,7 +142,8 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 // PUT - Cập nhật sản phẩm
-router.put('/:id', upload.single('image'), async (req, res) => {  const { id } = req.params;
+router.put('/:id', upload.single('image'), async (req, res) => {  
+  const { id } = req.params;
   const { name, description, price, stock_quantity, category } = req.body;
   
   try {
@@ -171,18 +175,20 @@ router.put('/:id', upload.single('image'), async (req, res) => {  const { id } =
       }
     }
     
-    // Cập nhật sản phẩm
+    // Cập nhật sản phẩm - bao gồm cả trường category
     const query = `
       UPDATE products 
-      SET name = $1, description = $2, price = $3, stock_quantity = $4, image = $5
-      WHERE id = $6
+      SET name = $1, description = $2, price = $3, stock_quantity = $4, image = $5, category = $6
+      WHERE id = $7
       RETURNING *`;
     
-    const values = [      name || oldProduct.name,
+    const values = [
+      name || oldProduct.name,
       description || oldProduct.description,
       price || oldProduct.price,
       stock_quantity || oldProduct.stock_quantity,
       imagePath,
+      category || oldProduct.category, // Thêm category vào câu lệnh UPDATE
       id
     ];
     

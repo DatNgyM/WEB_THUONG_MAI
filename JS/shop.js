@@ -16,54 +16,50 @@ let filters = {
 // Hàm để tải sản phẩm từ API
 async function fetchProducts() {
     try {
-        const apiUrl = new URL('http://localhost:3000/api/products');
+        // Sử dụng URL tương đối để tránh vấn đề về domain
+        const apiUrl = '/api/products';
         
-        // Thêm các tham số filter nếu có
-        if (filters.categories.length > 0) {
-            apiUrl.searchParams.append('category', filters.categories.join(','));
-        }
-        
-        if (filters.priceRange.min > 0) {
-            apiUrl.searchParams.append('min_price', filters.priceRange.min);
-        }
-        
-        if (filters.priceRange.max < 2000) {
-            apiUrl.searchParams.append('max_price', filters.priceRange.max);
-        }
-        
-        if (filters.search.trim() !== '') {
-            apiUrl.searchParams.append('search', filters.search);
-        }
-        
-        console.log('Fetching products from API:', apiUrl.toString());
-        const response = await fetch(apiUrl.toString());
+        console.log('Đang tải sản phẩm từ API:', apiUrl);
+        const response = await fetch(apiUrl);
         
         if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
+            console.error('Lỗi API:', response.status, response.statusText);
+            throw new Error(`Lỗi API: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('Dữ liệu sản phẩm từ API:', data);
         
-        // Nếu API không trả về dữ liệu, sử dụng mẫu
-        if (!data || data.length === 0) {
-            console.warn('No products returned from API, using sample data');
+        // Nếu API không trả về dữ liệu hoặc trả về mảng rỗng
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            console.warn('API không trả về sản phẩm nào, sử dụng dữ liệu mẫu');
             return getSampleProducts();
         }
         
         // Map data từ API sang định dạng cần thiết
-        return data.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: parseFloat(item.price),
-            image: item.image || '/images/products/default-product.jpg',
-            category: item.category || 'Other',
-            brand: item.brand || 'Unknown',
-            rating: item.rating || 4,
-            description: item.description || 'No description available',
-            seller: item.seller_name || 'Unknown Seller'
-        }));
+        return data.map(item => {
+            // Log thông tin sản phẩm để debug
+            console.log('Xử lý sản phẩm:', item);
+            return {
+                id: item.id,
+                name: item.name || 'Sản phẩm không tên',
+                price: parseFloat(item.price || 0),
+                // Kiểm tra đường dẫn hình ảnh và sử dụng fallback nếu cần
+                image: item.image_url || item.image || '/images/products/default-product.jpg',
+                category: item.category || 'Other',
+                brand: item.brand || 'Unknown',
+                rating: parseFloat(item.rating) || 4,
+                description: item.description || 'Không có mô tả',
+                seller: item.seller_name || 'Unknown Seller'
+            };
+        });
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Lỗi khi tải sản phẩm:', error);
+        // Hiển thị thông báo lỗi cho người dùng (tùy chọn)
+        const productsGrid = document.getElementById('productsGrid');
+        if (productsGrid) {
+            productsGrid.innerHTML = `<div class="alert alert-danger col-12">Không thể tải sản phẩm. Lỗi: ${error.message}</div>`;
+        }
         // Trả về dữ liệu mẫu nếu có lỗi
         return getSampleProducts();
     }
@@ -176,7 +172,37 @@ function filterProducts() {
 function updateProductDisplay() {
     const filteredProducts = filterProducts();
     const productsGrid = document.getElementById('productsGrid');
-    productsGrid.innerHTML = filteredProducts.map(renderProduct).join('');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const errorMessage = document.getElementById('error-message');
+    const noProductsMessage = document.getElementById('no-products-message');
+    
+    // Ẩn tất cả các thông báo
+    if (loadingIndicator) loadingIndicator.style.display = 'none';
+    if (errorMessage) errorMessage.style.display = 'none';
+    if (noProductsMessage) noProductsMessage.style.display = 'none';
+    
+    // Nếu không có sản phẩm (sau khi lọc), hiển thị thông báo
+    if (filteredProducts.length === 0) {
+        if (noProductsMessage) noProductsMessage.style.display = 'block';
+        if (productsGrid) productsGrid.innerHTML = '';
+    } else {
+        // Hiển thị sản phẩm
+        if (productsGrid) {
+            productsGrid.innerHTML = filteredProducts.map(renderProduct).join('');
+            
+            // Thêm sự kiện cho nút "Add to Cart"
+            productsGrid.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.dataset.productId;
+                    const product = products.find(p => p.id == productId);
+                    if (product) {
+                        addToCart(product);
+                    }
+                });
+            });
+        }
+    }
     
     // Cập nhật số lượng sản phẩm hiển thị
     const showingResults = document.querySelector('.showing-results span');
@@ -185,10 +211,98 @@ function updateProductDisplay() {
     }
 }
 
+// Hàm thêm vào giỏ hàng
+function addToCart(product) {
+    console.log('Thêm vào giỏ hàng:', product);
+    
+    // Lấy giỏ hàng hiện tại từ localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    const existingProductIndex = cart.findIndex(item => item.id === product.id);
+    
+    if (existingProductIndex !== -1) {
+        // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
+        cart[existingProductIndex].quantity += 1;
+    } else {
+        // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1
+        });
+    }
+    
+    // Lưu giỏ hàng vào localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Cập nhật hiển thị số lượng sản phẩm trong giỏ hàng
+    updateCartCount();
+    
+    // Hiển thị thông báo thành công
+    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+}
+
+// Cập nhật số lượng sản phẩm trong giỏ hàng
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(element => {
+        element.textContent = totalItems;
+    });
+}
+
 // Event Listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Khởi tạo hiển thị sản phẩm
-    updateProductDisplay();
+document.addEventListener('DOMContentLoaded', async function() {
+    // Hiển thị loading khi trang tải
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const errorMessage = document.getElementById('error-message');
+    if (loadingIndicator) loadingIndicator.style.display = 'block';
+    if (errorMessage) errorMessage.style.display = 'none';
+    
+    try {
+        // Khởi tạo hiển thị giỏ hàng
+        updateCartCount();
+        
+        // Tải sản phẩm từ API
+        products = await fetchProducts();
+        
+        // Cập nhật hiển thị sản phẩm
+        updateProductDisplay();
+    } catch (error) {
+        console.error('Lỗi khi khởi tạo trang:', error);
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        if (errorMessage) {
+            errorMessage.style.display = 'block';
+            errorMessage.textContent = `Không thể tải sản phẩm. Lỗi: ${error.message}`;
+        }
+    }
+    
+    // Xử lý sự kiện cho các checkbox category
+    document.querySelectorAll('.filter-section input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const section = this.closest('.filter-section');
+            const sectionTitle = section.querySelector('h6').textContent;
+            
+            if (sectionTitle === 'Categories') {
+                filters.categories = Array.from(section.querySelectorAll('input:checked'))
+                    .map(cb => cb.nextElementSibling.textContent.trim());
+            } else if (sectionTitle === 'Brand') {
+                filters.brands = Array.from(section.querySelectorAll('input:checked'))
+                    .map(cb => cb.nextElementSibling.textContent.trim());
+            } else if (sectionTitle === 'Rating') {
+                // Xử lý filter theo rating nếu cần
+                const checkedRating = section.querySelector('input:checked');
+                filters.rating = checkedRating ? parseInt(checkedRating.value) : null;
+            }
+            
+            updateProductDisplay();
+        });
+    });
     
     // Xử lý sự kiện cho các checkbox category
     document.querySelectorAll('.filter-section input[type="checkbox"]').forEach(checkbox => {

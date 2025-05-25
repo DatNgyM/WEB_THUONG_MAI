@@ -50,33 +50,61 @@ class HomePage {
 
     async loadFeaturedProducts() {
         try {
-            const response = await fetch('/server/featured-products');
+            // Thay đổi endpoint API để lấy tất cả sản phẩm
+            const response = await fetch('/api/products'); // Sử dụng /api/products
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const products = await response.json();
             this.renderProducts(products);
         } catch (error) {
-            console.error('Error loading featured products:', error);
+            console.error('Error loading products:', error); // Sửa lại thông báo lỗi
             // Show featured products from local data as fallback
             this.renderProducts(this.getFallbackProducts());
         }
     }
 
     renderProducts(products) {
-        const productsContainer = document.querySelector('.products');
-        if (!productsContainer) return;
+        const productsContainer = document.getElementById('products-container'); // Sử dụng getElementById nếu ID là duy nhất
+        if (!productsContainer) {
+            console.error("Products container not found!");
+            return;
+        }
 
-        const html = products.map(product => `
-            <div class="product" data-product-id="${product.id}">
-                <img src="${product.image}" alt="${product.name}">
+        if (!Array.isArray(products)) {
+            console.error("Products data is not an array:", products);
+            productsContainer.innerHTML = '<p>Không có sản phẩm nào để hiển thị.</p>';
+            return;
+        }
+
+        if (products.length === 0) {
+            productsContainer.innerHTML = '<p>Không có sản phẩm nào để hiển thị.</p>';
+            return;
+        }
+
+        const html = products.map(product => {
+            // Đảm bảo sử dụng đúng tên thuộc tính từ API
+            // Ví dụ: product.image_url nếu API trả về image_url
+            // Ví dụ: product.price nếu API trả về price
+            const imageUrl = product.image_url || product.image || '/images/placeholder.jpg'; // Thêm ảnh placeholder nếu không có ảnh
+            const productName = product.name || 'Tên sản phẩm không xác định';
+            const productPrice = product.price !== undefined ? product.price.toFixed(2) : 'N/A';
+            const productId = product.id || 'N/A';
+
+            return `
+            <div class="product" data-product-id="${productId}">
+                <img src="${imageUrl}" alt="${productName}">
                 <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <h3 class="product-name">${productName}</h3>
+                    <div class="product-price">$${productPrice}</div>
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         productsContainer.innerHTML = html;
-        this.setupEventListeners();
+        this.setupEventListeners(); // Gọi lại để gán sự kiện cho sản phẩm mới
     }
 
     handleSearch(e) {

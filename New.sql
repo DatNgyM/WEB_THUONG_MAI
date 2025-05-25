@@ -222,3 +222,35 @@ SET is_premium = EXCLUDED.is_premium,
     account_name = EXCLUDED.account_name,
     bank_name = EXCLUDED.bank_name,
     billing_email = EXCLUDED.billing_email;
+
+
+
+	-- Tạo bảng sessions để lưu trữ phiên đăng nhập
+CREATE TABLE sessions (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL,
+  CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+);
+
+-- Tạo chỉ mục cho phép truy vấn nhanh sessions theo thời hạn
+CREATE INDEX "IDX_session_expire" ON "sessions" ("expire");
+
+-- Tạo bảng categories để phân loại sản phẩm
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Thêm cột category_id vào bảng products (nếu chưa có)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS category_id INTEGER;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS category VARCHAR(100);
+
+-- Thêm một số danh mục mẫu
+INSERT INTO categories (name, description) VALUES
+('Điện thoại', 'Các loại điện thoại thông minh'),
+('Laptop', 'Máy tính xách tay và phụ kiện'),
+('Đồng hồ', 'Đồng hồ thông minh và truyền thống'),
+('Phụ kiện', 'Các phụ kiện điện tử');

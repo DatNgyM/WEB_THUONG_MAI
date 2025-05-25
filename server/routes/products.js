@@ -5,7 +5,8 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const pool = require('../db'); // Changed db to pool
+const fs = require('fs'); // Require fs module to check file existence
 
 /**
  * GET /api/products
@@ -15,50 +16,78 @@ router.get('/', async (req, res) => {
     try {
         const { category, min_price, max_price, seller_id, search } = req.query;
         
-        // Build query with potential filters
-        let query = 'SELECT p.*, u.name as seller_name FROM products p JOIN users u ON p.seller_id = u.id WHERE 1=1';
-        const params = [];
+        console.log('Đang truy vấn sản phẩm với các tham số:', { category, min_price, max_price, seller_id, search });
         
-        // Add category filter if provided
+        // Truy vấn sản phẩm và thông tin seller, sử dụng trường category trong bảng products
+        let queryText = `
+            SELECT 
+                p.*, 
+                COALESCE(u.name, 'Unknown') as seller_name
+            FROM 
+                products p
+            LEFT JOIN 
+                users u ON p.seller_id = u.id
+            WHERE 1=1
+        `;
+        const params = [];
+        let paramIndex = 1;
+        
+        // Add category filter if provided - dùng trường category trong bảng products
         if (category) {
-            query += ' AND p.category = ?';
+            queryText += ` AND p.category = $${paramIndex++}`;
             params.push(category);
         }
         
         // Add price range filter if provided
         if (min_price) {
-            query += ' AND p.price >= ?';
+            queryText += ` AND p.price >= $${paramIndex++}`;
             params.push(parseFloat(min_price));
         }
         if (max_price) {
-            query += ' AND p.price <= ?';
+            queryText += ` AND p.price <= $${paramIndex++}`;
             params.push(parseFloat(max_price));
         }
         
         // Add seller filter if provided
         if (seller_id) {
-            query += ' AND p.seller_id = ?';
+            queryText += ` AND p.seller_id = $${paramIndex++}`;
             params.push(parseInt(seller_id));
         }
         
         // Add search filter if provided
         if (search) {
-            query += ' AND (p.name LIKE ? OR p.description LIKE ?)';
+            queryText += ` AND (p.name ILIKE $${paramIndex++} OR p.description ILIKE $${paramIndex++})`; // Changed LIKE to ILIKE for case-insensitive search
             params.push(`%${search}%`);
             params.push(`%${search}%`);
         }
         
+        console.log('Executing query:', queryText);
+        console.log('With params:', params);
+        
         // Execute the query
-        db.query(query, params, (err, results) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Database error' });
+        const { rows } = await pool.query(queryText, params); // Changed db.query to pool.query and callback to async/await
+            
+        console.log(`API trả về ${rows.length} sản phẩm`);
+            
+        // Xử lý kết quả để đảm bảo các trường đúng định dạng
+        // Ensure image paths are valid and fallback to default image if missing
+        const processedResults = rows.map(product => {
+            // Check if the image exists in the products folder
+            const imagePath = `./images/products/${product.image}`;
+
+            if (!product.image || !fs.existsSync(imagePath)) {
+                product.image = '/images/products/default-product.jpg';
+            } else if (!product.image.startsWith('http') && !product.image.startsWith('/')) {
+                product.image = '/images/products/' + product.image;
             }
-            res.json(results);
+
+            return product;
         });
+            
+        res.json(processedResults);
     } catch (error) {
         console.error('Server error:', error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
 
@@ -69,20 +98,35 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const query = 'SELECT p.*, u.name as seller_name FROM products p JOIN users u ON p.seller_id = u.id WHERE p.id = ?';
+        const queryText = `
+            SELECT 
+                p.*, 
+                COALESCE(u.name, 'Unknown') as seller_name
+            FROM 
+                products p
+            LEFT JOIN 
+                users u ON p.seller_id = u.id
+            WHERE p.id = $1
+        `;
         
-        db.query(query, [id], (err, results) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Database error' });
-            }
+        const { rows } = await pool.query(queryText, [id]); // Changed db.query to pool.query and callback to async/await
             
-            if (results.length === 0) {
-                return res.status(404).json({ error: 'Product not found' });
-            }
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
             
-            res.json(results[0]);
-        });
+        // Xử lý kết quả để đảm bảo các trường đúng định dạng
+        const product = rows[0];
+            
+        // Đảm bảo đường dẫn ảnh đúng
+        const imagePath = `./images/products/${product.image}`;
+        if (!product.image || !fs.existsSync(imagePath)) {
+            product.image = '/images/products/default-product.jpg';
+        } else if (!product.image.startsWith('http') && !product.image.startsWith('/')) {
+            product.image = '/images/products/' + product.image;
+        }
+            
+        res.json(product);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Server error' });
@@ -96,15 +140,19 @@ router.get('/:id', async (req, res) => {
 router.get('/category/:category', async (req, res) => {
     try {
         const { category } = req.params;
-        const query = 'SELECT p.*, u.name as seller_name FROM products p JOIN users u ON p.seller_id = u.id WHERE p.category = ?';
+        const queryText = `
+            SELECT 
+                p.*, 
+                COALESCE(u.name, 'Unknown') as seller_name
+            FROM 
+                products p
+            LEFT JOIN 
+                users u ON p.seller_id = u.id
+            WHERE p.category = $1 
+        `; // Changed p.category = ? to p.category = $1
         
-        db.query(query, [category], (err, results) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Database error' });
-            }
-            res.json(results);
-        });
+        const { rows } = await pool.query(queryText, [category]); // Changed db.query to pool.query and callback to async/await
+        res.json(rows);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Server error' });
