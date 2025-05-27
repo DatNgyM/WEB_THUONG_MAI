@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Details - Five:05</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <title>MacBook Pro M4 - Five:05</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/CSS/styles.css" />
+    <script src="/JS/imageDebug.js" defer></script>
 </head>
 <body>
     <header>
@@ -67,39 +67,410 @@
                 </div>
             </div>
         </div>
-    </header>
-
-    <main class="product-details-page">
+    </header>    <main class="product-details-page">
         <div class="container">
-            <nav aria-label="breadcrumb" class="mt-4">
-                <ol class="breadcrumb">
+            <nav aria-label="breadcrumb" class="mt-4">                <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/Page/index.html">Home</a></li>
                     <li class="breadcrumb-item"><a href="/Page/product.html">Shop</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-category">Category</li>
+                    <li class="breadcrumb-item"><a href="/Page/product.html" id="breadcrumb-category">Laptops</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-product">MacBook Pro M4</li>
                 </ol>
             </nav>
 
             <div class="product-details-container">
                 <div class="row g-4">
                     <!-- Product Gallery -->
-                    <div class="col-lg-6">
-                        <div class="product-gallery">
+                    <div class="col-lg-6"><div class="product-gallery">
                             <div class="main-image-container">
-                                <img src="/images/products/default-product.jpg" alt="Product Image" id="mainImage" class="main-image">
+                                <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg" alt="MacBook Pro M4" id="mainImage" class="main-image">
                                 <button class="wishlist-btn" aria-label="Add to wishlist" title="Add to wishlist">
                                     <i class="bi bi-heart"></i>
                                 </button>
                             </div>
+                            <div class="thumbnail-container">
+                                <button class="thumbnail-nav prev" aria-label="Previous image" title="Previous image">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <div class="thumbnails">
+                                    <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg" alt="View 1" class="thumbnail active" onclick="changeImage(event, this.src)">
+                                    <img src="/images/products/default-product.jpg" alt="View 2" class="thumbnail" onclick="changeImage(event, this.src)">
+                                </div>
+                                <button class="thumbnail-nav next" aria-label="Next image" title="Next image">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>                    </div>
+
+                    <!-- Product Info -->
+                    <div class="col-lg-6">
+                        <div class="product-info">                            <div class="product-header">
+                                <h1 class="product-title" id="product-name">MacBook Pro M4</h1>
+                                <div class="product-meta">
+                                    <span class="sku" id="product-sku">SKU: MP78932X5</span>
+                                    <div class="product-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <span class="rating-text">4.5 (85 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>                            <div class="product-price">
+                                <div class="current-price" id="product-price">$1,599.00</div>
+                                <div class="original-price" id="product-original-price">$1,799.00</div>
+                                <div class="discount-badge" id="product-discount">-11%</div>
+                            </div>
+
+                            <div class="product-description">
+                                <p id="product-description">The all-new MacBook Pro with M4 chip - Experience unprecedented power and efficiency with the latest Apple Silicon technology. Featuring a stunning Liquid Retina XDR display, exceptional battery life, and pro-level performance that transforms your workflow.</p>
+                            </div>
+
+                            <div class="product-options">
+                                <div class="option-section">
+                                    <h3>Color</h3>
+                                    <div class="color-options">
+                                        <label class="color-option">
+                                            <input type="radio" name="color" value="space-black" checked>
+                                            <span class="color-swatch" style="background-color: #2C2C2C"></span>
+                                            <span class="color-name">Space Black</span>
+                                        </label>
+                                        <label class="color-option">
+                                            <input type="radio" name="color" value="silver">
+                                            <span class="color-swatch" style="background-color: #E8E8E8"></span>
+                                            <span class="color-name">Silver</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="option-section">
+                                    <h3>Storage</h3>
+                                    <div class="storage-options">
+                                        <label class="storage-option">
+                                            <input type="radio" name="storage" value="256" checked>
+                                            <span class="storage-details">
+                                                <span class="storage-size">256GB</span>
+                                                <span class="storage-price">$1,599.00</span>
+                                            </span>
+                                        </label>
+                                        <label class="storage-option">
+                                            <input type="radio" name="storage" value="512">
+                                            <span class="storage-details">
+                                                <span class="storage-size">512GB</span>
+                                                <span class="storage-price">$1,799.00</span>
+                                            </span>
+                                        </label>
+                                        <label class="storage-option">
+                                            <input type="radio" name="storage" value="1tb">
+                                            <span class="storage-details">
+                                                <span class="storage-size">1TB</span>
+                                                <span class="storage-price">$2,199.00</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="option-section">
+                                    <div class="quantity-selector">
+                                        <h3>Quantity</h3>                                        <div class="quantity-input">
+                                            <button class="quantity-btn minus" aria-label="Decrease quantity" title="Decrease quantity">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" value="1" min="1" max="10" id="quantity" aria-label="Quantity" title="Quantity">
+                                            <button class="quantity-btn plus" aria-label="Increase quantity" title="Increase quantity">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            <div class="product-actions">
+                                <button class="btn-add-to-cart" id="addToCartBtn" aria-label="Add to cart" title="Add to cart">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                                <button class="btn-buy-now" aria-label="Buy now" title="Buy now">
+                                    Buy Now
+                                </button>
+                            </div>
+
+                            <div class="product-features">
+                                <div class="feature">
+                                    <i class="fas fa-truck"></i>
+                                    <div class="feature-text">
+                                        <h4>Free Shipping</h4>
+                                        <p>On orders over $100</p>
+                                    </div>
+                                </div>
+                                <div class="feature">
+                                    <i class="fas fa-undo"></i>
+                                    <div class="feature-text">
+                                        <h4>Easy Returns</h4>
+                                        <p>30-day return policy</p>
+                                    </div>
+                                </div>
+                                <div class="feature">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <div class="feature-text">
+                                        <h4>Secure Payment</h4>
+                                        <p>100% secure checkout</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Product Details -->
-                    <div class="col-lg-6">
-                        <div class="product-info">
-                            <h1 id="product-name">Product Name</h1>
-                            <p id="product-price" class="price">$0.00</p>
-                            <p id="product-description">Product description goes here...</p>
-                            <button class="btn btn-primary add-to-cart" id="addToCartBtn">Add to Cart</button>
+                <!-- Product Details Tabs -->
+                <div class="product-details-tabs">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description" aria-label="Description" title="Description">
+                                Description
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specifications" aria-label="Specifications" title="Specifications">
+                                Specifications
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" aria-label="Reviews" title="Reviews">
+                                Reviews
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="description">
+                            <div class="product-description-content">
+                                <h2>Revolutionary Performance</h2>
+                                <p>The MacBook Pro with M4 chip represents a quantum leap in performance. The new chip delivers up to 40% faster CPU performance than the previous generation, making complex tasks like compiling code, rendering 3D scenes, and processing large datasets remarkably efficient.</p>
+                                
+                                <div class="feature-image">
+                                    <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg" alt="Performance Features">
+                                </div>
+
+                                <h2>Stunning Display</h2>
+                                <p>Experience exceptional visual clarity with the Liquid Retina XDR display featuring mini-LED technology. With 1000 nits of sustained brightness, 1600 nits peak brightness, and a 1,000,000:1 contrast ratio, your content looks more true to life than ever before.</p>
+
+                                <div class="feature-image">
+                                    <img src="/images/products/default-product.jpg" alt="Display Features">
+                                </div>
+
+                                <h2>Professional Connectivity</h2>
+                                <p>The MacBook Pro comes with a comprehensive array of ports to support your professional workflow. With Thunderbolt 4 ports, HDMI, SDXC card slot, and MagSafe 3, you can connect to high-speed peripherals, displays, and power without adapters.</p>
+
+                                <div class="specs-grid">
+                                    <div class="spec-item">
+                                        <i class="fas fa-microchip"></i>
+                                        <h4>M4 Chip</h4>
+                                        <p>12-core CPU, 18-core GPU</p>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-battery-full"></i>
+                                        <h4>All-day Battery</h4>
+                                        <p>Up to 22 hours video playback</p>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-memory"></i>
+                                        <h4>Unified Memory</h4>
+                                        <p>Up to 96GB high-bandwidth memory</p>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-hdd"></i>
+                                        <h4>Fast Storage</h4>
+                                        <p>Up to 8TB SSD storage</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="specifications">
+                            <div class="specifications-content">
+                                <div class="spec-group">
+                                    <h3>Display</h3>
+                                    <ul>
+                                        <li><strong>Size:</strong> 14.2-inch (diagonal)</li>
+                                        <li><strong>Type:</strong> Liquid Retina XDR display</li>
+                                        <li><strong>Resolution:</strong> 3024 x 1964 pixels at 254 ppi</li>
+                                        <li><strong>Technology:</strong> Mini-LED backlit</li>
+                                        <li><strong>Refresh Rate:</strong> Up to 120Hz with ProMotion</li>
+                                        <li><strong>Brightness:</strong> 1000 nits sustained, 1600 nits peak HDR</li>
+                                    </ul>
+                                </div>
+
+                                <div class="spec-group">
+                                    <h3>Processor & Performance</h3>
+                                    <ul>
+                                        <li><strong>Chip:</strong> Apple M4 Pro chip</li>
+                                        <li><strong>CPU:</strong> 12-core (8 performance cores, 4 efficiency cores)</li>
+                                        <li><strong>GPU:</strong> 18-core integrated graphics</li>
+                                        <li><strong>Neural Engine:</strong> 16-core</li>
+                                        <li><strong>Media Engine:</strong> Advanced with hardware-accelerated H.264, HEVC, ProRes, and ProRes RAW</li>
+                                    </ul>
+                                </div>
+
+                                <div class="spec-group">
+                                    <h3>Memory & Storage</h3>
+                                    <ul>
+                                        <li><strong>Memory:</strong> 16GB, 32GB or 64GB unified memory</li>
+                                        <li><strong>Memory Bandwidth:</strong> 200GB/s</li>
+                                        <li><strong>Storage:</strong> 256GB, 512GB, 1TB, 2TB, 4TB, or 8TB SSD</li>
+                                        <li><strong>Storage Performance:</strong> Up to 7.4GB/s sequential read</li>
+                                    </ul>
+                                </div>
+
+                                <div class="spec-group">
+                                    <h3>Connectivity & Ports</h3>
+                                    <ul>
+                                        <li><strong>Wi-Fi:</strong> Wi-Fi 6E (802.11ax)</li>
+                                        <li><strong>Bluetooth:</strong> Bluetooth 5.3</li>
+                                        <li><strong>Thunderbolt/USB 4 ports:</strong> Three (supports charging, DisplayPort, Thunderbolt 3, USB 4)</li>
+                                        <li><strong>HDMI:</strong> HDMI 2.1 port with support for multichannel audio output</li>
+                                        <li><strong>SDXC:</strong> SDXC card slot</li>
+                                        <li><strong>Charging:</strong> MagSafe 3 port</li>
+                                        <li><strong>Audio:</strong> 3.5 mm headphone jack with advanced support for high-impedance headphones</li>
+                                    </ul>
+                                </div>
+
+                                <div class="spec-group">
+                                    <h3>Battery & Power</h3>
+                                    <ul>
+                                        <li><strong>Battery Capacity:</strong> 70-watt-hour lithium-polymer battery</li>
+                                        <li><strong>Battery Life:</strong> Up to 22 hours Apple TV app movie playback; Up to 18 hours wireless web</li>
+                                        <li><strong>Power Adapter:</strong> 67W USB-C Power Adapter (included)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="reviews">
+                            <div class="reviews-content">
+                                <div class="reviews-summary">
+                                    <div class="rating-overview">
+                                        <div class="rating-score">
+                                            <h2>4.5</h2>
+                                            <div class="stars">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </div>
+                                            <p>Based on 120 reviews</p>
+                                        </div>
+                                        <div class="rating-bars">
+                                            <div class="rating-bar">
+                                                <span class="stars">5 stars</span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 75%"></div>
+                                                </div>
+                                                <span class="count">90</span>
+                                            </div>
+                                            <div class="rating-bar">
+                                                <span class="stars">4 stars</span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 17%"></div>
+                                                </div>
+                                                <span class="count">20</span>
+                                            </div>
+                                            <div class="rating-bar">
+                                                <span class="stars">3 stars</span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 5%"></div>
+                                                </div>
+                                                <span class="count">6</span>
+                                            </div>
+                                            <div class="rating-bar">
+                                                <span class="stars">2 stars</span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 2%"></div>
+                                                </div>
+                                                <span class="count">3</span>
+                                            </div>
+                                            <div class="rating-bar">
+                                                <span class="stars">1 star</span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="width: 1%"></div>
+                                                </div>
+                                                <span class="count">1</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="reviews-list">
+                                    <div class="review-item">
+                                        <div class="review-header">
+                                            <img src="/images/avatar.png" alt="User" class="review-avatar">
+                                            <div class="review-meta">
+                                                <h4>David Chen</h4>
+                                                <div class="stars">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                                <span class="review-date">1 week ago</span>
+                                            </div>
+                                        </div>
+                                        <p class="review-text">As a software developer, this MacBook Pro is an absolute beast! The M4 chip handles everything I throw at it - from running multiple virtual machines to compiling large codebases in record time. The display is phenomenal for coding, and battery life is outstanding - I can work all day without reaching for a charger. Worth every penny for professionals.</p>
+                                        <div class="review-images">
+                                            <img src="/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg" alt="Review Image">
+                                        </div>
+                                    </div>
+
+                                    <div class="review-item">
+                                        <div class="review-header">
+                                            <img src="/images/avatar.png" alt="User" class="review-avatar">
+                                            <div class="review-meta">
+                                                <h4>Michelle L.</h4>
+                                                <div class="stars">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </div>
+                                                <span class="review-date">2 weeks ago</span>
+                                            </div>
+                                        </div>
+                                        <p class="review-text">The performance is incredible for video editing and 3D rendering. The M4 chip is a significant improvement over the M2 Pro I was using before. The XDR display has perfect color accuracy for my creative work. My only slight complaint is that the baseline storage is still only 256GB, which fills up quickly when working with large media files - definitely recommend upgrading to at least 512GB or 1TB.</p>
+                                    </div>
+                                </div>
+
+                                <div class="write-review">
+                                    <h3>Write a Review</h3>
+                                    <form class="review-form">
+                                        <div class="rating-input">
+                                            <label>Your Rating</label>
+                                            <div class="stars">
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Review Title</label>
+                                            <input type="text" class="form-control" placeholder="Summarize your experience">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Your Review</label>
+                                            <textarea class="form-control" rows="4" placeholder="Tell us what you liked or disliked"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Photos</label>
+                                            <input type="file" class="form-control" multiple accept="image/*" aria-label="Upload photos" title="Upload photos">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" aria-label="Submit review" title="Submit review">Submit Review</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,6 +478,139 @@
         </div>
     </main>
 
-    <script src="/JS/productDetails.js"></script>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>About Five:07</h3>
+                <p>Your trusted source for premium tech products and accessories.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/Page/index.html">Home</a></li>
+                    <li><a href="/Page/product.html">Shop</a></li>
+                    <li><a href="/Page/index.html#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Refunds</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="subscribe-button">Subscribe</button>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>        <div class="footer-bottom">
+            <p>&copy; 2025 Five:05 Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script>        // Image gallery functionality 
+        // This function is overridden by the one in productDetailss.js
+        function changeImage(event, src) {
+            console.log("Using inline changeImage, but should be using JS file version");
+            const mainImage = document.getElementById('mainImage');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            
+            if (mainImage) {
+                // Process path
+                if (!src.startsWith('/') && !src.startsWith('http')) {
+                    src = '/' + src;
+                }
+                
+                // Set error handler
+                mainImage.onerror = function() {
+                    console.error(`Failed to load image: ${src}`);
+                    this.src = '/images/products/default-product.jpg';
+                };
+                
+                mainImage.src = src;
+            }
+            
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            if (event && event.target) {
+                const thumbnail = event.target.closest('.thumbnail');
+                if (thumbnail) {
+                    thumbnail.classList.add('active');
+                }
+            }
+        }
+
+        // Quantity selector
+        document.addEventListener('DOMContentLoaded', () => {
+            const quantityInput = document.querySelector('.quantity-input input');
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+
+            minusBtn.addEventListener('click', () => {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+
+            plusBtn.addEventListener('click', () => {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue < 10) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+
+            // Thumbnail navigation
+            const thumbnailContainer = document.querySelector('.thumbnails');
+            const prevBtn = document.querySelector('.thumbnail-nav.prev');
+            const nextBtn = document.querySelector('.thumbnail-nav.next');
+
+            prevBtn.addEventListener('click', () => {
+                thumbnailContainer.scrollBy({
+                    left: -100,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                thumbnailContainer.scrollBy({
+                    left: 100,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Review rating interaction
+            const ratingStars = document.querySelectorAll('.rating-input .stars i');
+            ratingStars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    ratingStars.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.remove('far');
+                            s.classList.add('fas');
+                        } else {
+                            s.classList.remove('fas');
+                            s.classList.add('far');
+                        }
+                    });
+                });
+            });
+        });    </script>
+    <script src="/JS/cart.js"></script>
+    <script src="/JS/productDetailss.js"></script>
 </body>
 </html>

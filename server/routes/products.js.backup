@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db'); // Changed db to pool
 const fs = require('fs'); // Require fs module to check file existence
+// const { enhanceProductData } = require('../middleware/productEnhancer'); // Import enhancer middleware
 
 /**
  * Enhance product data with additional information
@@ -16,54 +17,17 @@ function enhanceProductData(data) {
         return data.map(product => enhanceProductData(product));
     }
     
-    try {
-        console.log(`Xử lý sản phẩm ${data.id}: ${data.name}`);
-        
-        // Kiểm tra tính hợp lệ của dữ liệu
-        if (!data) {
-            console.error('Dữ liệu sản phẩm trống');
-            return data;
-        }
-        
-        // Xử lý hình ảnh từ trường images (JSON string hoặc array)
-        if (data.images) {
-            let imagesArray;
-            
-            // Nếu images là string (JSON), chuyển thành array
-            if (typeof data.images === 'string') {
-                try {
-                    imagesArray = JSON.parse(data.images);
-                    console.log(`Đã parse images string thành array: ${imagesArray.length} hình ảnh`);
-                } catch (e) {
-                    console.error(`Lỗi parse images JSON: ${e.message}`);
-                    imagesArray = [data.images];
-                }
-            } else if (Array.isArray(data.images)) {
-                imagesArray = data.images;
-            }
-            
-            // Sử dụng hình ảnh đầu tiên từ mảng
-            if (imagesArray && imagesArray.length > 0) {
-                const firstImage = imagesArray[0];
-                console.log(`Sử dụng hình ảnh đầu tiên: ${firstImage}`);
-                data.image = firstImage.startsWith('/') ? firstImage : '/' + firstImage;
-                
-                // Ensure we store the full array for the product details page
-                data.images = imagesArray.map(img => img.startsWith('/') ? img : '/' + img);
-            }
-        }
-        
-        // Fallback nếu không có hình ảnh
-        if (!data.image) {
-            data.image = '/images/products/default-product.jpg';
-            console.log(`Sử dụng hình ảnh mặc định cho sản phẩm ${data.id}`);
-        } else if (!data.image.startsWith('http') && !data.image.startsWith('/')) {
+    // Ensure image path is correct
+    if (data.image) {
+        // Nếu đường dẫn đã có định dạng đầy đủ thì giữ nguyên
+        if (data.image.startsWith('http') || data.image.startsWith('/')) {
+            // Không cần xử lý
+        } else {
+            // Chuyển đường dẫn thành dạng với dấu / ở đầu
             data.image = '/' + data.image;
         }
-        console.log(`Sản phẩm ${data.id}: Sử dụng đường dẫn hình ảnh ${data.image}`);
-    } catch (error) {
-        console.error(`Lỗi xử lý dữ liệu sản phẩm ${data.id}:`, error);
-        // Sử dụng ảnh mặc định nếu có lỗi
+    } else {
+        // Sử dụng hình ảnh mặc định nếu không có
         data.image = '/images/products/default-product.jpg';
     }
     
@@ -76,6 +40,8 @@ function enhanceProductData(data) {
     if (typeof data.rating === 'string') {
         data.rating = parseFloat(data.rating);
     }
+    
+    console.log('Enhanced product:', data.id, 'with image path:', data.image);
     
     return data;
 }
@@ -137,14 +103,28 @@ router.get('/', async (req, res) => {
         console.log('With params:', params);
         
         // Execute the query
-        const { rows } = await pool.query(queryText, params);
+        const { rows } = await pool.query(queryText, params); // Changed db.query to pool.query and callback to async/await
             
         console.log(`API trả về ${rows.length} sản phẩm`);
+              // Xử lý kết quả để đảm bảo các trường đúng định dạng
+        // Ensure image paths are valid and fallback to default image if missing
+        let processedResults = rows.map(product => {
+            // Check if the image exists in the products folder
+            const imagePath = `./images/products/${product.image}`;
+
+            if (!product.image || !fs.existsSync(imagePath)) {
+                product.image = '/images/products/default-product.jpg';
+            } else if (!product.image.startsWith('http') && !product.image.startsWith('/')) {
+                product.image = '/images/products/' + product.image;
+            }
+
+            return product;
+        });
         
         // Nâng cao chất lượng dữ liệu sản phẩm với mô tả phong phú
-        const enhancedResults = enhanceProductData(rows);
+        processedResults = enhanceProductData(processedResults);
             
-        res.json(enhancedResults);
+        res.json(processedResults);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
@@ -154,7 +134,6 @@ router.get('/', async (req, res) => {
 /**
  * GET /api/products/category/:category
  * Get products by category
- * CHÚ Ý: Route này phải đứng trước route '/:id' để tránh xung đột
  */
 router.get('/category/:category', async (req, res) => {
     try {
@@ -175,8 +154,20 @@ router.get('/category/:category', async (req, res) => {
         const { rows } = await pool.query(queryText, [category]);
         console.log(`Found ${rows.length} products in category ${category}`);
         
+        // Process images and enhance product data
+        const processedResults = rows.map(product => {
+            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                product.image = '/' + product.images[0];
+                console.log(`Set product ${product.id} image from images array:`, product.image);
+            } else if (!product.image || product.image.startsWith('/images/products/default')) {
+                product.image = '/images/products/default-product.jpg';
+                console.log(`Set default image for product ${product.id}`);
+            }
+            return product;
+        });
+        
         // Enhance product descriptions
-        const enhancedResults = enhanceProductData(rows);
+        const enhancedResults = enhanceProductData(processedResults);
         
         res.json(enhancedResults);
     } catch (error) {
@@ -189,23 +180,9 @@ router.get('/category/:category', async (req, res) => {
  * GET /api/products/:id
  * Get a specific product by ID
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {    try {
     try {
-        const { id } = req.params;
-        console.log('Getting product with ID:', id);
-        
-        // Thêm try-catch cụ thể để xử lý lỗi định dạng ID
-        let productId;
-        try {
-            productId = parseInt(id);
-            if (isNaN(productId)) {
-                throw new Error('ID không hợp lệ');
-            }
-        } catch (e) {
-            console.error(`ID sản phẩm không hợp lệ: ${id}`, e);
-            return res.status(400).json({ error: 'ID sản phẩm không hợp lệ' });
-        }
-        
+        const { category } = req.params;
         const queryText = `
             SELECT 
                 p.*, 
@@ -214,30 +191,28 @@ router.get('/:id', async (req, res) => {
                 products p
             LEFT JOIN 
                 users u ON p.seller_id = u.id
-            WHERE p.id = $1
-        `;
+            WHERE p.category = $1 
+        `; // Changed p.category = ? to p.category = $1
+          const { rows } = await pool.query(queryText, [category]); // Changed db.query to pool.query and callback to async/await
         
-        console.log('Executing query with params:', [productId]);
-        const { rows } = await pool.query(queryText, [productId]);
-        console.log('Query result rows:', rows.length);
+        // Process images and enhance product data
+        const processedResults = rows.map(product => {
+            // Check if the image exists in the products folder
+            const imagePath = `./images/products/${product.image}`;
+
+            if (!product.image || !fs.existsSync(imagePath)) {
+                product.image = '/images/products/default-product.jpg';
+            } else if (!product.image.startsWith('http') && !product.image.startsWith('/')) {
+                product.image = '/images/products/' + product.image;
+            }
+
+            return product;
+        });
         
-        if (rows.length === 0) {
-            console.log(`Không tìm thấy sản phẩm với ID ${productId}`);
-            return res.status(404).json({ error: 'Product not found' });
-        }
+        // Enhance product descriptions
+        const enhancedResults = enhanceProductData(processedResults);
         
-        // Xử lý kết quả để đảm bảo các trường đúng định dạng
-        let product = rows[0];
-        
-        // Thêm log debug để xác định lỗi
-        console.log('Raw product data:', JSON.stringify(product));
-            
-        // Nâng cao chất lượng dữ liệu sản phẩm với mô tả phong phú
-        const enhancedProduct = enhanceProductData(product);
-        
-        console.log('Enhanced product data:', JSON.stringify(enhancedProduct));
-            
-        res.json(enhancedProduct);
+        res.json(enhancedResults);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Server error' });

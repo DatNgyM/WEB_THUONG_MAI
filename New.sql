@@ -243,6 +243,8 @@ CREATE TABLE categories (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+select *from categories
+select *from products
 
 -- Thêm cột category_id vào bảng products (nếu chưa có)
 ALTER TABLE products ADD COLUMN IF NOT EXISTS category_id INTEGER;

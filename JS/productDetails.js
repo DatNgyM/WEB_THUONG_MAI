@@ -63,7 +63,7 @@ class ProductDetails {
     handleBuyNow() {
         this.handleAddToCart();
         // Redirect to checkout page
-        window.location.href = '/checkout.html';
+        window.location.href = '/Page/checkout.html';
     }
 }
 

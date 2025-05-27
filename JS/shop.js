@@ -1,6 +1,18 @@
 // Danh sách sản phẩm - mặc định sẽ được tải từ API
 let products = [];
 
+// Hàm xử lý đường dẫn hình ảnh để đảm bảo hiển thị đúng
+function processImagePath(path) {
+    if (!path) return '/images/products/default-product.jpg';
+    
+    // Thêm "/" vào đầu đường dẫn nếu cần
+    if (!path.startsWith('/') && !path.startsWith('http')) {
+        path = '/' + path;
+    }
+    
+    return path;
+}
+
 // Lưu trữ trạng thái bộ lọc
 let filters = {
     categories: [],
@@ -40,12 +52,36 @@ async function fetchProducts() {
         return data.map(item => {
             // Log thông tin sản phẩm để debug
             console.log('Xử lý sản phẩm:', item);
+            
+            // Xử lý đường dẫn hình ảnh
+            const imagePath = item.image ? processImagePath(item.image) : '/images/products/default-product.jpg';
+            console.log(`Sản phẩm ${item.id}: Sử dụng đường dẫn hình ảnh ${imagePath}`);
+            
+            // Xử lý mảng hình ảnh nếu có
+            let images = [];
+            if (item.images) {
+                if (Array.isArray(item.images)) {
+                    images = item.images.map(img => processImagePath(img));
+                } else if (typeof item.images === 'string') {
+                    try {
+                        const parsedImages = JSON.parse(item.images);
+                        if (Array.isArray(parsedImages)) {
+                            images = parsedImages.map(img => processImagePath(img));
+                        }
+                    } catch (e) {
+                        console.warn(`Không thể parse images string cho sản phẩm ${item.id}:`, e);
+                        // Nếu không phải JSON thì xem như một đường dẫn image duy nhất
+                        images = [processImagePath(item.images)];
+                    }
+                }
+            }
+            
             return {
                 id: item.id,
                 name: item.name || 'Sản phẩm không tên',
                 price: parseFloat(item.price || 0),
-                // Kiểm tra đường dẫn hình ảnh và sử dụng fallback nếu cần
-                image: item.image_url || item.image || '/images/products/default-product.jpg',
+                image: imagePath,
+                images: images.length > 0 ? images : [imagePath], // Đảm bảo luôn có ít nhất 1 hình ảnh
                 category: item.category || 'Other',
                 brand: item.brand || 'Unknown',
                 rating: parseFloat(item.rating) || 4,
@@ -113,13 +149,23 @@ function getSampleProducts() {
 
 // Render một sản phẩm
 function renderProduct(product) {
+    // Log để debug
+    console.log(`Render sản phẩm ${product.id}: ${product.name} với hình ảnh ${product.image}`);
+    
+    // Xử lý đường dẫn hình ảnh
+    const imagePath = processImagePath(product.image);
+    
     return `
         <div class="col-md-4 col-sm-6 product-card" data-category="${product.category}" data-brand="${product.brand}" data-price="${product.price}">
             <div class="product">
                 <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}" />
+                    <img 
+                        src="${imagePath}" 
+                        alt="${product.name}" 
+                        onerror="this.onerror=null; this.src='/images/products/default-product.jpg'; console.log('Lỗi tải hình ảnh cho sản phẩm ID: ${product.id}, thay thế bằng ảnh mặc định');"
+                    />
                     <div class="product-overlay">
-                        <a href="/Page/productdetails.html?id=${product.id}" class="btn btn-primary">View Details</a>
+                        <a href="/Page/productdetailss.html?id=${product.id}" class="btn btn-primary">View Details</a>
                         
                         <button class="btn btn-outline-primary add-to-cart" data-product-id="${product.id}">
                             <i class="fas fa-shopping-cart"></i> Add to Cart

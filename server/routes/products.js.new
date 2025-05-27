@@ -16,55 +16,28 @@ function enhanceProductData(data) {
         return data.map(product => enhanceProductData(product));
     }
     
-    try {
-        console.log(`Xử lý sản phẩm ${data.id}: ${data.name}`);
-        
-        // Kiểm tra tính hợp lệ của dữ liệu
-        if (!data) {
-            console.error('Dữ liệu sản phẩm trống');
-            return data;
-        }
-        
-        // Xử lý hình ảnh từ trường images (JSON string hoặc array)
-        if (data.images) {
-            let imagesArray;
-            
-            // Nếu images là string (JSON), chuyển thành array
-            if (typeof data.images === 'string') {
-                try {
-                    imagesArray = JSON.parse(data.images);
-                    console.log(`Đã parse images string thành array: ${imagesArray.length} hình ảnh`);
-                } catch (e) {
-                    console.error(`Lỗi parse images JSON: ${e.message}`);
-                    imagesArray = [data.images];
-                }
-            } else if (Array.isArray(data.images)) {
-                imagesArray = data.images;
-            }
-            
-            // Sử dụng hình ảnh đầu tiên từ mảng
-            if (imagesArray && imagesArray.length > 0) {
-                const firstImage = imagesArray[0];
-                console.log(`Sử dụng hình ảnh đầu tiên: ${firstImage}`);
-                data.image = firstImage.startsWith('/') ? firstImage : '/' + firstImage;
-                
-                // Ensure we store the full array for the product details page
-                data.images = imagesArray.map(img => img.startsWith('/') ? img : '/' + img);
-            }
-        }
-        
-        // Fallback nếu không có hình ảnh
-        if (!data.image) {
-            data.image = '/images/products/default-product.jpg';
-            console.log(`Sử dụng hình ảnh mặc định cho sản phẩm ${data.id}`);
-        } else if (!data.image.startsWith('http') && !data.image.startsWith('/')) {
+    // Ensure image path is correct
+    if (data.image) {
+        // Nếu đường dẫn đã có định dạng đầy đủ thì giữ nguyên
+        if (data.image.startsWith('http') || data.image.startsWith('/')) {
+            // Không cần xử lý
+        } else {
+            // Chuyển đường dẫn thành dạng với dấu / ở đầu
             data.image = '/' + data.image;
         }
-        console.log(`Sản phẩm ${data.id}: Sử dụng đường dẫn hình ảnh ${data.image}`);
-    } catch (error) {
-        console.error(`Lỗi xử lý dữ liệu sản phẩm ${data.id}:`, error);
-        // Sử dụng ảnh mặc định nếu có lỗi
+    } else {
+        // Sử dụng hình ảnh mặc định nếu không có
         data.image = '/images/products/default-product.jpg';
+    }
+    
+    // Nếu có mảng images, sử dụng hình ảnh đầu tiên
+    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+        if (!data.images[0].startsWith('/')) {
+            data.image = '/' + data.images[0];
+        } else {
+            data.image = data.images[0];
+        }
+        console.log(`Product ${data.id}: Using first image from images array: ${data.image}`);
     }
     
     // Đảm bảo price là số
@@ -194,18 +167,6 @@ router.get('/:id', async (req, res) => {
         const { id } = req.params;
         console.log('Getting product with ID:', id);
         
-        // Thêm try-catch cụ thể để xử lý lỗi định dạng ID
-        let productId;
-        try {
-            productId = parseInt(id);
-            if (isNaN(productId)) {
-                throw new Error('ID không hợp lệ');
-            }
-        } catch (e) {
-            console.error(`ID sản phẩm không hợp lệ: ${id}`, e);
-            return res.status(400).json({ error: 'ID sản phẩm không hợp lệ' });
-        }
-        
         const queryText = `
             SELECT 
                 p.*, 
@@ -217,19 +178,17 @@ router.get('/:id', async (req, res) => {
             WHERE p.id = $1
         `;
         
-        console.log('Executing query with params:', [productId]);
-        const { rows } = await pool.query(queryText, [productId]);
+        console.log('Executing query with params:', [id]);
+        const { rows } = await pool.query(queryText, [id]);
         console.log('Query result rows:', rows.length);
         
         if (rows.length === 0) {
-            console.log(`Không tìm thấy sản phẩm với ID ${productId}`);
             return res.status(404).json({ error: 'Product not found' });
         }
         
         // Xử lý kết quả để đảm bảo các trường đúng định dạng
         let product = rows[0];
         
-        // Thêm log debug để xác định lỗi
         console.log('Raw product data:', JSON.stringify(product));
             
         // Nâng cao chất lượng dữ liệu sản phẩm với mô tả phong phú

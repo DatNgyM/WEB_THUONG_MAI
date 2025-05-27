@@ -13,7 +13,7 @@ function checkLoginStatus() {
 }
 
 // Get cart items from localStorage
-let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 // Kiểm tra xem người dùng đã đăng nhập chưa
 const isLoggedIn = checkLoginStatus();
 
