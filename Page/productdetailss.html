@@ -67,7 +67,8 @@
                 </div>
             </div>
         </div>
-    </header>    <main class="product-details-page">
+    </header>    
+        <main class="product-details-page">
         <div class="container">
             <nav aria-label="breadcrumb" class="mt-4">                <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/Page/index.html">Home</a></li>
@@ -103,10 +104,11 @@
 
                     <!-- Product Info -->
                     <div class="col-lg-6">
-                        <div class="product-info">                            <div class="product-header">
-                                <h1 class="product-title" id="product-name">MacBook Pro M4</h1>
+                        <div class="product-info">                            
+                            <div class="product-header">
+                                <h1 class="product-title" id="product-name"></h1>
                                 <div class="product-meta">
-                                    <span class="sku" id="product-sku">SKU: MP78932X5</span>
+                                    <span class="sku" id="product-sku"></span>
                                     <div class="product-rating">
                                         <div class="stars">
                                             <i class="fas fa-star"></i>
@@ -115,10 +117,11 @@
                                             <i class="fas fa-star"></i>
                                             <i class="fas fa-star-half-alt"></i>
                                         </div>
-                                        <span class="rating-text">4.5 (85 reviews)</span>
+                                        <span class="rating-text"></span>
                                     </div>
                                 </div>
-                            </div>                            <div class="product-price">
+                            </div>                            
+                            <div class="product-price">
                                 <div class="current-price" id="product-price">$1,599.00</div>
                                 <div class="original-price" id="product-original-price">$1,799.00</div>
                                 <div class="discount-badge" id="product-discount">-11%</div>
@@ -145,7 +148,7 @@
                                     </div>
                                 </div>
 
-                                <div class="option-section">
+                                <!-- <div class="option-section">
                                     <h3>Storage</h3>
                                     <div class="storage-options">
                                         <label class="storage-option">
@@ -170,7 +173,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="option-section">
                                     <div class="quantity-selector">
@@ -185,7 +188,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            <div class="product-actions">
+                            </div>                            
+                            <div class="product-actions">
                                 <button class="btn-add-to-cart" id="addToCartBtn" aria-label="Add to cart" title="Add to cart">
                                     <i class="fas fa-shopping-cart"></i>
                                     Add to Cart
@@ -524,35 +528,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script>        // Image gallery functionality 
-        // This function is overridden by the one in productDetailss.js
+    <script>
+        // Image gallery functionality
         function changeImage(event, src) {
-            console.log("Using inline changeImage, but should be using JS file version");
             const mainImage = document.getElementById('mainImage');
             const thumbnails = document.querySelectorAll('.thumbnail');
             
-            if (mainImage) {
-                // Process path
-                if (!src.startsWith('/') && !src.startsWith('http')) {
-                    src = '/' + src;
-                }
-                
-                // Set error handler
-                mainImage.onerror = function() {
-                    console.error(`Failed to load image: ${src}`);
-                    this.src = '/images/products/default-product.jpg';
-                };
-                
-                mainImage.src = src;
-            }
-            
+            mainImage.src = src;
             thumbnails.forEach(thumb => thumb.classList.remove('active'));
-            if (event && event.target) {
-                const thumbnail = event.target.closest('.thumbnail');
-                if (thumbnail) {
-                    thumbnail.classList.add('active');
-                }
-            }
+            event.target.classList.add('active');
         }
 
         // Quantity selector

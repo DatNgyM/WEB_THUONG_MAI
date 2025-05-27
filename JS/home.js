@@ -16,7 +16,7 @@ class HomePage {
                 if (e.target.closest('.add-to-cart')) return;
                 
                 const productId = product.dataset.productId;
-                window.location.href = `/Page/productdetails.html?id=${productId}`;
+                window.location.href = `/Page/productdetailss.html?id=${productId}`;
             });
         });
 

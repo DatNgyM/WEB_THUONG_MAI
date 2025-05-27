@@ -102,50 +102,50 @@ async function fetchProducts() {
 }
 
 // Dữ liệu mẫu để sử dụng khi API không hoạt động
-function getSampleProducts() {
-    return [
-        {
-            id: 1,
-            name: "iPhone 16 Pro Max Titan",
-            price: 1211.87,
-            image: "/images/iphone-16-pro-max-titan.jpg",
-            category: "Phones & Tablets",
-            brand: "Apple",
-            rating: 5,
-            description: "Latest iPhone model with titanium frame"
-        },
-        {
-            id: 2,
-            name: "Laptop MSI Gaming Stealth 14 AI Studio",
-            price: 1969.54,
-            image: "/images/msi-stealth-14-ai-studio-a1vfg-ultra-7-085vn.jpg",
-            category: "Laptops",
-            brand: "MSI",
-            rating: 4,
-            description: "High-performance gaming laptop"
-        },
-        {
-            id: 3,
-            name: "Macbook Pro M4 14 inch",
-            price: 1542.14,
-            image: "/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg",
-            category: "Laptops",
-            brand: "Apple",
-            rating: 5,
-            description: "Powerful MacBook with M4 chip"
-        },
-        {
-            id: 4,
-            name: "Apple Watch Ultra 2 GPS",
-            price: 990.40,
-            image: "/images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg",
-            category: "Smartwatches",
-            brand: "Apple",
-            rating: 5,
-            description: "Premium smartwatch with advanced features"
-        }
-    ];
-}
+// function getSampleProducts() {
+//     return [
+//         {
+//             id: 1,
+//             name: "iPhone 16 Pro Max Titan",
+//             price: 1211.87,
+//             image: "/images/iphone-16-pro-max-titan.jpg",
+//             category: "Phones & Tablets",
+//             brand: "Apple",
+//             rating: 5,
+//             description: "Latest iPhone model with titanium frame"
+//         },
+//         {
+//             id: 2,
+//             name: "Laptop MSI Gaming Stealth 14 AI Studio",
+//             price: 1969.54,
+//             image: "/images/msi-stealth-14-ai-studio-a1vfg-ultra-7-085vn.jpg",
+//             category: "Laptops",
+//             brand: "MSI",
+//             rating: 4,
+//             description: "High-performance gaming laptop"
+//         },
+//         {
+//             id: 3,
+//             name: "Macbook Pro M4 14 inch",
+//             price: 1542.14,
+//             image: "/images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg",
+//             category: "Laptops",
+//             brand: "Apple",
+//             rating: 5,
+//             description: "Powerful MacBook with M4 chip"
+//         },
+//         {
+//             id: 4,
+//             name: "Apple Watch Ultra 2 GPS",
+//             price: 990.40,
+//             image: "/images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg",
+//             category: "Smartwatches",
+//             brand: "Apple",
+//             rating: 5,
+//             description: "Premium smartwatch with advanced features"
+//         }
+//     ];
+// }
 
 // Render một sản phẩm
 function renderProduct(product) {
