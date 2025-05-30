@@ -365,7 +365,8 @@
         }
     </style>
 </head>
-<body>        <header>
+<body>       
+     <header>
         <div class="header-container">
             <div class="logo">
                 <a href="index.html">Five:07</a>
@@ -649,5 +650,127 @@
     <script src="/JS/checkout.js"></script>
     <script src="/JS/bankAccountFix.js"></script>
     <script src="/JS/adminCheck.js"></script>
+
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            
+            if (placeOrderBtn) {
+                placeOrderBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Validate form fields
+                    if (validateCheckoutForm()) {
+                        // Store order data
+                        const total = document.getElementById('total').textContent;
+                        const paymentMethod = getSelectedPaymentMethod();
+                        
+                        localStorage.setItem('orderTotal', total);
+                        localStorage.setItem('paymentMethod', paymentMethod);
+                        
+                        // FIXED: Change from "order Success.html" to "orderSuccess.html"
+                        window.location.href = 'orderSuccess.html?total=' + encodeURIComponent(total);
+                    }
+                });
+            }
+        });
+        
+        function validateCheckoutForm() {
+            // Check if address is selected
+            const addressSelected = document.querySelector('input[name="address"]:checked');
+            if (!addressSelected) {
+                alert('Please select a shipping address');
+                return false;
+            }
+            
+            // Check if delivery method is selected
+            const deliverySelected = document.querySelector('input[name="delivery"]:checked');
+            if (!deliverySelected) {
+                alert('Please select a delivery method');
+                return false;
+            }
+            
+            // Check if payment method is selected
+            const paymentSelected = document.querySelector('input[name="payment"]:checked');
+            if (!paymentSelected) {
+                alert('Please select a payment method');
+                return false;
+            }
+            
+            // If credit card is selected, validate card details
+            if (paymentSelected.value === 'credit') {
+                const cardNumber = document.getElementById('cardNumber').value.trim();
+                const cardExpiry = document.getElementById('cardExpiry').value.trim();
+                const cardCvv = document.getElementById('cardCvv').value.trim();
+                
+                if (!cardNumber || !cardExpiry || !cardCvv) {
+                    alert('Please fill in all credit card details');
+                    return false;
+                }
+                
+                // Basic card number validation (should be 16 digits)
+                if (cardNumber.replace(/\s/g, '').length < 16) {
+                    alert('Please enter a valid card number');
+                    return false;
+                }
+                
+                // Basic expiry validation (MM/YY format)
+                if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                    alert('Please enter expiry date in MM/YY format');
+                    return false;
+                }
+                
+                // Basic CVV validation (3 digits)
+                if (!/^\d{3}$/.test(cardCvv)) {
+                    alert('Please enter a valid 3-digit CVV');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function getSelectedPaymentMethod() {
+            const paymentSelected = document.querySelector('input[name="payment"]:checked');
+            if (paymentSelected) {
+                if (paymentSelected.value === 'credit') {
+                    const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                    return `Credit Card ending in ****${cardNumber.slice(-4)}`;
+                } else if (paymentSelected.value === 'paypal') {
+                    return 'PayPal';
+                }
+            }
+            return 'Credit Card ending in ****1234';
+        }
+
+        // Update shipping cost when delivery method changes
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'delivery') {
+                updateShippingCost(e.target.value);
+            }
+        });
+
+        function updateShippingCost(deliveryMethod) {
+            const shippingElement = document.getElementById('shipping');
+            const totalElement = document.getElementById('total');
+            const subtotalElement = document.getElementById('subtotal');
+            const taxElement = document.getElementById('tax');
+            
+            let shippingCost = 0;
+            if (deliveryMethod === 'express') {
+                shippingCost = 9.99;
+            }
+            
+            // Update shipping display
+            shippingElement.textContent = shippingCost === 0 ? '$0.00' : `$${shippingCost.toFixed(2)}`;
+            
+            // Recalculate total
+            const subtotal = parseFloat(subtotalElement.textContent.replace('$', '').replace(',', ''));
+            const tax = parseFloat(taxElement.textContent.replace('$', '').replace(',', ''));
+            const newTotal = subtotal + shippingCost + tax;
+            
+            totalElement.textContent = `$${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+    </script>
 </body>
 </html>

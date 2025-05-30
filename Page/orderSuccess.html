@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Success - Five:07 Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/styles.css" />
+    <script src="/JS/authDisplay.js" defer></script>
+    <script src="/JS/home.js"></script>
+    <script src="/JS/chatWidget.js" defer></script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        .success-page {
+            padding: 40px 0;
+            min-height: 70vh;
+        }
+        .success-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .success-title::before {
+            content: "✓";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .success-subtitle {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        .order-details {
+            margin: 25px 0;
+        }
+        .order-details h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        .order-details h4::before {
+            content: "📋";
+            margin-right: 10px;
+        }
+        .detail-item {
+            margin-bottom: 8px;
+        }
+        .estimated-delivery {
+            margin: 25px 0;
+        }
+        .estimated-delivery h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        .estimated-delivery h4::before {
+            content: "🚚";
+            margin-right: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn-primary-custom {
+            background: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-primary-custom:hover {
+            background: #0069d9;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-secondary-custom {
+            background: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            color: white;
+            text-decoration: none;
+        }
+        .confirmation-message {
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .confirmation-message::before {
+            content: "✉️";
+            margin-right: 8px;
+        }
+        .btn-icon {
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 20px;
+                margin: 0 15px;
+            }
+            .success-title {
+                font-size: 2rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">Five:07</a>
+            </div>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#shop">Shop</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#colours">Our Colors</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="Search products..." onkeyup="searchProduct()">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div id="account-section" style="display: none;">
+                    <div class="dropdown" id="account-menu">
+                        <span id="user-greeting">Xin chào, Le Ba Phat</span>
+                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Page/accountsetting.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">My Orders</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="javascript:void(0);" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="guest-section">
+                    <a href="/Page/login.html" class="auth-link">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+
+                <div class="cart-container">
+                    <a href="/Page/cart.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Success Content -->
+    <div class="success-page">
+        <div class="container">
+            <div class="success-container">
+                <h1 class="success-title">Order Successful!</h1>
+                <p class="success-subtitle">Thank you for your purchase. Your order has been confirmed and will be processed shortly.</p>
+                
+                <div class="order-details">
+                    <h4>Order Details</h4>
+                    <div class="detail-item">
+                        <strong>Order Number:</strong> <span id="orderNumber">#ORD-2025-001234</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Order Date:</strong> <span id="orderDate">May 30, 2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Payment Method:</strong> <span id="paymentMethod">Credit Card ending in ****1234</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Total Amount:</strong> <span id="totalAmount">$1,372.80</span>
+                    </div>
+                </div>
+
+                <div class="estimated-delivery">
+                    <h4>Estimated Delivery</h4>
+                    <p id="deliveryEstimate">Your order will be delivered between June 2-4, 2025</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="index.html" class="btn-primary-custom">
+                        <i class="fas fa-home btn-icon"></i>Continue Shopping
+                    </a>
+                    <a href="#" class="btn-secondary-custom" id="trackOrderBtn">
+                        <i class="fas fa-search btn-icon"></i>Track Order
+                    </a>
+                </div>
+
+                <p class="confirmation-message">
+                    A confirmation email has been sent to your registered email address.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>About Five:07</h3>
+                <p>Your trusted source for premium tech products and accessories.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#shop">Shop</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Refunds</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="subscribe-button">Subscribe</button>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Five:07 Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="/JS/adminCheck.js"></script>
+    <script>
+        // Generate random order number
+        function generateOrderNumber() {
+            const orderNum = '#ORD-2025-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('orderNumber').textContent = orderNum;
+        }
+
+        // Set current date
+        function setOrderDate() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('orderDate').textContent = today.toLocaleDateString('en-US', options);
+        }
+
+        // Calculate delivery estimate (3-5 business days)
+        function setDeliveryEstimate() {
+            const today = new Date();
+            const deliveryStart = new Date(today);
+            const deliveryEnd = new Date(today);
+            
+            deliveryStart.setDate(today.getDate() + 3);
+            deliveryEnd.setDate(today.getDate() + 5);
+            
+            document.getElementById('deliveryEstimate').textContent = 
+                `Your order will be delivered between June ${deliveryStart.getDate()}-${deliveryEnd.getDate()}, 2025`;
+        }
+
+        // Load order data from localStorage or URL parameters
+        function loadOrderData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const total = urlParams.get('total') || localStorage.getItem('orderTotal') || '$1,372.80';
+            const paymentMethod = localStorage.getItem('paymentMethod') || 'Credit Card ending in ****1234';
+            
+            document.getElementById('totalAmount').textContent = total;
+            document.getElementById('paymentMethod').textContent = paymentMethod;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate random order number
+            generateOrderNumber();
+            
+            // Set order date
+            setOrderDate();
+            
+            // Set delivery estimate
+            setDeliveryEstimate();
+            
+            // Load order data
+            loadOrderData();
+            
+            // Clear cart after successful order
+            localStorage.removeItem('cart');
+            
+            // Update cart count display
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = '0';
+            }
+            
+            // Track order button
+            document.getElementById('trackOrderBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Order tracking feature will be available soon!');
+            });
+        });
+    </script>
+</body>
+</html>
