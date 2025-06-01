@@ -29,7 +29,8 @@ const adminDashboard = require('./routes/adminDashboard');
 const adminOrders = require('./routes/adminOrders');
 const adminInventory = require('./routes/adminInventory');
 const adminProducts = require('./routes/adminProducts');
-
+// Thêm vào phần import routes (sau các require khác)
+const productDetailsRouter = require('./routes/productDetails');
 
 
 const PORT = 3000;
@@ -64,7 +65,7 @@ app.use('/api/admin/auth', adminAuthRouter);
 
 // Unprotected products API (tạm thời để test) 
 app.use('/api/admin/products', adminProducts);
-
+app.use('/', productDetailsRouter); // Đảm bảo có dòng này
 // Protected admin routes
 app.use('/api/admin', authenticateAdmin);
 app.use('/api/admin/dashboard', adminDashboard);
