@@ -313,7 +313,7 @@ async function updateCccdInfo() {
         alert('Đã xảy ra lỗi khi cập nhật CCCD. Vui lòng thử lại sau.');
     }
     }
-}
+
 
 // Thiết lập chức năng đăng ký người bán
 function setupSellerRegistration(userObject) {

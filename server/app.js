@@ -78,7 +78,7 @@ app.use(express.static(path.join(__dirname, '../')));
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running: http://localhost:${PORT}`);
-  console.log('\n📄 Các trang chính:');
+  console.log('\n Các trang chính:');
   console.log(`- Trang chủ        http://localhost:${PORT}/Page/index.html`);
   console.log(`- Đăng nhập        http://localhost:${PORT}/Page/login.html`);
   console.log(`- Trang Admin      http://localhost:${PORT}/Page/admin/index.html`);
