@@ -154,3 +154,49 @@ function checkAndFixPaymentMethod(bankInfo) {
         if (accountNumberInput) accountNumberInput.value = bankInfo.accountNumber;
     }
 }
+
+// Sửa đoạn code để lấy thông tin từ đúng user hiện tại
+function updateBankAccountFields() {
+  // Lấy thông tin user hiện tại
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  
+  if (!currentUser || !currentUser.id) {
+    console.log('No user logged in, not updating bank fields');
+    return;
+  }
+  
+  // Thêm log để debug
+  console.log('Current user:', currentUser);
+  
+  // Lấy thông tin tài khoản ngân hàng từ server cho user hiện tại
+  fetch(`/api/billing/${currentUser.id}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Bank data from server:', data);
+      
+      if (data.success && data.account) {
+        // Cập nhật đúng thông tin từ server
+        document.getElementById('bankName').value = data.account.bank_name || '';
+        document.getElementById('accountName').value = data.account.account_name || '';
+        document.getElementById('accountNumber').value = data.account.account_number || '';
+        
+        // Lưu thông tin này vào localStorage
+        if (!currentUser.bankAccount) currentUser.bankAccount = {};
+        currentUser.bankAccount.bankName = data.account.bank_name;
+        currentUser.bankAccount.accountName = data.account.account_name;
+        currentUser.bankAccount.accountNumber = data.account.account_number;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        console.log('Updated bank fields from server data');
+      } else {
+        // Nếu server không có dữ liệu, xóa trống các trường
+        document.getElementById('bankName').value = '';
+        document.getElementById('accountName').value = '';
+        document.getElementById('accountNumber').value = '';
+        console.log('Cleared bank fields (no server data)');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching bank account info:', error);
+    });
+}

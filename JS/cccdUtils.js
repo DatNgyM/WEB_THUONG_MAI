@@ -1,4 +1,3 @@
-
 /**
  * Tiện ích xử lý CCCD
  * Cung cấp các hàm hỗ trợ để xử lý số CCCD trong toàn bộ ứng dụng
@@ -59,6 +58,11 @@ function setupCccdField(cccdElement, userObject) {
         console.log('CCCD hợp lệ - đã hiển thị:', userObject.cccd);
     }
 }
+
+// Đặt thuộc tính readonly hoặc disabled cho trường CCCD
+document.getElementById('cccd').setAttribute('readonly', true);
+// hoặc
+// document.getElementById('cccd').disabled = true;
 
 // Export các hàm để sử dụng ở nơi khác (sử dụng với module system)
 // Đối với non-module, các hàm này sẽ là global

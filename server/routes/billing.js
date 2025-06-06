@@ -50,4 +50,86 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Kiểm tra và sửa route API xử lý cập nhật tài khoản ngân hàng
+router.post('/update', async (req, res) => {
+  try {
+    const { userId, accountNumber, accountName, bankName } = req.body;
+    
+    // Sửa lại query để phù hợp với PostgreSQL
+    const result = await db.query(`
+      INSERT INTO billing_info 
+        (user_id, account_number, account_name, bank_name)
+      VALUES 
+        ($1, $2, $3, $4)
+      ON CONFLICT (user_id) DO UPDATE SET
+        account_number = $2,
+        account_name = $3,
+        bank_name = $4
+      RETURNING *
+    `, [userId, accountNumber, accountName, bankName]);
+    
+    res.json({ success: true, data: result.rows[0] });
+    
+  } catch (error) {
+    console.error('Lỗi cập nhật tài khoản:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Thêm route này nếu chưa có
+router.post('/update', async (req, res) => {
+  try {
+    const { userId, accountNumber } = req.body;
+    
+    // Cập nhật vào database
+    await db.query(
+      `INSERT INTO billing_info (user_id, account_number) 
+       VALUES ($1, $2) 
+       ON CONFLICT (user_id) DO UPDATE 
+       SET account_number = $2`,
+      [userId, accountNumber]
+    );
+    
+    res.json({ success: true, message: 'Cập nhật tài khoản thành công' });
+  } catch (error) {
+    console.error('Error updating bank account:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Thêm API endpoint để lấy thông tin tài khoản ngân hàng theo user ID
+router.get('/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    
+    // Log để debug
+    console.log('Fetching bank account info for user:', userId);
+    
+    // Query database
+    const result = await db.query(
+      'SELECT * FROM billing_info WHERE user_id = $1',
+      [userId]
+    );
+    
+    if (result.rows.length > 0) {
+      res.json({
+        success: true,
+        account: result.rows[0]
+      });
+    } else {
+      res.json({
+        success: true,
+        account: null,
+        message: 'No bank account information found'
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching bank account:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
 module.exports = router;

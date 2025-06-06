@@ -774,7 +774,7 @@ function addBankPaymentMethod(bankInfo) {
         console.error('Payment methods container not found in DOM');
         // Tìm phần tử chứa "Payment Method" để xem cấu trúc DOM xung quanh
         const paymentSections = Array.from(document.querySelectorAll('h3')).filter(el => 
-            el.textContent.includes('Payment Method'));
+            el.textContent.includes('Payment'));
         if (paymentSections.length > 0) {
             console.log('Found payment section heading:', paymentSections[0]);
             // Thử tìm container trong phần tử cha của tiêu đề
@@ -1113,4 +1113,42 @@ function checkBankMethodExists() {
         
         return false;
     }
+}
+
+// Sửa phần hiển thị thông tin thanh toán trong checkout
+function loadPaymentMethods() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  
+  // Reset form trước khi hiển thị
+  document.getElementById('bankName').value = '';
+  document.getElementById('accountName').value = '';
+  document.getElementById('accountNumber').value = '';
+  
+  if (currentUser && currentUser.id) {
+    // Lấy dữ liệu tài khoản ngân hàng từ server
+    fetch(`/api/billing/${currentUser.id}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.account) {
+          // Hiển thị thông tin từ server
+          document.getElementById('bankName').value = data.account.bank_name || '';
+          document.getElementById('accountName').value = data.account.account_name || '';
+          document.getElementById('accountNumber').value = data.account.account_number || '';
+        } else if (currentUser.bankAccount) {
+          // Backup: lấy từ localStorage nếu server không có
+          document.getElementById('bankName').value = currentUser.bankAccount.bankName || '';
+          document.getElementById('accountName').value = currentUser.bankAccount.accountName || '';
+          document.getElementById('accountNumber').value = currentUser.bankAccount.accountNumber || '';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading payment info:', error);
+        // Fallback: lấy từ localStorage
+        if (currentUser.bankAccount) {
+          document.getElementById('bankName').value = currentUser.bankAccount.bankName || '';
+          document.getElementById('accountName').value = currentUser.bankAccount.accountName || '';
+          document.getElementById('accountNumber').value = currentUser.bankAccount.accountNumber || '';
+        }
+      });
+  }
 }
