@@ -1,0 +1,7 @@
+# Bỏ qua tất cả file .md
+*.md
+
+# Nhưng vẫn giữ README.md
+!README.md
+
+
