@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    Options -Multiviews
+    RewriteEngine On
+    # Đây là vấn đề chính - đường dẫn base phải chính xác
+    # Nếu chạy trên localhost:8080 thì không cần path, chỉ cần /
+    RewriteBase /
+    
+    # Nếu không phải file hoặc thư mục
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    
+    # Chuyển hướng tất cả request đến index.php
+    RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+</IfModule>
