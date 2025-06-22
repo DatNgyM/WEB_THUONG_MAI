@@ -10,39 +10,20 @@ class UserModel extends Model
     public function __construct()
     {
         parent::__construct();
-    }    /**
-         * Đăng ký người dùng mới
-         * @param array $data Dữ liệu người dùng
-         * @return array Response array
-         */
+    }
+
+    /**
+     * Đăng ký người dùng mới
+     * @param array $data Dữ liệu người dùng
+     * @return int|false ID người dùng mới hoặc false
+     */
     public function register($data)
     {
-        // Validate required fields
-        if (empty($data['email']) || empty($data['password'])) {
-            return ['success' => false, 'message' => 'Email and password are required'];
-        }
-
-        // Check if email already exists
-        if ($this->emailExists($data['email'])) {
-            return ['success' => false, 'message' => 'Email already exists'];
-        }
-
         // Hash password
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $data['created_at'] = date('Y-m-d H:i:s');
-        $data['status'] = 1; // Active by default
-
-        $userId = $this->insert($data);
-
-        if ($userId) {
-            return [
-                'success' => true,
-                'message' => 'User registered successfully',
-                'user_id' => $userId
-            ];
-        } else {
-            return ['success' => false, 'message' => 'Failed to register user'];
-        }
+        
+        return $this->insert($data);
     }
 
     /**
@@ -54,16 +35,16 @@ class UserModel extends Model
     public function login($email, $password)
     {
         $user = $this->getUserByEmail($email);
-
+        
         if ($user && password_verify($password, $user['password'])) {
             // Cập nhật last_login
             $this->update(['last_login' => date('Y-m-d H:i:s')], $user['id']);
-
+            
             // Không trả về password
             unset($user['password']);
             return $user;
         }
-
+        
         return false;
     }
 
@@ -75,10 +56,10 @@ class UserModel extends Model
     public function getUserByEmail($email)
     {
         $sql = "SELECT * FROM {$this->table} WHERE email = :email AND status = 1";
-
+        
         $this->db->query($sql);
         $this->db->bind(':email', $email);
-
+        
         return $this->db->single();
     }
 
@@ -90,10 +71,10 @@ class UserModel extends Model
     public function getUserByUsername($username)
     {
         $sql = "SELECT * FROM {$this->table} WHERE username = :username AND status = 1";
-
+        
         $this->db->query($sql);
         $this->db->bind(':username', $username);
-
+        
         return $this->db->single();
     }
 
@@ -106,18 +87,18 @@ class UserModel extends Model
     public function emailExists($email, $excludeId = null)
     {
         $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE email = :email";
-
+        
         if ($excludeId) {
             $sql .= " AND id != :exclude_id";
         }
-
+        
         $this->db->query($sql);
         $this->db->bind(':email', $email);
-
+        
         if ($excludeId) {
             $this->db->bind(':exclude_id', $excludeId, PDO::PARAM_INT);
         }
-
+        
         $result = $this->db->single();
         return $result['count'] > 0;
     }
@@ -131,18 +112,18 @@ class UserModel extends Model
     public function usernameExists($username, $excludeId = null)
     {
         $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE username = :username";
-
+        
         if ($excludeId) {
             $sql .= " AND id != :exclude_id";
         }
-
+        
         $this->db->query($sql);
         $this->db->bind(':username', $username);
-
+        
         if ($excludeId) {
             $this->db->bind(':exclude_id', $excludeId, PDO::PARAM_INT);
         }
-
+        
         $result = $this->db->single();
         return $result['count'] > 0;
     }
@@ -158,10 +139,10 @@ class UserModel extends Model
                        date_of_birth, gender, role, status, created_at, last_login
                 FROM {$this->table} 
                 WHERE id = :id AND status = 1";
-
+        
         $this->db->query($sql);
         $this->db->bind(':id', $id, PDO::PARAM_INT);
-
+        
         return $this->db->single();
     }
 
@@ -174,21 +155,21 @@ class UserModel extends Model
     public function updateProfile($id, $data)
     {
         // Không cho phép cập nhật một số trường nhạy cảm
-        $allowedFields = ['name', 'first_name', 'last_name', 'phone', 'address', 'avatar', 'date_of_birth', 'gender'];
+        $allowedFields = ['first_name', 'last_name', 'phone', 'avatar', 'date_of_birth', 'gender'];
         $updateData = [];
-
+        
         foreach ($allowedFields as $field) {
             if (isset($data[$field])) {
                 $updateData[$field] = $data[$field];
             }
         }
-
+        
         if (empty($updateData)) {
             return false;
         }
-
+        
         $updateData['updated_at'] = date('Y-m-d H:i:s');
-
+        
         return $this->update($updateData, $id);
     }
 
@@ -202,13 +183,13 @@ class UserModel extends Model
     public function changePassword($id, $oldPassword, $newPassword)
     {
         $user = $this->getById($id);
-
+        
         if (!$user || !password_verify($oldPassword, $user['password'])) {
             return false;
         }
-
+        
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
+        
         return $this->update([
             'password' => $hashedPassword,
             'updated_at' => date('Y-m-d H:i:s')
@@ -224,7 +205,7 @@ class UserModel extends Model
     public function resetPassword($id, $newPassword)
     {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
+        
         return $this->update([
             'password' => $hashedPassword,
             'updated_at' => date('Y-m-d H:i:s')
@@ -244,11 +225,11 @@ class UserModel extends Model
                 FROM {$this->table} 
                 ORDER BY created_at DESC 
                 LIMIT :limit OFFSET :offset";
-
+        
         $this->db->query($sql);
         $this->db->bind(':limit', $limit, PDO::PARAM_INT);
         $this->db->bind(':offset', $offset, PDO::PARAM_INT);
-
+        
         return $this->db->resultSet();
     }
 
@@ -263,106 +244,4 @@ class UserModel extends Model
         $result = $this->db->single();
         return (int) $result['count'];
     }
-
-    /**
-     * Lấy người dùng theo ID
-     * @param int $id ID người dùng
-     * @return array|false Thông tin người dùng
-     */
-    public function getUserById($id)
-    {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND status = 1";
-
-        $this->db->query($sql);
-        $this->db->bind(':id', $id, PDO::PARAM_INT);
-
-        $user = $this->db->single();
-        if ($user) {
-            unset($user['password']); // Không trả về password
-        }
-        return $user;
-    }    /**
-         * Cập nhật thông tin người dùng
-         * @param int $id ID người dùng
-         * @param array $data Dữ liệu cập nhật
-         * @return array Response array
-         */
-    public function updateUser($id, $data)
-    {
-        // Xóa các field không được phép cập nhật
-        unset($data['id'], $data['password'], $data['created_at']);
-
-        if (empty($data)) {
-            return ['success' => false, 'message' => 'No data to update'];
-        }
-
-        $data['updated_at'] = date('Y-m-d H:i:s');
-
-        $result = $this->update($data, $id);
-
-        if ($result) {
-            return ['success' => true, 'message' => 'User updated successfully'];
-        } else {
-            return ['success' => false, 'message' => 'Failed to update user'];
-        }
-    }
-
-    /**
-     * Thiết lập remember token cho người dùng
-     * @param int $userId ID người dùng
-     * @param string $token Remember token
-     * @return bool
-     */
-    public function setRememberToken($userId, $token)
-    {
-        $sql = "UPDATE {$this->table} SET remember_token = :token WHERE id = :user_id";
-        $this->db->query($sql);
-        $this->db->bind(':token', hash('sha256', $token));
-        $this->db->bind(':user_id', $userId, PDO::PARAM_INT);
-
-        return $this->db->execute();
-    }
-
-    /**
-     * Lấy người dùng theo remember token
-     * @param string $token Remember token
-     * @return array|false Thông tin người dùng
-     */
-    public function getUserByRememberToken($token)
-    {
-        $sql = "SELECT * FROM {$this->table} WHERE remember_token = :token AND status = 1";
-        $this->db->query($sql);
-        $this->db->bind(':token', hash('sha256', $token));
-
-        return $this->db->single();
-    }
-
-    /**
-     * Xóa remember token
-     * @param int $userId ID người dùng
-     * @return bool
-     */
-    public function clearRememberToken($userId)
-    {
-        $sql = "UPDATE {$this->table} SET remember_token = NULL WHERE id = :user_id";
-        $this->db->query($sql);
-        $this->db->bind(':user_id', $userId, PDO::PARAM_INT);
-
-        return $this->db->execute();
-    }
-
-    /**
-     * Tìm người dùng theo ID
-     * @param int $id ID người dùng
-     * @return array|false Thông tin người dùng
-     */
-    public function find($id)
-    {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND status = 1";
-        $this->db->query($sql);
-        $this->db->bind(':id', $id, PDO::PARAM_INT);
-
-        return $this->db->single();
-    }
 }
-

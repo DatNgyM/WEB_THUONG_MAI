@@ -1,7 +1,7 @@
 <!-- Helper function cho Javascript để render sản phẩm -->
 <script>
     function formatPrice(price) {
-        return new Intl.NumberFormat('vi-VN').format(price);
+        return new Intl.NumberFormat('vi-VN').format(price) + ' ₫';
     }
 
     function getProductImageUrl(imagePath) {

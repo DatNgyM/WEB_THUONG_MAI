@@ -1,9 +1,14 @@
 <IfModule mod_rewrite.c>
     Options -Multiviews
     RewriteEngine On
-    # Đây là vấn đề chính - đường dẫn base phải chính xác
-    # Nếu chạy trên localhost:8080 thì không cần path, chỉ cần /
+    # Cấu hình cho Laragon - Apache
+    # Nếu chạy trên virtual host (web-thuong-mai.test) thì dùng /
+    # Nếu chạy trên localhost/WEB_THUONG_MAI thì dùng /WEB_THUONG_MAI/
     RewriteBase /
+    
+    # Handle static files (CSS, JS, Images)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(CSS|JS|images)/(.*)$ $1/$2 [L]
     
     # Nếu không phải file hoặc thư mục
     RewriteCond %{REQUEST_FILENAME} !-d

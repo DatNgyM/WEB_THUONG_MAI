@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test JavaScript Functions - Five:07</title>
+    <link rel="stylesheet" href="CSS/main-styles.css">
+    <link rel="stylesheet" href="CSS/fixes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="JS/main.js" defer></script>
+    <style>
+        .test-section {
+            padding: 2rem;
+            margin: 1rem 0;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+        .test-button {
+            margin: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #9ACD32;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding: 2rem 0;">
+        <h1>Test JavaScript Functions</h1>
+        
+        <!-- Test Notifications -->
+        <div class="test-section">
+            <h3>Test Notifications</h3>
+            <button class="test-button" onclick="testNotifications()">Test Success Notification</button>
+            <button class="test-button" onclick="testErrorNotification()">Test Error Notification</button>
+            <button class="test-button" onclick="testWarningNotification()">Test Warning Notification</button>
+            <button class="test-button" onclick="testInfoNotification()">Test Info Notification</button>
+        </div>
+        
+        <!-- Test Loading -->
+        <div class="test-section">
+            <h3>Test Loading</h3>
+            <button class="test-button" onclick="testLoading()">Test Loading Overlay</button>
+        </div>
+        
+        <!-- Test Cart Functions -->
+        <div class="test-section">
+            <h3>Test Cart Functions</h3>
+            <button class="test-button add-to-cart-btn" data-product-id="1">Add Product 1 to Cart</button>
+            <button class="test-button add-to-cart-btn" data-product-id="2" data-quantity="2">Add 2x Product 2 to Cart</button>
+            <p>Cart Count: <span id="cart-count">0</span></p>
+        </div>
+        
+        <!-- Test Mobile Menu -->
+        <div class="test-section">
+            <h3>Test Mobile Menu</h3>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="mobile-menu">
+                <div class="mobile-menu-content">
+                    <a href="#" class="mobile-menu-link">Test Link 1</a>
+                    <a href="#" class="mobile-menu-link">Test Link 2</a>
+                    <a href="#" class="mobile-menu-link">Test Link 3</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Quantity Controls -->
+        <div class="test-section">
+            <h3>Test Quantity Controls</h3>
+            <div class="quantity-controls">
+                <button class="quantity-btn" data-action="decrease">-</button>
+                <input type="number" class="quantity-input" value="1" min="1" data-product-id="test">
+                <button class="quantity-btn" data-action="increase">+</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function testNotifications() {
+            if (typeof showNotification === 'function') {
+                showNotification('Đây là thông báo thành công!', 'success');
+            } else {
+                alert('showNotification function not found');
+            }
+        }
+        
+        function testErrorNotification() {
+            if (typeof showNotification === 'function') {
+                showNotification('Đây là thông báo lỗi!', 'error');
+            }
+        }
+        
+        function testWarningNotification() {
+            if (typeof showNotification === 'function') {
+                showNotification('Đây là thông báo cảnh báo!', 'warning');
+            }
+        }
+        
+        function testInfoNotification() {
+            if (typeof showNotification === 'function') {
+                showNotification('Đây là thông báo thông tin!', 'info');
+            }
+        }
+        
+        function testLoading() {
+            if (typeof showLoading === 'function' && typeof hideLoading === 'function') {
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    showNotification('Loading test completed!', 'success');
+                }, 3000);
+            } else {
+                alert('Loading functions not found');
+            }
+        }
+        
+        // Mock cart functions for testing
+        function mockAddToCart(productId, quantity) {
+            console.log('Mock add to cart:', productId, quantity);
+            
+            // Simulate success response
+            setTimeout(() => {
+                const currentCount = parseInt(document.getElementById('cart-count').textContent);
+                document.getElementById('cart-count').textContent = currentCount + parseInt(quantity);
+                showNotification('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+            }, 500);
+        }
+        
+        // Override fetch for testing
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+            if (url.includes('page=cart') && options && options.method === 'POST') {
+                return new Promise((resolve) => {
+                    const formData = options.body;
+                    const action = formData.get('action');
+                    const productId = formData.get('product_id');
+                    const quantity = formData.get('quantity') || 1;
+                    
+                    console.log('Mock fetch:', action, productId, quantity);
+                    
+                    setTimeout(() => {
+                        resolve({
+                            json: () => Promise.resolve({
+                                success: true,
+                                message: 'Mock success',
+                                cart_count: parseInt(document.getElementById('cart-count').textContent) + parseInt(quantity)
+                            })
+                        });
+                    }, 500);
+                });
+            }
+            return originalFetch.apply(this, arguments);
+        };
+    </script>
+</body>
+</html>

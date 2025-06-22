@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Giao Diện - Five:07</title>    <link rel="stylesheet" href="CSS/main-styles.css">
+    <link rel="stylesheet" href="CSS/auth-styles.css">
+    <link rel="stylesheet" href="CSS/products-styles.css">
+    <link rel="stylesheet" href="CSS/cart-styles.css">
+    <link rel="stylesheet" href="CSS/fixes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="JS/main.js" defer></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <div class="nav-logo">
+                    <a href="#" class="logo-link">
+                        <img src="images/logo.jpg" alt="Five:07" class="logo-img">
+                        <span class="logo-text">Five:07</span>
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="nav-search">
+                    <form class="search-form">
+                        <div class="search-input-wrapper">
+                            <input type="text" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-home"></i> Trang chủ
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i> Sản phẩm
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Đăng ký
+                    </a>
+                </div>
+
+                <!-- Cart -->
+                <div class="nav-cart">
+                    <a href="#" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">3</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+            <div class="mobile-menu-content">
+                <a href="#" class="mobile-menu-link">Trang chủ</a>
+                <a href="#" class="mobile-menu-link">Sản phẩm</a>
+                <a href="#" class="mobile-menu-link">Đăng nhập</a>
+                <a href="#" class="mobile-menu-link">Đăng ký</a>
+                <a href="#" class="mobile-menu-link">Giỏ hàng</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            Chào mừng đến với <span class="brand-name">Five:07</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Khám phá những sản phẩm công nghệ tốt nhất với giá cả hợp lý
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-shopping-bag"></i> Mua sắm ngay
+                            </a>
+                            <a href="#" class="btn btn-outline">
+                                <i class="fas fa-info-circle"></i> Tìm hiểu thêm
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <img src="images/banner_QC.png" alt="Five:07 Banner" class="hero-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Products Grid -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Sản phẩm nổi bật</h2>
+                    <p class="section-subtitle">Khám phá những sản phẩm hot nhất</p>
+                </div>
+
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/iphone-16-pro-max-1-638639190782955686.jpg" alt="iPhone 16 Pro Max" class="product-img">
+                            <div class="product-overlay">
+                                <button class="btn btn-outline btn-sm add-to-cart-btn" data-product-id="1">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <a href="#">iPhone 16 Pro Max</a>
+                            </h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="rating-text">(4.5)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="current-price">29.990.000₫</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/macbook-pro-14-inch-m4-16gb-512gb-tgdd-den-1-638660152965882579-750x500.jpg" alt="MacBook Pro M4" class="product-img">
+                            <div class="product-overlay">
+                                <button class="btn btn-outline btn-sm add-to-cart-btn" data-product-id="2">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <a href="#">MacBook Pro M4 14"</a>
+                            </h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="rating-text">(5.0)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="original-price">45.990.000₫</span>
+                                <span class="sale-price">42.990.000₫</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/apple-watch-ultra-2-lte-49mm-vien-titanium-day-milan-638641727211652156-750x500.jpg" alt="Apple Watch Ultra 2" class="product-img">
+                            <div class="product-overlay">
+                                <button class="btn btn-outline btn-sm add-to-cart-btn" data-product-id="3">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <a href="#">Apple Watch Ultra 2</a>
+                            </h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="rating-text">(4.0)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="current-price">19.999.000₫</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/msi-stealth-14-ai-studio-a1vfg-ultra-7-085vn.jpg" alt="MSI Stealth 14 AI Studio" class="product-img">
+                            <div class="product-overlay">
+                                <button class="btn btn-outline btn-sm add-to-cart-btn" data-product-id="4">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <a href="#">MSI Stealth 14 AI Studio</a>
+                            </h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="rating-text">(4.5)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="current-price">32.990.000₫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Features -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h3 class="feature-title">Giao hàng nhanh</h3>
+                        <p class="feature-desc">Giao hàng trong 24h với dịch vụ chuyển phát nhanh</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Bảo hành chính hãng</h3>
+                        <p class="feature-desc">Cam kết bảo hành chính hãng từ nhà sản xuất</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3 class="feature-title">Hỗ trợ 24/7</h3>
+                        <p class="feature-desc">Đội ngũ hỗ trợ khách hàng chuyên nghiệp 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Five:07</h3>
+                    <p class="footer-desc">Cửa hàng công nghệ uy tín hàng đầu Việt Nam</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Liên kết</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Trang chủ</a></li>
+                        <li><a href="#">Sản phẩm</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Hỗ trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Liên hệ</h4>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-phone"></i> 0123-456-789</p>
+                        <p><i class="fas fa-envelope"></i> contact@five07.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Hà Nội, Việt Nam</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

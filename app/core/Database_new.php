@@ -14,9 +14,11 @@ class Database
 
     private $dbh; // Database Handler
     private $stmt; // Statement
-    private $error;    /**
-          * Constructor - Khởi tạo kết nối database
-          */
+    private $error;
+
+    /**
+     * Constructor - Khởi tạo kết nối database
+     */
     public function __construct()
     {
         // Tạo DSN (Data Source Name)
@@ -30,10 +32,12 @@ class Database
             echo "Database Connection Error: " . $this->error;
             die();
         }
-    }    /**
-         * Chuẩn bị truy vấn SQL
-         * @param string $sql
-         */
+    }
+
+    /**
+     * Chuẩn bị truy vấn SQL
+     * @param string $sql
+     */
     public function query($sql)
     {
         $this->stmt = $this->dbh->prepare($sql);
@@ -97,10 +101,12 @@ class Database
     {
         $this->execute();
         return $this->stmt->fetch(PDO::FETCH_ASSOC);
-    }    /**
-         * Đếm số dòng kết quả
-         * @return int
-         */
+    }
+
+    /**
+     * Đếm số dòng kết quả
+     * @return int
+     */
     public function rowCount()
     {
         return $this->stmt->rowCount();
@@ -137,5 +143,62 @@ class Database
     public function rollback()
     {
         return $this->dbh->rollback();
+    }
+
+    /**
+     * Đóng kết nối database
+     */
+    public function close()
+    {
+        $this->dbh = null;
+    }
+
+    /**
+     * Kiểm tra kết nối database
+     * @return bool
+     */
+    public function isConnected()
+    {
+        return $this->dbh !== null;
+    }
+
+    /**
+     * Debug query với parameters
+     */
+    public function debugDumpParams()
+    {
+        if ($this->stmt) {
+            $this->stmt->debugDumpParams();
+        }
+    }
+
+    /**
+     * Thực thi truy vấn đơn giản (không prepared)
+     * @param string $sql
+     * @return mixed
+     */
+    public function exec($sql)
+    {
+        try {
+            return $this->dbh->exec($sql);
+        } catch (PDOException $e) {
+            echo "Exec Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Lấy thông tin database
+     * @return array
+     */
+    public function getDatabaseInfo()
+    {
+        return [
+            'host' => $this->host,
+            'database' => $this->dbname,
+            'charset' => $this->charset,
+            'port' => $this->port,
+            'connected' => $this->isConnected()
+        ];
     }
 }

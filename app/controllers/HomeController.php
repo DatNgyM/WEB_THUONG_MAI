@@ -4,35 +4,45 @@
  * Xử lý các tác vụ liên quan đến trang chủ
  */
 class HomeController extends Controller
-{
-    /**
+{    /**
      * Phương thức mặc định - hiển thị trang chủ
      */
     public function index()
     {
-        // Tải model sản phẩm
-        $productModel = $this->model('ProductModel');
+        // Chuyển hướng đến trang HTML hoặc serve file HTML
+        $htmlFile = ROOT_PATH . '/Page/index.html';
 
-        // Lấy danh sách sản phẩm nổi bật
-        $featuredProducts = $productModel->getFeaturedProducts(8);
+        if (file_exists($htmlFile)) {
+            // Set header để trình duyệt hiểu đây là HTML
+            header('Content-Type: text/html; charset=UTF-8');
 
-        // Lấy danh sách sản phẩm mới nhất
-        $newProducts = $productModel->getLatestProducts(8);
+            // Đọc và hiển thị file HTML
+            readfile($htmlFile);
+            exit;
+        } else {
+            // Load view PHP nếu không có file HTML
+            // Tải model sản phẩm
+            $productModel = $this->model('ProductModel');
 
-        // Tải model danh mục
-        $categoryModel = $this->model('CategoryModel');
+            // Lấy danh sách sản phẩm nổi bật
+            $featuredProducts = $productModel->getFeaturedProducts(8);
 
-        // Lấy danh sách danh mục
-        $categories = $categoryModel->getPopularCategories(4);
+            // Lấy danh sách sản phẩm mới nhất
+            $newProducts = $productModel->getLatestProducts(8);
 
-        // Load view với dữ liệu
-        $data = [
-            'pageTitle' => 'Trang chủ - Website Thương Mại',
-            'featuredProducts' => $featuredProducts,
-            'newProducts' => $newProducts,
-            'categories' => $categories
-        ];
+            // Tải model danh mục
+            $categoryModel = $this->model('CategoryModel');
 
-        $this->view('home/index', $data);
+            // Lấy danh sách danh mục
+            $categories = $categoryModel->getPopularCategories(4);            // Load view với dữ liệu
+            $data = [
+                'pageTitle' => 'Trang chủ - Website Thương Mại',
+                'featuredProducts' => $featuredProducts,
+                'newProducts' => $newProducts,
+                'categories' => $categories
+            ];
+
+            $this->view('home/index', $data);
+        }
     }
 }

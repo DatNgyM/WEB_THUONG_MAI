@@ -11,31 +11,62 @@ class App
     protected $params = [];
     public function __construct()
     {
-        // Debug URL
-        /*
-        if (isset($_GET['url'])) {
-            echo '<div style="background: #f8f9fa; padding: 10px; margin: 10px; border: 1px solid #ddd;">';
-            echo '<h4>Debug URL:</h4>';
-            echo 'Raw URL: ' . $_GET['url'] . '<br>';
-            echo 'Parsed URL: <pre>';
-            print_r(explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL)));
-            echo '</pre>';
-            echo '</div>';
-        }
-        */
+        $url = $this->parseUrl();
 
-        $url = $this->parseUrl();        // Lấy controller
-        if (isset($url[0]) && !empty($url[0])) {
-            $controllerFile = CONTROLLER_PATH . '/' . ucfirst($url[0]) . 'Controller.php';
-            if (file_exists($controllerFile)) {
-                $this->controller = ucfirst($url[0]) . 'Controller';
-                unset($url[0]);
-            } else {
-                // Debug - ghi log controller không tồn tại
-                $log_file = ROOT_PATH . '/url_debug.log';
-                $log_message = date('Y-m-d H:i:s') . ' - Controller not found: ' . $controllerFile . "\n";
-                file_put_contents($log_file, $log_message, FILE_APPEND);
-            }
+        // Special routing rules
+        if (empty($url[0])) {
+            // Root URL - serve index.html
+            $this->serveStaticPage('index.html');
+            return;
+        }
+
+        // Handle special routes
+        switch ($url[0]) {
+            case 'login':
+                $this->serveStaticPage('login.html');
+                return;
+            case 'product':
+                if (isset($url[1])) {
+                    $this->controller = 'ProductController';
+                    $this->method = 'show';
+                    $this->params = [$url[1]];
+                } else {
+                    $this->serveStaticPage('product.html');
+                    return;
+                }
+                break;
+            case 'cart':
+                $this->serveStaticPage('cart.html');
+                return;
+            case 'checkout':
+                $this->serveStaticPage('checkout.html');
+                return;
+            case 'account':
+                $this->serveStaticPage('accountsetting.html');
+                return;
+            case 'admin':
+                if (isset($url[1])) {
+                    $this->serveAdminPage($url[1]);
+                } else {
+                    $this->serveAdminPage('index.html');
+                }
+                return;
+            case 'api':
+                // API requests should be handled by api.php
+                header('Location: ' . BASE_URL . '/api.php?' . $_SERVER['QUERY_STRING']);
+                exit;
+            default:
+                // Try to find controller
+                $controllerFile = CONTROLLER_PATH . '/' . ucfirst($url[0]) . 'Controller.php';
+                if (file_exists($controllerFile)) {
+                    $this->controller = ucfirst($url[0]) . 'Controller';
+                    unset($url[0]);
+                } else {
+                    // Default to 404
+                    $this->notFound();
+                    return;
+                }
+                break;
         }
 
         // Require controller
@@ -87,5 +118,49 @@ class App
             return $parts;
         }
         return [];
+    }
+
+    /**
+     * Serve static HTML page
+     */
+    private function serveStaticPage($filename)
+    {
+        $filePath = ROOT_PATH . '/Page/' . $filename;
+
+        if (file_exists($filePath)) {
+            header('Content-Type: text/html; charset=UTF-8');
+            readfile($filePath);
+            exit;
+        } else {
+            $this->notFound();
+        }
+    }
+
+    /**
+     * Serve admin page
+     */
+    private function serveAdminPage($filename)
+    {
+        $filePath = ROOT_PATH . '/Page/admin/' . $filename;
+
+        if (file_exists($filePath)) {
+            header('Content-Type: text/html; charset=UTF-8');
+            readfile($filePath);
+            exit;
+        } else {
+            $this->notFound();
+        }
+    }
+
+    /**
+     * Handle 404 not found
+     */
+    private function notFound()
+    {
+        http_response_code(404);
+        echo '<h1>404 - Page Not Found</h1>';
+        echo '<p>The requested page could not be found.</p>';
+        echo '<a href="' . BASE_URL . '">Go to Home</a>';
+        exit;
     }
 }

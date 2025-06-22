@@ -35,9 +35,9 @@ class ProductModel extends Model
 
         return $this->db->resultSet();
     }    /**
-         * Lấy tổng số sản phẩm
-         * @return int Tổng số sản phẩm
-         */
+     * Lấy tổng số sản phẩm
+     * @return int Tổng số sản phẩm
+     */
     public function getTotalProducts()
     {
         $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE status = 1";
@@ -199,33 +199,27 @@ class ProductModel extends Model
 
     /**
      * Lấy sản phẩm liên quan
-     * @param int $product_id ID sản phẩm hiện tại
-     * @param string $category Danh mục sản phẩm
-     * @param int $limit Số lượng sản phẩm liên quan
+     * @param int $productId ID sản phẩm hiện tại
+     * @param int $categoryId ID danh mục
+     * @param int $limit Số lượng sản phẩm
      * @return array Danh sách sản phẩm liên quan
      */
-    public function getRelatedProducts($product_id, $category = '', $limit = 4)
+    public function getRelatedProducts($productId, $categoryId, $limit = 4)
     {
         $sql = "SELECT p.*, c.name as category_name,
-                       COALESCE(pi.image_path, CONCAT('images/', p.image_url)) as image_url
+                       pi.image_path as primary_image
                 FROM {$this->table} p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
-                WHERE p.status = 1 AND p.id != :product_id";
-
-        if (!empty($category)) {
-            $sql .= " AND p.category = :category";
-        }
-
-        $sql .= " ORDER BY RAND() LIMIT :limit";
+                WHERE p.category_id = :category_id 
+                      AND p.id != :product_id 
+                      AND p.status = 1 
+                ORDER BY RAND() 
+                LIMIT :limit";
 
         $this->db->query($sql);
-        $this->db->bind(':product_id', $product_id, PDO::PARAM_INT);
-
-        if (!empty($category)) {
-            $this->db->bind(':category', $category);
-        }
-
+        $this->db->bind(':category_id', $categoryId, PDO::PARAM_INT);
+        $this->db->bind(':product_id', $productId, PDO::PARAM_INT);
         $this->db->bind(':limit', $limit, PDO::PARAM_INT);
 
         return $this->db->resultSet();
@@ -239,10 +233,10 @@ class ProductModel extends Model
     public function updateViews($productId)
     {
         $sql = "UPDATE {$this->table} SET views = views + 1 WHERE id = :id";
-
+        
         $this->db->query($sql);
         $this->db->bind(':id', $productId, PDO::PARAM_INT);
-
+        
         return $this->db->execute();
     }
 
@@ -301,7 +295,7 @@ class ProductModel extends Model
     public function checkStock($productId, $quantity = 1)
     {
         $product = $this->getById($productId);
-
+        
         if (!$product) {
             return false;
         }
@@ -326,135 +320,5 @@ class ProductModel extends Model
         $this->db->bind(':id', $productId, PDO::PARAM_INT);
 
         return $this->db->execute();
-    }
-
-    /**
-     * Lấy tất cả sản phẩm (không phân trang)
-     * @return array Danh sách tất cả sản phẩm
-     */
-    public function getAllProducts()
-    {
-        $sql = "SELECT p.*, c.name as category_name, 
-                       pi.image_path as primary_image
-                FROM {$this->table} p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
-                WHERE p.status = 1 
-                ORDER BY p.created_at DESC";
-
-        $this->db->query($sql);
-        return $this->db->resultSet();
-    }
-
-    /**
-     * Lấy danh sách sản phẩm với phân trang và bộ lọc
-     * @param array $conditions Điều kiện lọc
-     * @param array $params Tham số cho điều kiện
-     * @param string $sort Trường sắp xếp
-     * @param string $order Thứ tự sắp xếp (ASC/DESC)
-     * @param int $limit Số sản phẩm mỗi trang
-     * @param int $offset Vị trí bắt đầu
-     * @return array Danh sách sản phẩm
-     */
-    public function getProductsWithFilter($conditions = [], $params = [], $sort = 'name', $order = 'ASC', $limit = 12, $offset = 0)
-    {
-        // Simplified query - just get products without complex joins
-        $sql = "SELECT p.* FROM {$this->table} p WHERE p.status = 1";
-
-        if (!empty($conditions)) {
-            $sql .= " AND " . implode(" AND ", $conditions);
-        }
-
-        // Validate sort field
-        $allowed_sorts = ['name', 'price', 'created_at', 'id'];
-        if (!in_array($sort, $allowed_sorts)) {
-            $sort = 'name';
-        }
-
-        // Validate order
-        $order = strtoupper($order);
-        if (!in_array($order, ['ASC', 'DESC'])) {
-            $order = 'ASC';
-        }
-
-        $sql .= " ORDER BY {$sort} {$order} LIMIT :limit OFFSET :offset";
-
-        $this->db->query($sql);
-
-        // Bind parameters for conditions
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $this->db->bind($key, $value);
-            }
-        }
-
-        $this->db->bind(':limit', $limit, PDO::PARAM_INT);
-        $this->db->bind(':offset', $offset, PDO::PARAM_INT);
-
-        return $this->db->resultSet();
-    }
-
-    /**
-     * Đếm số sản phẩm với bộ lọc
-     * @param array $conditions Điều kiện lọc
-     * @param array $params Tham số cho điều kiện
-     * @return int Số lượng sản phẩm
-     */
-    public function countProducts($conditions = [], $params = [])
-    {
-        $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE status = 1";
-
-        if (!empty($conditions)) {
-            $sql .= " AND " . implode(" AND ", $conditions);
-        }
-
-        $this->db->query($sql);
-
-        // Bind parameters for conditions
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $this->db->bind($key, $value);
-            }
-        }
-
-        $result = $this->db->single();
-        return (int) $result['count'];
-    }    /**
-         * Lấy danh sách các danh mục
-         * @return array Danh sách danh mục
-         */
-    public function getCategories()
-    {
-        $sql = "SELECT DISTINCT category FROM {$this->table} WHERE status = 1 AND category IS NOT NULL AND category != '' ORDER BY category";
-        $this->db->query($sql);
-        return $this->db->resultSet();
-    }
-
-    /**
-     * Lấy danh sách sản phẩm theo IDs
-     * @param array $ids Mảng ID sản phẩm
-     * @return array Danh sách sản phẩm
-     */
-    public function getProductsByIds($ids)
-    {
-        if (empty($ids) || !is_array($ids)) {
-            return [];
-        }
-
-        $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $sql = "SELECT p.*, c.name as category_name,
-                       COALESCE(pi.image_path, CONCAT('images/', p.image_url)) as image_url
-                FROM {$this->table} p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
-                WHERE p.status = 1 AND p.id IN ($placeholders)";
-
-        $this->db->query($sql);
-
-        foreach ($ids as $index => $id) {
-            $this->db->bind($index + 1, $id, PDO::PARAM_INT);
-        }
-
-        return $this->db->resultSet();
     }
 }
